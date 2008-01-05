@@ -14,10 +14,7 @@
 #
 #===============================================================================
 
-#from xml.dom.minidom import *
-#import codecs
-#import xml.sax
-#import sys, string
+
 from FB_DATA import FB_Products
 
 ##General XML-Handler Class, parse entire XML-Data File and fill alle Data-Structures

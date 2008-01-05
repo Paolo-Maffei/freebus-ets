@@ -21,6 +21,8 @@ from xml.dom.minidom import *
 from XML.FB_XML_HANDLER import FB_XMLHandler
 from XML.FB_XML_HANDLER import FB_ProductXMLHandler
 from XML.FB_XML_HANDLER import FB_AppXMLHandler
+from XML.FB_XML_HANDLER import FB_CommXMLHandler
+from XML.FB_XML_HANDLER import FB_Prod2ProgrXMLHandler
 
 
 ##This class contains all Methods to work with the FB-XML Files
@@ -107,4 +109,30 @@ class FB_XML:
             self.__LogObj.NewLog("Error at 'getApplications'" ,2)
             return -1
 
+    ##detect all communication-objects within the given Product-Data-File
+    #@param xml-File: Path and Filename of sourcefile
+    #@return: List of FB_CommunicationObj Instances
+    def getCommunicationObjects(self,xml_handler):
 
+        try:
+            CommObjList = xml_handler.getCommObjList()
+
+            return CommObjList
+
+        except:
+            self.__LogObj.NewLog("Error at 'getCommunicationObjects'" ,2)
+            return -1
+
+    ##detect all prosuct to programs assignments within the given Product-Data-File
+    #@param xml-File: Path and Filename of sourcefile
+    #@return: List of FB_Prod2Prog Instances
+    def getProd2Progr(self,xml_handler):
+
+        try:
+            Prod2Prog = xml_handler.getProd2ProgrList()
+
+            return Prod2Prog
+
+        except:
+            self.__LogObj.NewLog("Error at 'getProd2Progr'" ,2)
+            return -1

@@ -47,10 +47,21 @@ if(XMLHandler != -1):
     productList = FB_XML.getProducts(XMLHandler)
     #Applications/Manufacturer-List
     AppManList = FB_XML.getApplications(XMLHandler)
+    #communicatiuon object List
+    CommObjList = FB_XML.getCommunicationObjects(XMLHandler)
+    #prod2programm object List
+    Prod2Progr = FB_XML.getProd2Progr(XMLHandler)
 
     print productList[0].getProductName()
+    print productList[0].getProductID()
+
     print AppManList[0][0].getProgramName()
     print AppManList[1][0].getManufactName()
+
+    print CommObjList[0].getProgramID()
+    print Prod2Progr[0].getProductID()
+
+  #  print len(CommObjList)
 else:
     print "geht nicht"
 
@@ -115,3 +126,18 @@ else:
  #   print productList[i].getOrigManID()
 
 
+#  print CommObjList[0].getObjName()
+#    print CommObjList[0].getObjFunction()
+#    print CommObjList[0].getObjReadEN()
+#    print CommObjList[0].getObjWriteEN()
+#    print CommObjList[0].getObjCommEN()
+#    print CommObjList[0].getObjTransEN()
+#    print CommObjList[0].getObjDisplOrder()
+#    print CommObjList[0].getParentParaValue()
+#    print CommObjList[0].getObjID()
+#    print CommObjList[0].getParaID()
+#    print CommObjList[0].getObjNumber()
+#    print CommObjList[0].getObjType()
+#    print CommObjList[0].getObjPriority()
+#    print CommObjList[0].getObjUpdateEN()
+#    print CommObjList[0].getObjUniqueNo()
