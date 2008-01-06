@@ -16,6 +16,7 @@
 import codecs
 import xml.sax.handler
 
+from xml.dom import minidom
 
 from xml.dom.minidom import *
 from XML.FB_XML_HANDLER import FB_XMLHandler
@@ -23,6 +24,8 @@ from XML.FB_XML_HANDLER import FB_ProductXMLHandler
 from XML.FB_XML_HANDLER import FB_AppXMLHandler
 from XML.FB_XML_HANDLER import FB_CommXMLHandler
 from XML.FB_XML_HANDLER import FB_Prod2ProgrXMLHandler
+from XML.FB_XML_HANDLER import FB_MaskXMLHandler
+from FB_DATA import FB_Constants
 
 
 ##This class contains all Methods to work with the FB-XML Files
@@ -70,6 +73,8 @@ class FB_XML:
     #@param return: return-value
     def parseXMLFile(self,xml_file):
         try:
+            self.__DOMObj = parse(xml_file)    #DOM Object
+
             handler = FB_XMLHandler.FB_XMLHandler(self.__LogObj)
             saxparser = xml.sax.make_parser()
             saxparser.setContentHandler(handler)
@@ -123,7 +128,7 @@ class FB_XML:
             self.__LogObj.NewLog("Error at 'getCommunicationObjects'" ,2)
             return -1
 
-    ##detect all prosuct to programs assignments within the given Product-Data-File
+    ##detect all product to programs assignments within the given Product-Data-File
     #@param xml-File: Path and Filename of sourcefile
     #@return: List of FB_Prod2Prog Instances
     def getProd2Progr(self,xml_handler):
@@ -136,3 +141,60 @@ class FB_XML:
         except:
             self.__LogObj.NewLog("Error at 'getProd2Progr'" ,2)
             return -1
+
+    ##detect all mask objects within the given Product-Data-File
+    #@param xml-File: Path and Filename of sourcefile
+    #@return: List of FB_Mask Instances
+    def getMask(self,xml_handler):
+
+        try:
+            Mask = xml_handler.getMaskList()
+
+            return Mask
+
+        except:
+            self.__LogObj.NewLog("Error at 'getMaskList'" ,2)
+            return -1
+
+#*********************************************************************************
+    ##craete new xml-product-data file and add root node
+    #@param xml-Filename+Path:
+    def CreateProductFile(self,xml_file):
+        try:
+
+            Start = """<?xml version="1.0" encoding="ISO-8859-1" ?>
+                <eib-products></eib-products>"""
+            self.__DOMObj = minidom.parseString(Start)
+
+            neu = self.__DOMObj.documentElement
+            #insert all nodes through iteration of MainNode
+            #print len(FB_Constants.MainNode)
+
+            for i in range(len(FB_Constants.MainNode)):
+                item = self.__DOMObj.createElement(FB_Constants.MainNode[i][0])
+                neu.appendChild(item)
+
+                SubNode = self.__DOMObj.getElementsByTagName(FB_Constants.MainNode[i][0])
+
+                for j in range(len(FB_Constants.MainNode[i])):
+                    item1 = self.__DOMObj.createElement(FB_Constants.MainNode[i][j])
+                    #print FB_Constants.MainNode[i][j]
+                    SubNode.appendChild(item1)
+            #item = self.__DOMObj.createElement("MANUFACTURER_ID")
+            #neu.appendChild(item)
+
+
+            #itemText = self.__DOMObj.createTextNode("doof")
+            #item.appendChild(itemText)
+
+
+            OutFileObj = open(xml_file,"w+")
+
+            String = self.__DOMObj.toprettyxml().encode('ISO-8859-1')
+
+            OutFileObj.write(String)
+            OutFileObj.close()
+
+        except IOError:
+            #LOG File
+            self.__LogObj.NewLog(IOError.message + " " + IOError.filename + " " + IOError.errno,2)

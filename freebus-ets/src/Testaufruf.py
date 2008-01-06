@@ -25,6 +25,8 @@ Options = 0
 LOG_XML = Logging.Logging("FB_XML",LogFileName,Options)
 
 file = "J:/Elektronik/Projekte/EIB/ETS for Freebus/SunXML.xml"
+newfile = "J:/Elektronik/Projekte/EIB/ETS for Freebus/TestXML.xml"
+
 
 XML = FB_XMLConverter.FB_XMLConverter("J:/Elektronik/Projekte/EIB/ETS for Freebus/CSuntracer2.vd_", \
                                   file, LOG_XML)
@@ -35,35 +37,70 @@ XML = FB_XMLConverter.FB_XMLConverter("J:/Elektronik/Projekte/EIB/ETS for Freebu
 #"J:/Elektronik/Projekte/EIB/ETS for Freebus/SuntracerXML.xml",
 FB_XML = FB_XML.FB_XML(LOG_XML)
 
+#new product-file
+FB_XML.CreateProductFile(newfile)
+
+
 #productList = FB_XML.getProducts(file)
 
 #AppList = FB_XML.getApplications(file)
 
 #create parse-object and parse xml-file -> all sub-handler will be called automatically
-XMLHandler = FB_XML.parseXMLFile(file)
 
-if(XMLHandler != -1):
+#XMLHandler = FB_XML.parseXMLFile(file)
+
+#if(XMLHandler != -1):
     #Product-List
-    productList = FB_XML.getProducts(XMLHandler)
+#    productList = FB_XML.getProducts(XMLHandler)
     #Applications/Manufacturer-List
-    AppManList = FB_XML.getApplications(XMLHandler)
+#    AppManList = FB_XML.getApplications(XMLHandler)
     #communicatiuon object List
-    CommObjList = FB_XML.getCommunicationObjects(XMLHandler)
+#    CommObjList = FB_XML.getCommunicationObjects(XMLHandler)
     #prod2programm object List
-    Prod2Progr = FB_XML.getProd2Progr(XMLHandler)
+#    Prod2Progr = FB_XML.getProd2Progr(XMLHandler)
+    #mask object list
+#    Mask = FB_XML.getMask(XMLHandler)
 
-    print productList[0].getProductName()
-    print productList[0].getProductID()
+#    print productList[0].getProductName()
+#    print productList[0].getProductID()
 
-    print AppManList[0][0].getProgramName()
-    print AppManList[1][0].getManufactName()
+ #   print AppManList[0][0].getProgramName()
+ #   print AppManList[1][0].getManufactName()
 
-    print CommObjList[0].getProgramID()
-    print Prod2Progr[0].getProductID()
+ #   print CommObjList[0].getProgramID()
+ #   print Prod2Progr[0].getProductID()
+
+#    print Mask[0].getMaskID()
+#    print Mask[0].getMaskVersion()
+#    print Mask[0].getUserRamStart()
+ #   print Mask[0].getUserRamEnd()
+#    print Mask[0].getUserEEpromStart()
+#    print Mask[0].getUserEEpromEnd()
+#    print Mask[0].getRunErrorAddr()
+#    print Mask[0].getAddrTabAddr()
+#    print Mask[0].getAssocTabAddr()
+#    print Mask[0].getCommsTabAddr()
+ #   print Mask[0].getManufactDataAddr()
+ #   print Mask[0].getManufactDataSize()
+ #   print Mask[0].getManufactIDAddr()
+ #   print Mask[0].getRoutAddr()
+ #   print Mask[0].getManufactIDProtect()
+ #   print Mask[0].getMaskVersionName()
+ #   print Mask[0].getMaskDataLength()
+ #   print Mask[0].getAddressTab()
+ #   print Mask[0].getAssocTab()
+ #   print Mask[0].getAppProgram()
+ #   print Mask[0].getPEIProgram()
+ #   print Mask[0].getLoadControlAddr()
+ #   print Mask[0].getRunControlAddr()
+ #   print Mask[0].getPortAddrProtected()
+ #   print Mask[0].getMediumTypeNo()
+ #   print Mask[0].getBCUTypeNo()
+
 
   #  print len(CommObjList)
-else:
-    print "geht nicht"
+#else:
+#    print "geht nicht"
 
 #ende =  len(AppManList[0])
 #print ende

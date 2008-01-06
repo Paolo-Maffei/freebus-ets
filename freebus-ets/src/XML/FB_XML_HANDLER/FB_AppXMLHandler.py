@@ -14,10 +14,7 @@
 #
 #===============================================================================
 
-#from xml.dom.minidom import *
-#import codecs
-#import xml.sax
-#import sys, string
+
 from FB_DATA import FB_Applications
 from FB_DATA import FB_Manufacturer
 
