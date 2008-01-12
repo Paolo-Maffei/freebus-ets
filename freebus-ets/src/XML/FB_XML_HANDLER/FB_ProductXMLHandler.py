@@ -216,7 +216,7 @@ class FB_ProductXMLHandler():
         #print char.encode( "iso-8859-1" )
         if(self.__isProductID == True):
             self.__prod.setProductID(char.encode( "iso-8859-1" ))
-
+           
         if(self.__isManufacturerID == True):
             self.__prod.setManufactuerID(char.encode( "iso-8859-1" ))
 

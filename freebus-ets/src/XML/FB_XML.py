@@ -42,6 +42,10 @@ class FB_XML:
     def getDOMObj(self):
         return self.__DOMObj
 
+    ##return List which contains all editable Textnodes (correct Level)
+    def getTextLevel(self):
+        parent = self.__DOMObj.documentElement
+        return parent.childNodes
 
     ##save Documents to XML
     def SaveDocument(self, DOMObj, xml_file):
@@ -55,16 +59,6 @@ class FB_XML:
             #LOG File
             self.__LogObj.NewLog(IOError.message + " " + IOError.filename + " " + IOError.errno,2)
 
-    ##load XML Data from file and save as DOM Object
-    def LoadDocument(self,xml_file):
-        try:
-
-            self.__DOMObj = parse(xml_file)
-
-        except IOError:
-            #LOG File
-
-            self.__LogObj.NewLog(IOError.message + " " + IOError.filename + " " + IOError.errno,2)
 
     ##parse entire XML-Data-File. All Sub-Handler will be called automatically
     ##After that you can call all provided functions to get products,
@@ -166,31 +160,47 @@ class FB_XML:
                 <eib-products></eib-products>"""
             self.__DOMObj = minidom.parseString(Start)
 
-            neu = self.__DOMObj.documentElement
-            #insert all nodes through iteration of MainNode
-            #print len(FB_Constants.MainNode)
+            newDocument = self.__DOMObj.documentElement
+            #insert all nodes through iteration of MainNodes
+            #or choise of single nodes
 
-            for i in range(len(FB_Constants.MainNode)):
-                item = self.__DOMObj.createElement(FB_Constants.MainNode[i][0])
-                neu.appendChild(item)
+#----------------------------------------------------------------------------------
+            #manufacturer
+            self.CreateNode(newDocument,FB_Constants.ManufacturerNode)
+#----------------------------------------------------------------------------------
+            #functional_entity
+            self.CreateNode(newDocument,FB_Constants.FunctionalNode)
+#----------------------------------------------------------------------------------
+            #bcu_type
+            self.CreateNode(newDocument,FB_Constants.BCUNode)
+#----------------------------------------------------------------------------------
+            #symbol
+            self.CreateNode(newDocument,FB_Constants.SymbolNode)
+#----------------------------------------------------------------------------------
+            #hw_product
+            self.CreateNode(newDocument,FB_Constants.ProductNode)
+#----------------------------------------------------------------------------------
+            #catalog_entry
+            self.CreateNode(newDocument,FB_Constants.CatalogNode)
+#----------------------------------------------------------------------------------
+            #medium_type
+            self.CreateNode(newDocument,FB_Constants.MediumNode)
+#----------------------------------------------------------------------------------
+            #mask
+            self.CreateNode(newDocument,FB_Constants.MaskNode)
+#----------------------------------------------------------------------------------
+           #application_program
+            self.CreateNode(newDocument,FB_Constants.AppNode)
+#----------------------------------------------------------------------------------
+          #virtual_device
+            self.CreateNode(newDocument,FB_Constants.VirDeviceNode)
+#----------------------------------------------------------------------------------
+#.....ab hier der Rest
 
-                SubNode = self.__DOMObj.getElementsByTagName(FB_Constants.MainNode[i][0])
-
-                for j in range(len(FB_Constants.MainNode[i])):
-                    item1 = self.__DOMObj.createElement(FB_Constants.MainNode[i][j])
-                    #print FB_Constants.MainNode[i][j]
-                    SubNode.appendChild(item1)
-            #item = self.__DOMObj.createElement("MANUFACTURER_ID")
-            #neu.appendChild(item)
-
-
-            #itemText = self.__DOMObj.createTextNode("doof")
-            #item.appendChild(itemText)
-
-
+            #open the new file
             OutFileObj = open(xml_file,"w+")
-
-            String = self.__DOMObj.toprettyxml().encode('ISO-8859-1')
+            #write das zeugs
+            String = self.__DOMObj.toxml().encode('ISO-8859-1')
 
             OutFileObj.write(String)
             OutFileObj.close()
@@ -198,3 +208,36 @@ class FB_XML:
         except IOError:
             #LOG File
             self.__LogObj.NewLog(IOError.message + " " + IOError.filename + " " + IOError.errno,2)
+
+    ##craete ElementNodes at the new xml data file
+    #@param Document: Document of the new DOM-object file
+    #@param Element: Element which will be added
+    def CreateNode(self,Document,Element):
+        try:
+            item = self.__DOMObj.createElement(Element[0])
+            Document.appendChild(item)
+            #SubNode-List
+            SubNode = self.__DOMObj.getElementsByTagName(Element[0])
+
+            for i in range(1,len(Element)):
+                text = self.__DOMObj.createTextNode("doof")
+                item = self.__DOMObj.createElement(Element[i])
+                item.appendChild(text)
+                SubNode[0].appendChild(item)
+
+        except:
+            #LOG File
+            self.__LogObj.NewLog("Error at creation of Node:" + Element ,2)
+
+    ##Add text elements to given DOM-Obj of XML-File
+    #@param SubNode: (Sub)-Node which contains al Nodes with textelements which should be edited
+    #@param Element: List of TextElements according to SubNode
+    def EditTextElement(self,SubNode,ElementList):
+        try:pass
+
+            #NodeList = SubNode.childNodes
+            #print NodeList
+        except:
+            #LOG File
+            self.__LogObj.NewLog("Error edit a Textelement:"  ,2)
+
