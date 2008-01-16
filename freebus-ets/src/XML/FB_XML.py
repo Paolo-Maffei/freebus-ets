@@ -33,25 +33,55 @@ class FB_XML:
 
     __LogObj = None
     __DOMObj = None
+    __xml_file = ""
+    __handler = -1     #instance of XML-handler
+    __ProductList = None    #List of instances of read Products
 
     ##Constructor
-    def __init__(self,LogObj):
+    #for each product file you have to create an instance of FB_XML
+    def __init__(self,LogObj,file):
         self.__LogObj = LogObj
+        self.__xml_file = file
+
 
     ##return the current DOM-Object
     def getDOMObj(self):
+        self.__DOMObj = parse(self.__xml_file)
         return self.__DOMObj
 
-    ##return List which contains all editable Textnodes (correct Level)
-    def getTextLevel(self):
-        parent = self.__DOMObj.documentElement
-        return parent.childNodes
-
     ##save Documents to XML
-    def SaveDocument(self, DOMObj, xml_file):
+    def SaveDocument(self):
         try:
-            OutFileObj = open(xml_file,"w")
-            String = DOMObj.toxml().encode('utf-8')
+            #self.__DOMObj = self.getDOMObj()
+            OutFileObj = open(self.__xml_file,"w")
+
+            parentNode = self.__DOMObj.documentElement
+
+            #suche alle hw_products -> in List
+            SubNodeList =  parentNode.getElementsByTagName(FB_Constants.ProductNode[0])
+            #read out data copy they into DOMObj
+            if(self.__ProductList <> None):
+                #iterate through each Product in ProductList
+                for i in range(len(self.__ProductList)):
+                    #for each element in Node: "ProductNode"
+                    for j in range(1,len(FB_Constants.ProductNode)):
+                        Value = self.__ProductList[i].getProduct(j)
+                        #iterate List of Nodes within MainNode (ex. hw_product)
+                        #find all Elements in hw_product
+                        Element = SubNodeList[i].getElementsByTagName(FB_Constants.ProductNode[j])
+
+                        #does Element-Node exist ? (different ets version-fils -> different element-counts
+                        if(len(Element)>0):
+                            if(FB_Constants.ProductNode[j] == Element[0].tagName):
+                                #save internal Value to XML-Object
+                                Element[0].firstChild.data = Value
+
+            else:
+                self.__LogObj.NewLog("error at saving product data -> no data object available",1)
+
+
+            String = self.__DOMObj.toxml(encoding = "ISO-8859-1")
+
             OutFileObj.write(String)
             OutFileObj.close()
 
@@ -65,18 +95,18 @@ class FB_XML:
     ##applications, communcations-objects etc.
     #@param xml-File: Path and Filename of sourcefile
     #@param return: return-value
-    def parseXMLFile(self,xml_file):
+    def parseXMLFile(self):
         try:
-            self.__DOMObj = parse(xml_file)    #DOM Object
+            self.__DOMObj = self.getDOMObj()
 
-            handler = FB_XMLHandler.FB_XMLHandler(self.__LogObj)
+            self.__handler = FB_XMLHandler.FB_XMLHandler(self.__LogObj)
             saxparser = xml.sax.make_parser()
-            saxparser.setContentHandler(handler)
-            saxparser.parse(xml_file)
+            saxparser.setContentHandler(self.__handler)
+            saxparser.parse(self.__xml_file)
 
-            return handler
+            return self.__handler
         except:
-            self.__LogObj.NewLog("General error at saxparser: " + xml_file,2)
+            self.__LogObj.NewLog("General error at saxparser: " + self.__xml_file,2)
             return -1
 
     ##detect all Products within the given Product-Data-File
@@ -84,8 +114,8 @@ class FB_XML:
     def getProducts(self,xml_handler):
 
         try:
-            ProductList = xml_handler.getProductList()
-            return ProductList
+            self.__ProductList = xml_handler.getProductList()
+            return self.__ProductList
 
         except:
             self.__LogObj.NewLog("Error at 'getProducts'" ,2)
@@ -153,14 +183,16 @@ class FB_XML:
 #*********************************************************************************
     ##craete new xml-product-data file and add root node
     #@param xml-Filename+Path:
-    def CreateProductFile(self,xml_file):
+    def CreateProductFile(self):
         try:
 
-            Start = """<?xml version="1.0" encoding="ISO-8859-1" ?>
+            #Start = """<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n
+            Start = """<?xml version=\"1.0\" ?>\n
                 <eib-products></eib-products>"""
             self.__DOMObj = minidom.parseString(Start)
 
             newDocument = self.__DOMObj.documentElement
+
             #insert all nodes through iteration of MainNodes
             #or choise of single nodes
 
@@ -198,9 +230,9 @@ class FB_XML:
 #.....ab hier der Rest
 
             #open the new file
-            OutFileObj = open(xml_file,"w+")
+            OutFileObj = open(self.__xml_file,"w+")
             #write das zeugs
-            String = self.__DOMObj.toxml().encode('ISO-8859-1')
+            String = self.__DOMObj.toxml(encoding = "ISO-8859-1")
 
             OutFileObj.write(String)
             OutFileObj.close()
@@ -220,7 +252,8 @@ class FB_XML:
             SubNode = self.__DOMObj.getElementsByTagName(Element[0])
 
             for i in range(1,len(Element)):
-                text = self.__DOMObj.createTextNode("doof")
+
+                text = self.__DOMObj.createTextNode(" ")
                 item = self.__DOMObj.createElement(Element[i])
                 item.appendChild(text)
                 SubNode[0].appendChild(item)

@@ -71,6 +71,7 @@ class FB_XMLConverter:
 
                 #write first two lines
                 OutFileObj.write("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n")
+
                 OutFileObj.write("<eib-products>\n")
 
                 #read first line and compare of signum

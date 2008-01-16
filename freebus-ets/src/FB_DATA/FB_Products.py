@@ -36,6 +36,72 @@ class FB_Products:
     def __init__(self):
         pass
 
+    #general set and get property with index for each element, coresponds to FB_Constants
+    def setProduct(self,Index, Value):
+        if(Index == 1):
+            self.__Product_ID = Value
+        elif(Index == 2):
+            self.__Manufacturer_ID = Value
+        elif(Index == 3):
+            self.__SymbolID = Value
+        elif(Index == 4):
+            self.__Product_Name = Value
+        elif(Index == 5):
+            self.__Product_Version = Value
+        elif(Index == 6):
+            self.__Comp_Type = Value
+        elif(Index == 7):
+            self.__Comp_Attr = Value
+        elif(Index == 8):
+            self.__Bus_Current = Value
+        elif(Index == 9):
+            self.__Product_Serial = Value
+        elif(Index == 10):
+            self.__CompTypeNo = Value
+        elif(Index == 11):
+            self.__ProductPic = Value
+        elif(Index == 12):
+            self.__BCU_Type = Value
+        elif(Index == 13):
+            self.__Product_Handling = Value
+        elif(Index == 14):
+            self.__ProductDLL = Value
+        elif(Index == 15):
+            self.__OrigManID = Value
+
+    def getProduct(self,Index):
+         if(Index == 1):
+            return self.__Product_ID
+         elif(Index == 2):
+            return self.__Manufacturer_ID
+         elif(Index == 3):
+            return self.__SymbolID
+         elif(Index == 4):
+            return self.__Product_Name
+         elif(Index == 5):
+            return self.__Product_Version
+         elif(Index == 6):
+            return self.__Comp_Type
+         elif(Index == 7):
+            return self.__Comp_Attr
+         elif(Index == 8):
+            return self.__Bus_Current
+         elif(Index == 9):
+            return self.__Product_Serial
+         elif(Index == 10):
+            return self.__CompTypeNo
+         elif(Index == 11):
+            return self.__ProductPic
+         elif(Index == 12):
+            return self.__BCU_Type
+         elif(Index == 13):
+            return self.__Product_Handling
+         elif(Index == 14):
+            return self.__ProductDLL
+         elif(Index == 15):
+            return self.__OrigManID
+
+
 #**********************************************************************
     #Handling Product ID
     def setProductID(self,P_ID):

@@ -24,7 +24,7 @@ Options = 0
 
 LOG_XML = Logging.Logging("FB_XML",LogFileName,Options)
 
-file = "J:/Elektronik/Projekte/EIB/ETS for Freebus/TestXML.xml"
+file = "J:/Elektronik/Projekte/EIB/ETS for Freebus/SunXML.xml"
 newfile = "J:/Elektronik/Projekte/EIB/ETS for Freebus/TestXML.xml"
 
 
@@ -35,10 +35,11 @@ XML = FB_XMLConverter.FB_XMLConverter("J:/Elektronik/Projekte/EIB/ETS for Freebu
 
 
 #"J:/Elektronik/Projekte/EIB/ETS for Freebus/SuntracerXML.xml",
-FB_XML = FB_XML.FB_XML(LOG_XML)
-
+#new file
+FB_XML_new = FB_XML.FB_XML(LOG_XML, newfile)
+FB_XML = FB_XML.FB_XML(LOG_XML, file)
 #new product-file
-FB_XML.CreateProductFile(newfile) #create also DOM-Object
+FB_XML_new.CreateProductFile() #create also DOM-Object
 
 #productList = FB_XML.getProducts(file)
 
@@ -46,8 +47,8 @@ FB_XML.CreateProductFile(newfile) #create also DOM-Object
 
 #create parse-object and parse xml-file -> all sub-handler will be called automatically
 
-XMLHandler = FB_XML.parseXMLFile(file) #call also after creation of file
-
+XMLHandler = FB_XML.parseXMLFile() #call also after creation of file
+#XMLHandler = -1
 if(XMLHandler != -1):
     #Product-List
     productList = FB_XML.getProducts(XMLHandler)
@@ -60,10 +61,12 @@ if(XMLHandler != -1):
 #    Prod2Progr = FB_XML.getProd2Progr(XMLHandler)
     #mask object list
 #    Mask = FB_XML.getMask(XMLHandler)
+    productList[0].setProductName("Freebus")
 
     print productList[0].getProductName()
     print productList[0].getProductID()
 
+    FB_XML.SaveDocument()
 #    print AppManList[0][0].getProgramName()
  #   print AppManList[1][0].getManufactName()
 
