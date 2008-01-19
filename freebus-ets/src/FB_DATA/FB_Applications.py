@@ -54,6 +54,144 @@ class FB_Apps:
         #print "okk"
         pass
 
+    def setApp(self,Index, Value):
+        if(Index == 1):
+            self.__ProgID = Value
+        elif(Index == 2):
+            self.__SymbolID = Value
+        elif(Index == 3):
+            self.__MaskID = Value
+        elif(Index == 4):
+            self.__ProgName = Value
+        elif(Index == 5):
+            self.__ProgVersion = Value
+        elif(Index == 6):
+            self.__ProgVersionNo = Value
+        elif(Index == 7):
+            self.__Linkable = Value
+        elif(Index == 8):
+            self.__DevType = Value
+        elif(Index == 9):
+            self.__PEIType = Value
+        elif(Index == 10):
+            self.__AddTabsize = Value
+        elif(Index == 11):
+            self.__AssTabAddr = Value
+        elif(Index == 12):
+            self.__AssTsize = Value
+        elif(Index == 13):
+            self.__ComTabAddr = Value
+        elif(Index == 14):
+            self.__ComTabsize = Value
+        elif(Index == 15):
+            self.__ProgSN = Value
+        elif(Index == 16):
+            self.__AppManID = Value
+        elif(Index == 17):
+            self.__EEPROMData = Value
+        elif(Index == 18):
+            self.__DataLength = Value
+        elif(Index == 19):
+            self.__S19File = Value
+        elif(Index == 20):
+            self.__MapFile = Value
+        elif(Index == 21):
+            self.__AssemblerID = Value
+        elif(Index == 22):
+            self.__HelpFileName = Value
+        elif(Index == 23):
+            self.__ContextID = Value
+        elif(Index == 24):
+            self.__DynamicMng = Value
+        elif(Index == 25):
+            self.__ProgType = Value
+        elif(Index == 26):
+            self.__RAMSize = Value
+        elif(Index == 27):
+            self.__OrgManID = Value
+        elif(Index == 28):
+            self.__APIVersion = Value
+        elif(Index == 29):
+            self.__ProgStyle = Value
+        elif(Index == 30):
+            self.__PollMaster = Value
+        elif(Index == 31):
+            self.__NoPollGroups = Value
+        elif(Index == 32):
+            self.__AllowedInETS = Value
+        elif(Index == 33):
+            self.__MinEtsVersion = Value
+
+
+    def getApp(self,Index):
+        if(Index == 1):
+            return self.__ProgID
+        elif(Index == 2):
+            return self.__SymbolID
+        elif(Index == 3):
+            return self.__MaskID
+        elif(Index == 4):
+            return self.__ProgName
+        elif(Index == 5):
+            return self.__ProgVersion
+        elif(Index == 6):
+            return self.__ProgVersionNo
+        elif(Index == 7):
+            return self.__Linkable
+        elif(Index == 8):
+            return self.__DevType
+        elif(Index == 9):
+            return self.__PEIType
+        elif(Index == 10):
+            return self.__AddTabsize
+        elif(Index == 11):
+            return self.__AssTabAddr
+        elif(Index == 12):
+            return self.__AssTsize
+        elif(Index == 13):
+            return self.__ComTabAddr
+        elif(Index == 14):
+            return self.__ComTabsize
+        elif(Index == 15):
+            return self.__ProgSN
+        elif(Index == 16):
+            return self.__AppManID
+        elif(Index == 17):
+            return self.__EEPROMData
+        elif(Index == 18):
+            return self.__DataLength
+        elif(Index == 19):
+            return self.__S19File
+        elif(Index == 20):
+            return self.__MapFile
+        elif(Index == 21):
+            return self.__AssemblerID
+        elif(Index == 22):
+            return self.__HelpFileName
+        elif(Index == 23):
+            return self.__ContextID
+        elif(Index == 24):
+            return self.__DynamicMng
+        elif(Index == 25):
+            return self.__ProgType
+        elif(Index == 26):
+            return self.__RAMSize
+        elif(Index == 27):
+            return self.__OrgManID
+        elif(Index == 28):
+            return self.__APIVersion
+        elif(Index == 29):
+            return self.__ProgStyle
+        elif(Index == 30):
+            return self.__PollMaster
+        elif(Index == 31):
+            return self.__NoPollGroups
+        elif(Index == 32):
+            return self.__AllowedInETS
+        elif(Index == 33):
+            return self.__MinEtsVersion
+
+
 #**********************************************************************
     #Handling PROGRAM_ID
     def setProgramID(self,P_ID):

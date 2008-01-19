@@ -22,6 +22,18 @@ class FB_Manufacturer:
     def __init__(self):
         pass
 
+    def setManufacturer(self,Index, Value):
+        if(Index == 1):
+            self.__ManName = Value
+        elif(Index == 2):
+            self.__ManID = Value
+
+    def getManufacturer(self,Index):
+        if(Index == 1):
+            return self.__ManName
+        elif(Index == 2):
+            return self.__ManID
+
 #**********************************************************************
     #MANUFACTURER_NAME
     def setManufactName(self,M_Name):

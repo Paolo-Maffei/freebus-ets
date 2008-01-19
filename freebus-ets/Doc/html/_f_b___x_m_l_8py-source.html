@@ -30,99 +30,315 @@
 <a name="l00016"></a>00016 <span class="keyword">import</span> codecs
 <a name="l00017"></a>00017 <span class="keyword">import</span> xml.sax.handler
 <a name="l00018"></a>00018 
-<a name="l00019"></a>00019 
-<a name="l00020"></a>00020 <span class="keyword">from</span> xml.dom.minidom <span class="keyword">import</span> *
-<a name="l00021"></a>00021 <span class="keyword">from</span> XML.FB_XML_HANDLER <span class="keyword">import</span> FB_XMLHandler
-<a name="l00022"></a>00022 <span class="keyword">from</span> XML.FB_XML_HANDLER <span class="keyword">import</span> FB_ProductXMLHandler
-<a name="l00023"></a>00023 <span class="keyword">from</span> XML.FB_XML_HANDLER <span class="keyword">import</span> FB_AppXMLHandler
-<a name="l00024"></a>00024 
-<a name="l00025"></a>00025 
-<a name="l00026"></a>00026 <span class="comment">##This class contains all Methods to work with the FB-XML Files</span>
-<a name="l00027"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html">00027</a> <span class="keyword">class </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html" title="This class contains all Methods to work with the FB-XML Files.">FB_XML</a>:
-<a name="l00028"></a>00028 
-<a name="l00029"></a>00029     __LogObj = <span class="keywordtype">None</span>
-<a name="l00030"></a>00030     __DOMObj = <span class="keywordtype">None</span>
-<a name="l00031"></a>00031 
-<a name="l00032"></a>00032     <span class="comment">##Constructor</span>
-<a name="l00033"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#72d5e4166546d5f1e889546045b78501">00033</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#72d5e4166546d5f1e889546045b78501" title="Constructor.">__init__</a>(self,LogObj):
-<a name="l00034"></a>00034         self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a> = LogObj
+<a name="l00019"></a>00019 <span class="keyword">from</span> xml.dom <span class="keyword">import</span> minidom
+<a name="l00020"></a>00020 
+<a name="l00021"></a>00021 <span class="keyword">from</span> xml.dom.minidom <span class="keyword">import</span> *
+<a name="l00022"></a>00022 <span class="keyword">from</span> XML.FB_XML_HANDLER <span class="keyword">import</span> FB_XMLHandler
+<a name="l00023"></a>00023 <span class="keyword">from</span> XML.FB_XML_HANDLER <span class="keyword">import</span> FB_ProductXMLHandler
+<a name="l00024"></a>00024 <span class="keyword">from</span> XML.FB_XML_HANDLER <span class="keyword">import</span> FB_AppXMLHandler
+<a name="l00025"></a>00025 <span class="keyword">from</span> XML.FB_XML_HANDLER <span class="keyword">import</span> FB_CommXMLHandler
+<a name="l00026"></a>00026 <span class="keyword">from</span> XML.FB_XML_HANDLER <span class="keyword">import</span> FB_Prod2ProgrXMLHandler
+<a name="l00027"></a>00027 <span class="keyword">from</span> XML.FB_XML_HANDLER <span class="keyword">import</span> FB_MaskXMLHandler
+<a name="l00028"></a>00028 <span class="keyword">from</span> FB_DATA <span class="keyword">import</span> FB_Constants
+<a name="l00029"></a>00029 
+<a name="l00030"></a>00030 
+<a name="l00031"></a>00031 <span class="comment">##This class contains all Methods to work with the FB-XML Files</span>
+<a name="l00032"></a>00032 <span class="comment">#For each xml-product file you have to create an instance of "FB_XML"</span>
+<a name="l00033"></a>00033 <span class="comment">#in this version the sax-parser will be used</span>
+<a name="l00034"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html">00034</a> <span class="keyword">class </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html">FB_XML</a>:
 <a name="l00035"></a>00035 
-<a name="l00036"></a>00036     <span class="comment">##return the current DOM-Object</span>
-<a name="l00037"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#25950697ad7afaae17df961ee55558ca">00037</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#25950697ad7afaae17df961ee55558ca" title="return the current DOM-Object">getDOMObj</a>(self):
-<a name="l00038"></a>00038         <span class="keywordflow">return</span> self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#935a5e6a09b62383156d9c75b6de066a">__DOMObj</a>
-<a name="l00039"></a>00039 
-<a name="l00040"></a>00040 
-<a name="l00041"></a>00041     <span class="comment">##save Documents to XML</span>
-<a name="l00042"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7287c829a283149c5bd6f4c29508a698">00042</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7287c829a283149c5bd6f4c29508a698" title="save Documents to XML">SaveDocument</a>(self, DOMObj, xml_file):
-<a name="l00043"></a>00043         <span class="keywordflow">try</span>:
-<a name="l00044"></a>00044             OutFileObj = open(xml_file,<span class="stringliteral">"w"</span>)
-<a name="l00045"></a>00045             String = DOMObj.toxml().encode(<span class="stringliteral">'utf-8'</span>)
-<a name="l00046"></a>00046             OutFileObj.write(String)
-<a name="l00047"></a>00047             OutFileObj.close()
-<a name="l00048"></a>00048 
-<a name="l00049"></a>00049         <span class="keywordflow">except</span> IOError:
-<a name="l00050"></a>00050             <span class="comment">#LOG File</span>
-<a name="l00051"></a>00051             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(IOError.message + <span class="stringliteral">" "</span> + IOError.filename + <span class="stringliteral">" "</span> + IOError.errno,2)
-<a name="l00052"></a>00052 
-<a name="l00053"></a>00053     <span class="comment">##load XML Data from file and save as DOM Object</span>
-<a name="l00054"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#ddbca5c393e6613283cf93586a2ba07c">00054</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#ddbca5c393e6613283cf93586a2ba07c" title="load XML Data from file and save as DOM Object">LoadDocument</a>(self,xml_file):
-<a name="l00055"></a>00055         <span class="keywordflow">try</span>:
-<a name="l00056"></a>00056 
-<a name="l00057"></a>00057             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#935a5e6a09b62383156d9c75b6de066a">__DOMObj</a> = parse(xml_file)
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059         <span class="keywordflow">except</span> IOError:
-<a name="l00060"></a>00060             <span class="comment">#LOG File</span>
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(IOError.message + <span class="stringliteral">" "</span> + IOError.filename + <span class="stringliteral">" "</span> + IOError.errno,2)
-<a name="l00063"></a>00063 
-<a name="l00064"></a>00064     <span class="comment">##parse entire XML-Data-File. All Sub-Handler will be called automatically</span>
-<a name="l00065"></a>00065     <span class="comment">##After that you can call all provided functions to get products,</span>
-<a name="l00066"></a>00066     <span class="comment">##applications, communcations-objects etc.</span>
-<a name="l00067"></a>00067     <span class="comment">#@param xml-File: Path and Filename of sourcefile</span>
-<a name="l00068"></a>00068     <span class="comment">#@param return: return-value</span>
-<a name="l00069"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#b4181250db3d8d191c1728dca19627eb">00069</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#b4181250db3d8d191c1728dca19627eb">parseXMLFile</a>(self,xml_file):
-<a name="l00070"></a>00070         <span class="keywordflow">try</span>:
-<a name="l00071"></a>00071             handler = FB_XMLHandler.FB_XMLHandler(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>)
-<a name="l00072"></a>00072             saxparser = xml.sax.make_parser()
-<a name="l00073"></a>00073             saxparser.setContentHandler(handler)
-<a name="l00074"></a>00074             saxparser.parse(xml_file)
-<a name="l00075"></a>00075 
-<a name="l00076"></a>00076             <span class="keywordflow">return</span> handler
-<a name="l00077"></a>00077         <span class="keywordflow">except</span>:
-<a name="l00078"></a>00078             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"General error at saxparser: "</span> + xml_file,2)
-<a name="l00079"></a>00079             <span class="keywordflow">return</span> -1
-<a name="l00080"></a>00080 
-<a name="l00081"></a>00081     <span class="comment">##detect all Products within the given Product-Data-File</span>
-<a name="l00082"></a>00082     <span class="comment">#@return: List of FB_Product Instances</span>
-<a name="l00083"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#8ffbc8c341a3f192a68df64fe38f9ad9">00083</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#8ffbc8c341a3f192a68df64fe38f9ad9">getProducts</a>(self,xml_handler):
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085         <span class="keywordflow">try</span>:
-<a name="l00086"></a>00086             ProductList = xml_handler.getProductList()
-<a name="l00087"></a>00087             <span class="keywordflow">return</span> ProductList
-<a name="l00088"></a>00088 
-<a name="l00089"></a>00089         <span class="keywordflow">except</span>:
-<a name="l00090"></a>00090             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"Error at 'getProducts'"</span> ,2)
-<a name="l00091"></a>00091             <span class="keywordflow">return</span> -1
-<a name="l00092"></a>00092 
-<a name="l00093"></a>00093 
-<a name="l00094"></a>00094     <span class="comment">##detect all Applications within the given Product-Data-File</span>
-<a name="l00095"></a>00095     <span class="comment">#@param xml-File: Path and Filename of sourcefile</span>
-<a name="l00096"></a>00096     <span class="comment">#@return: List of FB_Applications Instances and Manufacturer-Data</span>
-<a name="l00097"></a>00097     <span class="comment">#to get Manufacturer-Data you also have to call getApplications</span>
-<a name="l00098"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7ec872d0b59862ad546b4423d0e107af">00098</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7ec872d0b59862ad546b4423d0e107af">getApplications</a>(self,xml_handler):
+<a name="l00036"></a>00036     __LogObj = <span class="keywordtype">None</span>
+<a name="l00037"></a>00037     __DOMObj = <span class="keywordtype">None</span>
+<a name="l00038"></a>00038     __xml_file = <span class="stringliteral">""</span>
+<a name="l00039"></a>00039     __handler = -1     <span class="comment">#instance of XML-handler</span>
+<a name="l00040"></a>00040     __ProductList = <span class="keywordtype">None</span>    <span class="comment">#List of instances of read Products</span>
+<a name="l00041"></a>00041     __AppList = <span class="keywordtype">None</span>        <span class="comment">#List of instances of read Applications</span>
+<a name="l00042"></a>00042     __ManufactList = <span class="keywordtype">None</span>   <span class="comment">#List of instances of read Manufacturers</span>
+<a name="l00043"></a>00043     __CommObjList = <span class="keywordtype">None</span>    <span class="comment">#List of instances of read Communication Objects</span>
+<a name="l00044"></a>00044     __Prod2ProgrList = <span class="keywordtype">None</span> <span class="comment">#List of instances of read Product to Program</span>
+<a name="l00045"></a>00045     __MaskList = <span class="keywordtype">None</span>       <span class="comment">#List of instances of read Mask</span>
+<a name="l00046"></a>00046 
+<a name="l00047"></a>00047     <span class="comment">##Constructor</span>
+<a name="l00048"></a>00048     <span class="comment">#for each product file you have to create an instance of FB_XML</span>
+<a name="l00049"></a>00049     <span class="comment">#@param LogObj: Log-File-Object to log all events within this inctance</span>
+<a name="l00050"></a>00050     <span class="comment">#@param file: Path and Filename of the xml-data-file</span>
+<a name="l00051"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#72d5e4166546d5f1e889546045b78501">00051</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#72d5e4166546d5f1e889546045b78501">__init__</a>(self,LogObj,file):
+<a name="l00052"></a>00052         self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a> = LogObj
+<a name="l00053"></a>00053         self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#d7e1fdcbad18369f46dad0fb934a1fd4">__xml_file</a> = file
+<a name="l00054"></a>00054 
+<a name="l00055"></a>00055 
+<a name="l00056"></a>00056     <span class="comment">##return the current DOM-Object</span>
+<a name="l00057"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#25950697ad7afaae17df961ee55558ca">00057</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#25950697ad7afaae17df961ee55558ca" title="return the current DOM-Object">getDOMObj</a>(self):
+<a name="l00058"></a>00058         self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#935a5e6a09b62383156d9c75b6de066a">__DOMObj</a> = parse(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#d7e1fdcbad18369f46dad0fb934a1fd4">__xml_file</a>)
+<a name="l00059"></a>00059         <span class="keywordflow">return</span> self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#935a5e6a09b62383156d9c75b6de066a">__DOMObj</a>
+<a name="l00060"></a>00060 
+<a name="l00061"></a>00061     <span class="comment">##save Documents to XML</span>
+<a name="l00062"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7287c829a283149c5bd6f4c29508a698">00062</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7287c829a283149c5bd6f4c29508a698" title="save Documents to XML">SaveDocument</a>(self):
+<a name="l00063"></a>00063         <span class="keywordflow">try</span>:
+<a name="l00064"></a>00064             <span class="comment">#self.__DOMObj = self.getDOMObj()</span>
+<a name="l00065"></a>00065             OutFileObj = open(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#d7e1fdcbad18369f46dad0fb934a1fd4">__xml_file</a>,<span class="stringliteral">"w"</span>)
+<a name="l00066"></a>00066 
+<a name="l00067"></a>00067             <span class="comment">#***************************************************************************************</span>
+<a name="l00068"></a>00068             <span class="comment">#products</span>
+<a name="l00069"></a>00069             <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#9e738b00b3480d92f860a7a086482506">SaveElements</a>(FB_Constants.ProductNode, self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#c7d72a52487ebf2683822bf120779b10">__ProductList</a>) == <span class="keyword">False</span>):
+<a name="l00070"></a>00070                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"error at saving product data -&gt; no data object available"</span>,1)
+<a name="l00071"></a>00071             <span class="comment">#***************************************************************************************</span>
+<a name="l00072"></a>00072             <span class="comment">#Applications</span>
+<a name="l00073"></a>00073             <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#9e738b00b3480d92f860a7a086482506">SaveElements</a>(FB_Constants.AppNode, self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#a98d2f0ba4f822e27d2d8be65e7197ac">__AppList</a>) == <span class="keyword">False</span>):
+<a name="l00074"></a>00074                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"error at saving application data -&gt; no data object available"</span>,1)
+<a name="l00075"></a>00075             <span class="comment">#***************************************************************************************</span>
+<a name="l00076"></a>00076             <span class="comment">#Manufacturer</span>
+<a name="l00077"></a>00077             <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#9e738b00b3480d92f860a7a086482506">SaveElements</a>(FB_Constants.ManufacturerNode, self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#4d5bff5de3ae765e4a35e6d878c676af">__ManufactList</a>) == <span class="keyword">False</span>):
+<a name="l00078"></a>00078                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"error at saving manufacturer data -&gt; no data object available"</span>,1)
+<a name="l00079"></a>00079             <span class="comment">#***************************************************************************************</span>
+<a name="l00080"></a>00080             <span class="comment">#Communication Objects</span>
+<a name="l00081"></a>00081             <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#9e738b00b3480d92f860a7a086482506">SaveElements</a>(FB_Constants.CommObjNode, self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#18bb5e7267d916f704df377195f887d3">__CommObjList</a>) == <span class="keyword">False</span>):
+<a name="l00082"></a>00082                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"error at saving communications objects -&gt; no data object available"</span>,1)
+<a name="l00083"></a>00083             <span class="comment">#***************************************************************************************</span>
+<a name="l00084"></a>00084             <span class="comment">#Product to Program assignment</span>
+<a name="l00085"></a>00085             <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#9e738b00b3480d92f860a7a086482506">SaveElements</a>(FB_Constants.Prod2ProgrNode, self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#93908fcc9ba28596709f4f85e70b8429">__Prod2ProgrList</a>) == <span class="keyword">False</span>):
+<a name="l00086"></a>00086                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"error at saving Product to Program objects -&gt; no data object available"</span>,1)
+<a name="l00087"></a>00087             <span class="comment">#***************************************************************************************</span>
+<a name="l00088"></a>00088             <span class="comment">#Mask</span>
+<a name="l00089"></a>00089             <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#9e738b00b3480d92f860a7a086482506">SaveElements</a>(FB_Constants.MaskNode, self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#de76864a7e1b63f6691b38ab0b6f0c2a">__MaskList</a>) == <span class="keyword">False</span>):
+<a name="l00090"></a>00090                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"error at saving mask data -&gt; no data object available"</span>,1)
+<a name="l00091"></a>00091 
+<a name="l00092"></a>00092             String = self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#935a5e6a09b62383156d9c75b6de066a">__DOMObj</a>.toxml(encoding = <span class="stringliteral">"ISO-8859-1"</span>)
+<a name="l00093"></a>00093             OutFileObj.write(String)
+<a name="l00094"></a>00094             OutFileObj.close()
+<a name="l00095"></a>00095 
+<a name="l00096"></a>00096         <span class="keywordflow">except</span> IOError:
+<a name="l00097"></a>00097             <span class="comment">#LOG File</span>
+<a name="l00098"></a>00098             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(IOError.message + <span class="stringliteral">" "</span> + IOError.filename + <span class="stringliteral">" "</span> + IOError.errno,2)
 <a name="l00099"></a>00099 
-<a name="l00100"></a>00100         <span class="keywordflow">try</span>:
-<a name="l00101"></a>00101             AppList = xml_handler.getAppList()
-<a name="l00102"></a>00102             Manufac = xml_handler.getManufacturerList()
-<a name="l00103"></a>00103 
-<a name="l00104"></a>00104             <span class="keywordflow">return</span> [AppList,Manufac]
-<a name="l00105"></a>00105 
-<a name="l00106"></a>00106         <span class="keywordflow">except</span>:
-<a name="l00107"></a>00107             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"Error at 'getApplications'"</span> ,2)
-<a name="l00108"></a>00108             <span class="keywordflow">return</span> -1
-<a name="l00109"></a>00109 
-<a name="l00110"></a>00110 
-</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Sun Dec 30 20:49:03 2007 for Freebus ETS by&nbsp;
+<a name="l00100"></a>00100     <span class="comment">##copy the internal data to the DOM-Obj -&gt; save data back to file</span>
+<a name="l00101"></a>00101     <span class="comment">#@param NodeList: List of main-tree Elements (xml-product base data) -&gt; see Constants</span>
+<a name="l00102"></a>00102     <span class="comment">#@param ElementList: List of elements which should be saved</span>
+<a name="l00103"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#9e738b00b3480d92f860a7a086482506">00103</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#9e738b00b3480d92f860a7a086482506">SaveElements</a>(self,NodeList,ElementList):
+<a name="l00104"></a>00104         <span class="keywordflow">try</span>:
+<a name="l00105"></a>00105             parentNode = self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#935a5e6a09b62383156d9c75b6de066a">__DOMObj</a>.documentElement
+<a name="l00106"></a>00106             SubNodeList =  parentNode.getElementsByTagName(NodeList[0])
+<a name="l00107"></a>00107 
+<a name="l00108"></a>00108             <span class="comment">#read out data copy they into DOMObj</span>
+<a name="l00109"></a>00109             <span class="keywordflow">if</span>(ElementList &lt;&gt; <span class="keywordtype">None</span>):
+<a name="l00110"></a>00110                 <span class="comment">#iterate through each Product in ProductList</span>
+<a name="l00111"></a>00111                 <span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(len(ElementList)):
+<a name="l00112"></a>00112                     <span class="comment">#for each element in Node: "ProductNode"</span>
+<a name="l00113"></a>00113 
+<a name="l00114"></a>00114                     <span class="keywordflow">for</span> j <span class="keywordflow">in</span> range(1,len(NodeList)):
+<a name="l00115"></a>00115 
+<a name="l00116"></a>00116                         <span class="keywordflow">if</span>(NodeList[0] == <span class="stringliteral">"manufacturer"</span>):
+<a name="l00117"></a>00117                             Value = ElementList[i].getManufacturer(j)
+<a name="l00118"></a>00118                         <span class="keywordflow">elif</span>(NodeList[0] == <span class="stringliteral">"hw_product"</span>):
+<a name="l00119"></a>00119                             Value = ElementList[i].getProduct(j)
+<a name="l00120"></a>00120                         <span class="keywordflow">elif</span>(NodeList[0] == <span class="stringliteral">"mask"</span>):
+<a name="l00121"></a>00121                             Value = ElementList[i].getMask(j)
+<a name="l00122"></a>00122                         <span class="keywordflow">elif</span>(NodeList[0] == <span class="stringliteral">"application_program"</span>):
+<a name="l00123"></a>00123                             Value = ElementList[i].getApp(j)
+<a name="l00124"></a>00124                         <span class="keywordflow">elif</span>(NodeList[0] == <span class="stringliteral">"communication_object"</span>):
+<a name="l00125"></a>00125                             Value =  ElementList[i].getCommObj(j)
+<a name="l00126"></a>00126                         <span class="keywordflow">elif</span>(NodeList[0] == <span class="stringliteral">"product_to_program"</span>):
+<a name="l00127"></a>00127                             Value = ElementList[i].getProd2Prog(j)
+<a name="l00128"></a>00128 
+<a name="l00129"></a>00129                         <span class="comment">#iterate List of Nodes within MainNode (ex. hw_product)</span>
+<a name="l00130"></a>00130                         <span class="comment">#find all Elements in hw_product</span>
+<a name="l00131"></a>00131                         Element = SubNodeList[i].getElementsByTagName(NodeList[j])
+<a name="l00132"></a>00132                         <span class="comment">#does Element-Node exist ? (different ets version-fils -&gt; different element-counts</span>
+<a name="l00133"></a>00133                         <span class="keywordflow">if</span>(len(Element)&gt;0):
+<a name="l00134"></a>00134                             <span class="keywordflow">if</span>(NodeList[j] == Element[0].tagName):
+<a name="l00135"></a>00135                                 <span class="comment">#save internal Value to XML-Object</span>
+<a name="l00136"></a>00136                                 Element[0].firstChild.data = unicode(Value,<span class="stringliteral">"ISO-8859-1"</span>)
+<a name="l00137"></a>00137 
+<a name="l00138"></a>00138                 <span class="keywordflow">return</span> <span class="keyword">True</span>
+<a name="l00139"></a>00139             <span class="keywordflow">else</span>:
+<a name="l00140"></a>00140                 <span class="keywordflow">return</span> <span class="keyword">False</span>
+<a name="l00141"></a>00141 
+<a name="l00142"></a>00142         <span class="keywordflow">except</span>:
+<a name="l00143"></a>00143             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"Exception at saving Elements to xml object at "</span>,2)
+<a name="l00144"></a>00144             <span class="keywordflow">return</span> <span class="keyword">False</span>
+<a name="l00145"></a>00145 
+<a name="l00146"></a>00146 
+<a name="l00147"></a>00147     <span class="comment">##parse entire XML-Data-File. All Sub-Handler will be called automatically</span>
+<a name="l00148"></a>00148     <span class="comment">##After that you can call all provided functions to get products,</span>
+<a name="l00149"></a>00149     <span class="comment">##applications, communcations-objects etc.</span>
+<a name="l00150"></a>00150     <span class="comment">#@param xml-File: Path and Filename of sourcefile</span>
+<a name="l00151"></a>00151     <span class="comment">#@param return: return-value</span>
+<a name="l00152"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#b4181250db3d8d191c1728dca19627eb">00152</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#b4181250db3d8d191c1728dca19627eb">parseXMLFile</a>(self):
+<a name="l00153"></a>00153         <span class="keywordflow">try</span>:
+<a name="l00154"></a>00154             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#935a5e6a09b62383156d9c75b6de066a">__DOMObj</a> = self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#25950697ad7afaae17df961ee55558ca" title="return the current DOM-Object">getDOMObj</a>()
+<a name="l00155"></a>00155 
+<a name="l00156"></a>00156             <span class="comment">#saxparser</span>
+<a name="l00157"></a>00157             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#4670160b82fde34dc1824c1f5bddb1b5">__handler</a> = FB_XMLHandler.FB_XMLHandler(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>)
+<a name="l00158"></a>00158             saxparser = xml.sax.make_parser()
+<a name="l00159"></a>00159             saxparser.setContentHandler(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#4670160b82fde34dc1824c1f5bddb1b5">__handler</a>)
+<a name="l00160"></a>00160             saxparser.parse(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#d7e1fdcbad18369f46dad0fb934a1fd4">__xml_file</a>)
+<a name="l00161"></a>00161 
+<a name="l00162"></a>00162             <span class="keywordflow">return</span> self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#4670160b82fde34dc1824c1f5bddb1b5">__handler</a>
+<a name="l00163"></a>00163         <span class="keywordflow">except</span>:
+<a name="l00164"></a>00164             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"General error at saxparser: "</span> + self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#d7e1fdcbad18369f46dad0fb934a1fd4">__xml_file</a>,2)
+<a name="l00165"></a>00165             <span class="keywordflow">return</span> -1
+<a name="l00166"></a>00166 
+<a name="l00167"></a>00167     <span class="comment">##detect all Products within the given Product-Data-File</span>
+<a name="l00168"></a>00168     <span class="comment">#@return: List of FB_Product Instances</span>
+<a name="l00169"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#8ffbc8c341a3f192a68df64fe38f9ad9">00169</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#8ffbc8c341a3f192a68df64fe38f9ad9">getProducts</a>(self,xml_handler):
+<a name="l00170"></a>00170 
+<a name="l00171"></a>00171         <span class="keywordflow">try</span>:
+<a name="l00172"></a>00172             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#c7d72a52487ebf2683822bf120779b10">__ProductList</a> = xml_handler.getProductList()
+<a name="l00173"></a>00173             <span class="keywordflow">return</span> self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#c7d72a52487ebf2683822bf120779b10">__ProductList</a>
+<a name="l00174"></a>00174 
+<a name="l00175"></a>00175         <span class="keywordflow">except</span>:
+<a name="l00176"></a>00176             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"Error at 'getProducts'"</span> ,2)
+<a name="l00177"></a>00177             <span class="keywordflow">return</span> -1
+<a name="l00178"></a>00178 
+<a name="l00179"></a>00179 
+<a name="l00180"></a>00180     <span class="comment">##detect all Applications within the given Product-Data-File</span>
+<a name="l00181"></a>00181     <span class="comment">#@param xml-File: Path and Filename of sourcefile</span>
+<a name="l00182"></a>00182     <span class="comment">#@return: List of FB_Applications Instances and Manufacturer-Data</span>
+<a name="l00183"></a>00183     <span class="comment">#to get Manufacturer-Data you also have to call getApplications</span>
+<a name="l00184"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7ec872d0b59862ad546b4423d0e107af">00184</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7ec872d0b59862ad546b4423d0e107af">getApplications</a>(self,xml_handler):
+<a name="l00185"></a>00185 
+<a name="l00186"></a>00186         <span class="keywordflow">try</span>:
+<a name="l00187"></a>00187             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#a98d2f0ba4f822e27d2d8be65e7197ac">__AppList</a> = xml_handler.getAppList()
+<a name="l00188"></a>00188             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#4d5bff5de3ae765e4a35e6d878c676af">__ManufactList</a> = xml_handler.getManufacturerList()
+<a name="l00189"></a>00189 
+<a name="l00190"></a>00190             <span class="keywordflow">return</span> [self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#a98d2f0ba4f822e27d2d8be65e7197ac">__AppList</a>,self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#4d5bff5de3ae765e4a35e6d878c676af">__ManufactList</a>]
+<a name="l00191"></a>00191 
+<a name="l00192"></a>00192         <span class="keywordflow">except</span>:
+<a name="l00193"></a>00193             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"Error at 'getApplications'"</span> ,2)
+<a name="l00194"></a>00194             <span class="keywordflow">return</span> -1
+<a name="l00195"></a>00195 
+<a name="l00196"></a>00196     <span class="comment">##detect all communication-objects within the given Product-Data-File</span>
+<a name="l00197"></a>00197     <span class="comment">#@param xml-File: Path and Filename of sourcefile</span>
+<a name="l00198"></a>00198     <span class="comment">#@return: List of FB_CommunicationObj Instances</span>
+<a name="l00199"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#ab99b110a0c709db51281365ede367db">00199</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#ab99b110a0c709db51281365ede367db">getCommunicationObjects</a>(self,xml_handler):
+<a name="l00200"></a>00200 
+<a name="l00201"></a>00201         <span class="keywordflow">try</span>:
+<a name="l00202"></a>00202             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#18bb5e7267d916f704df377195f887d3">__CommObjList</a> = xml_handler.getCommObjList()
+<a name="l00203"></a>00203 
+<a name="l00204"></a>00204             <span class="keywordflow">return</span> self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#18bb5e7267d916f704df377195f887d3">__CommObjList</a>
+<a name="l00205"></a>00205 
+<a name="l00206"></a>00206         <span class="keywordflow">except</span>:
+<a name="l00207"></a>00207             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"Error at 'getCommunicationObjects'"</span> ,2)
+<a name="l00208"></a>00208             <span class="keywordflow">return</span> -1
+<a name="l00209"></a>00209 
+<a name="l00210"></a>00210     <span class="comment">##detect all product to programs assignments within the given Product-Data-File</span>
+<a name="l00211"></a>00211     <span class="comment">#@param xml-File: Path and Filename of sourcefile</span>
+<a name="l00212"></a>00212     <span class="comment">#@return: List of FB_Prod2Prog Instances</span>
+<a name="l00213"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#9b801c2208c249f24cc401fac44d86be">00213</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#9b801c2208c249f24cc401fac44d86be">getProd2Progr</a>(self,xml_handler):
+<a name="l00214"></a>00214 
+<a name="l00215"></a>00215         <span class="keywordflow">try</span>:
+<a name="l00216"></a>00216             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#93908fcc9ba28596709f4f85e70b8429">__Prod2ProgrList</a> = xml_handler.getProd2ProgrList()
+<a name="l00217"></a>00217 
+<a name="l00218"></a>00218             <span class="keywordflow">return</span> self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#93908fcc9ba28596709f4f85e70b8429">__Prod2ProgrList</a>
+<a name="l00219"></a>00219 
+<a name="l00220"></a>00220         <span class="keywordflow">except</span>:
+<a name="l00221"></a>00221             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"Error at 'getProd2Progr'"</span> ,2)
+<a name="l00222"></a>00222             <span class="keywordflow">return</span> -1
+<a name="l00223"></a>00223 
+<a name="l00224"></a>00224     <span class="comment">##detect all mask objects within the given Product-Data-File</span>
+<a name="l00225"></a>00225     <span class="comment">#@param xml-File: Path and Filename of sourcefile</span>
+<a name="l00226"></a>00226     <span class="comment">#@return: List of FB_Mask Instances</span>
+<a name="l00227"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#62f055cec90501b7792d3598c1012f9d">00227</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#62f055cec90501b7792d3598c1012f9d">getMask</a>(self,xml_handler):
+<a name="l00228"></a>00228 
+<a name="l00229"></a>00229         <span class="keywordflow">try</span>:
+<a name="l00230"></a>00230             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#de76864a7e1b63f6691b38ab0b6f0c2a">__MaskList</a> = xml_handler.getMaskList()
+<a name="l00231"></a>00231 
+<a name="l00232"></a>00232             <span class="keywordflow">return</span> self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#de76864a7e1b63f6691b38ab0b6f0c2a">__MaskList</a>
+<a name="l00233"></a>00233 
+<a name="l00234"></a>00234         <span class="keywordflow">except</span>:
+<a name="l00235"></a>00235             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"Error at 'getMaskList'"</span> ,2)
+<a name="l00236"></a>00236             <span class="keywordflow">return</span> -1
+<a name="l00237"></a>00237 
+<a name="l00238"></a>00238 <span class="comment">#*********************************************************************************</span>
+<a name="l00239"></a>00239     <span class="comment">##craete new xml-product-data file and add root node</span>
+<a name="l00240"></a>00240     <span class="comment">#@param xml-Filename+Path:</span>
+<a name="l00241"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#c8f17c96c774904f34513e8e15bce302">00241</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#c8f17c96c774904f34513e8e15bce302">CreateProductFile</a>(self):
+<a name="l00242"></a>00242         <span class="keywordflow">try</span>:
+<a name="l00243"></a>00243 
+<a name="l00244"></a>00244             <span class="comment">#Start = """&lt;?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?&gt;\n</span>
+<a name="l00245"></a>00245             Start = <span class="stringliteral">"""&lt;?xml version=\"1.0\" ?&gt;\n</span>
+<a name="l00246"></a>00246 <span class="stringliteral">                &lt;eib-products&gt;&lt;/eib-products&gt;"""</span>
+<a name="l00247"></a>00247             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#935a5e6a09b62383156d9c75b6de066a">__DOMObj</a> = minidom.parseString(Start)
+<a name="l00248"></a>00248 
+<a name="l00249"></a>00249             newDocument = self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#935a5e6a09b62383156d9c75b6de066a">__DOMObj</a>.documentElement
+<a name="l00250"></a>00250 
+<a name="l00251"></a>00251             <span class="comment">#insert all nodes through iteration of MainNodes</span>
+<a name="l00252"></a>00252             <span class="comment">#or choise of single nodes</span>
+<a name="l00253"></a>00253 
+<a name="l00254"></a>00254 <span class="comment">#----------------------------------------------------------------------------------</span>
+<a name="l00255"></a>00255             <span class="comment">#manufacturer</span>
+<a name="l00256"></a>00256             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#1db153d11510b00f0d3b686a0522ccdf">CreateNode</a>(newDocument,FB_Constants.ManufacturerNode)
+<a name="l00257"></a>00257 <span class="comment">#----------------------------------------------------------------------------------</span>
+<a name="l00258"></a>00258             <span class="comment">#functional_entity</span>
+<a name="l00259"></a>00259             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#1db153d11510b00f0d3b686a0522ccdf">CreateNode</a>(newDocument,FB_Constants.FunctionalNode)
+<a name="l00260"></a>00260 <span class="comment">#----------------------------------------------------------------------------------</span>
+<a name="l00261"></a>00261             <span class="comment">#bcu_type</span>
+<a name="l00262"></a>00262             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#1db153d11510b00f0d3b686a0522ccdf">CreateNode</a>(newDocument,FB_Constants.BCUNode)
+<a name="l00263"></a>00263 <span class="comment">#----------------------------------------------------------------------------------</span>
+<a name="l00264"></a>00264             <span class="comment">#symbol</span>
+<a name="l00265"></a>00265             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#1db153d11510b00f0d3b686a0522ccdf">CreateNode</a>(newDocument,FB_Constants.SymbolNode)
+<a name="l00266"></a>00266 <span class="comment">#----------------------------------------------------------------------------------</span>
+<a name="l00267"></a>00267             <span class="comment">#hw_product</span>
+<a name="l00268"></a>00268             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#1db153d11510b00f0d3b686a0522ccdf">CreateNode</a>(newDocument,FB_Constants.ProductNode)
+<a name="l00269"></a>00269 <span class="comment">#----------------------------------------------------------------------------------</span>
+<a name="l00270"></a>00270             <span class="comment">#catalog_entry</span>
+<a name="l00271"></a>00271             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#1db153d11510b00f0d3b686a0522ccdf">CreateNode</a>(newDocument,FB_Constants.CatalogNode)
+<a name="l00272"></a>00272 <span class="comment">#----------------------------------------------------------------------------------</span>
+<a name="l00273"></a>00273             <span class="comment">#medium_type</span>
+<a name="l00274"></a>00274             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#1db153d11510b00f0d3b686a0522ccdf">CreateNode</a>(newDocument,FB_Constants.MediumNode)
+<a name="l00275"></a>00275 <span class="comment">#----------------------------------------------------------------------------------</span>
+<a name="l00276"></a>00276             <span class="comment">#mask</span>
+<a name="l00277"></a>00277             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#1db153d11510b00f0d3b686a0522ccdf">CreateNode</a>(newDocument,FB_Constants.MaskNode)
+<a name="l00278"></a>00278 <span class="comment">#----------------------------------------------------------------------------------</span>
+<a name="l00279"></a>00279            <span class="comment">#application_program</span>
+<a name="l00280"></a>00280             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#1db153d11510b00f0d3b686a0522ccdf">CreateNode</a>(newDocument,FB_Constants.AppNode)
+<a name="l00281"></a>00281 <span class="comment">#----------------------------------------------------------------------------------</span>
+<a name="l00282"></a>00282           <span class="comment">#virtual_device</span>
+<a name="l00283"></a>00283             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#1db153d11510b00f0d3b686a0522ccdf">CreateNode</a>(newDocument,FB_Constants.VirDeviceNode)
+<a name="l00284"></a>00284 <span class="comment">#----------------------------------------------------------------------------------</span>
+<a name="l00285"></a>00285           <span class="comment">#product to program...</span>
+<a name="l00286"></a>00286             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#1db153d11510b00f0d3b686a0522ccdf">CreateNode</a>(newDocument,FB_Constants.Prod2ProgrNode)
+<a name="l00287"></a>00287 <span class="comment">#----------------------------------------------------------------------------------</span>
+<a name="l00288"></a>00288           <span class="comment">#communication objects</span>
+<a name="l00289"></a>00289             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#1db153d11510b00f0d3b686a0522ccdf">CreateNode</a>(newDocument,FB_Constants.CommObjNode)
+<a name="l00290"></a>00290 <span class="comment">#----------------------------------------------------------------------------------</span>
+<a name="l00291"></a>00291 
+<a name="l00292"></a>00292 <span class="comment">#.....ab hier der Rest</span>
+<a name="l00293"></a>00293 
+<a name="l00294"></a>00294             <span class="comment">#open the new file</span>
+<a name="l00295"></a>00295             OutFileObj = open(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#d7e1fdcbad18369f46dad0fb934a1fd4">__xml_file</a>,<span class="stringliteral">"w+"</span>)
+<a name="l00296"></a>00296             <span class="comment">#write das zeugs</span>
+<a name="l00297"></a>00297             String = self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#935a5e6a09b62383156d9c75b6de066a">__DOMObj</a>.toxml(encoding = <span class="stringliteral">"ISO-8859-1"</span>)
+<a name="l00298"></a>00298 
+<a name="l00299"></a>00299             OutFileObj.write(String)
+<a name="l00300"></a>00300             OutFileObj.close()
+<a name="l00301"></a>00301 
+<a name="l00302"></a>00302         <span class="keywordflow">except</span> IOError:
+<a name="l00303"></a>00303             <span class="comment">#LOG File</span>
+<a name="l00304"></a>00304             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(IOError.message + <span class="stringliteral">" "</span> + IOError.filename + <span class="stringliteral">" "</span> + IOError.errno,2)
+<a name="l00305"></a>00305 
+<a name="l00306"></a>00306     <span class="comment">##craete ElementNodes at the new xml data file</span>
+<a name="l00307"></a>00307     <span class="comment">#@param Document: Document of the new DOM-object file</span>
+<a name="l00308"></a>00308     <span class="comment">#@param Element: Element which will be added</span>
+<a name="l00309"></a><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#1db153d11510b00f0d3b686a0522ccdf">00309</a>     <span class="keyword">def </span><a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#1db153d11510b00f0d3b686a0522ccdf">CreateNode</a>(self,Document,Element):
+<a name="l00310"></a>00310         <span class="keywordflow">try</span>:
+<a name="l00311"></a>00311             item = self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#935a5e6a09b62383156d9c75b6de066a">__DOMObj</a>.createElement(Element[0])
+<a name="l00312"></a>00312             Document.appendChild(item)
+<a name="l00313"></a>00313             <span class="comment">#SubNode-List</span>
+<a name="l00314"></a>00314             SubNode = self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#935a5e6a09b62383156d9c75b6de066a">__DOMObj</a>.getElementsByTagName(Element[0])
+<a name="l00315"></a>00315 
+<a name="l00316"></a>00316             <span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(1,len(Element)):
+<a name="l00317"></a>00317 
+<a name="l00318"></a>00318                 text = self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#935a5e6a09b62383156d9c75b6de066a">__DOMObj</a>.createTextNode(<span class="stringliteral">" "</span>)
+<a name="l00319"></a>00319                 item = self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#935a5e6a09b62383156d9c75b6de066a">__DOMObj</a>.createElement(Element[i])
+<a name="l00320"></a>00320                 item.appendChild(text)
+<a name="l00321"></a>00321                 SubNode[0].appendChild(item)
+<a name="l00322"></a>00322 
+<a name="l00323"></a>00323         <span class="keywordflow">except</span>:
+<a name="l00324"></a>00324             <span class="comment">#LOG File</span>
+<a name="l00325"></a>00325             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_1_1_f_b___x_m_l.html#7be7bd22975a956aecfe1381f59aea28">__LogObj</a>.NewLog(<span class="stringliteral">"Error at creation of Node:"</span> + Element ,2)
+<a name="l00326"></a>00326 
+</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Sat Jan 19 16:02:08 2008 for Freebus ETS by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

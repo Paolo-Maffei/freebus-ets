@@ -50,6 +50,119 @@ class FB_Mask:
         #print "okk"
         pass
 
+    def setMask(self,Index, Value):
+        if(Index == 1):
+            self.__MaskID = Value
+        elif(Index == 2):
+            self.__MaskVersion = Value
+        elif(Index == 3):
+            self.__UserRamStart = Value
+        elif(Index == 4):
+            self.__UserRamEnd = Value
+        elif(Index == 5):
+            self.__UserEEpromStart = Value
+        elif(Index == 6):
+            self.__UserEEpromEnd = Value
+        elif(Index == 7):
+            self.__RunErrorAddress = Value
+        elif(Index == 8):
+            self.__Address_Tab_Addr = Value
+        elif(Index == 9):
+            self.__AssocTab_Addr = Value
+        elif(Index == 10):
+            self.__CommsTab_Addr = Value
+        elif(Index == 11):
+            self.__Manufact_Data_Addr = Value
+        elif(Index == 12):
+            self.__Manufact_Data_Size = Value
+        elif(Index == 13):
+            self.__Manufact_ID_Addr = Value
+        elif(Index == 14):
+            self.__Rout_Addr = Value
+        elif(Index == 15):
+            self.__Manufact_ID_Protetect = Value
+        elif(Index == 16):
+            self.__Mask_Version_Name = Value
+        elif(Index == 17):
+            self.__Mask_EEpromData = Value
+        elif(Index == 18):
+            self.__Mask_Data_Length = Value
+        elif(Index == 19):
+            self.__Address_Tab = Value
+        elif(Index == 20):
+            self.__Assoc_Tab = Value
+        elif(Index == 21):
+            self.__App_Program = Value
+        elif(Index == 22):
+            self.__PEI_Program = Value
+        elif(Index == 23):
+            self.__Load_Control_Addr = Value
+        elif(Index == 24):
+            self.__Run_Control_Addr = Value
+        elif(Index == 25):
+            self.__Port_Addr_Protect = Value
+        elif(Index == 26):
+            self.__Medium_TypeNo = Value
+        elif(Index == 27):
+            self.__BCU_TypeNo = Value
+
+    def getMask(self,Index):
+        if(Index == 1):
+            return self.__MaskID
+        elif(Index == 2):
+            return self.__MaskVersion
+        elif(Index == 3):
+            return self.__UserRamStart
+        elif(Index == 4):
+            return self.__UserRamEnd
+        elif(Index == 5):
+            return self.__UserEEpromStart
+        elif(Index == 6):
+            return self.__UserEEpromEnd
+        elif(Index == 7):
+            return self.__RunErrorAddress
+        elif(Index == 8):
+            return self.__Address_Tab_Addr
+        elif(Index == 9):
+            return self.__AssocTab_Addr
+        elif(Index == 10):
+            return self.__CommsTab_Addr
+        elif(Index == 11):
+            return self.__Manufact_Data_Addr
+        elif(Index == 12):
+            return self.__Manufact_Data_Size
+        elif(Index == 13):
+            return self.__Manufact_ID_Addr
+        elif(Index == 14):
+            return self.__Rout_Addr
+        elif(Index == 15):
+            return self.__Manufact_ID_Protetect
+        elif(Index == 16):
+            return self.__Mask_Version_Name
+        elif(Index == 17):
+            return self.__Mask_EEpromData
+        elif(Index == 18):
+            return self.__Mask_Data_Length
+        elif(Index == 19):
+            return self.__Address_Tab
+        elif(Index == 20):
+            return self.__Assoc_Tab
+        elif(Index == 21):
+            return self.__App_Program
+        elif(Index == 22):
+            return self.__PEI_Program
+        elif(Index == 23):
+            return self.__Load_Control_Addr
+        elif(Index == 24):
+            return self.__Run_Control_Addr
+        elif(Index == 25):
+            return self.__Port_Addr_Protect
+        elif(Index == 26):
+            return self.__Medium_TypeNo
+        elif(Index == 27):
+            return self.__BCU_TypeNo
+
+
 #**********************************************************************
     #Handling MASK_ID
     def setMaskID(self,M_ID):

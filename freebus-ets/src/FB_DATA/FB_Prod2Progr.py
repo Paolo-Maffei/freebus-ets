@@ -32,6 +32,46 @@ class FB_Prod2Prog:
     def __init__(self):
         pass
 
+    def setProd2Prog(self,Index, Value):
+        if(Index == 1):
+            self.__Prod2Prog_ID = Value
+        elif(Index == 2):
+            self.__Product_ID = Value
+        elif(Index == 3):
+            self.__Program_ID = Value
+        elif(Index == 4):
+            self.__Prod2Prog_Status_Code = Value
+        elif(Index == 5):
+            self.__Reg_Number = Value
+        elif(Index == 6):
+            self.__Reg_Year = Value
+        elif(Index == 7):
+            self.__Orig_Reg_Number = Value
+        elif(Index == 8):
+            self.__Orig_Reg_Year = Value
+        elif(Index == 9):
+            self.__Reg_TS = Value
+
+    def getProd2Prog(self,Index):
+        if(Index == 1):
+            return self.__Prod2Prog_ID
+        elif(Index == 2):
+            return self.__Product_ID
+        elif(Index == 3):
+            return self.__Program_ID
+        elif(Index == 4):
+            return self.__Prod2Prog_Status_Code
+        elif(Index == 5):
+            return self.__Reg_Number
+        elif(Index == 6):
+            return self.__Reg_Year
+        elif(Index == 7):
+            return self.__Orig_Reg_Number
+        elif(Index == 8):
+            return self.__Orig_Reg_Year
+        elif(Index == 9):
+            return self.__Reg_TS
+
 #**********************************************************************
     #Handling PROD2PROG_ID
     def setProd2ProgID(self,PP_ID):

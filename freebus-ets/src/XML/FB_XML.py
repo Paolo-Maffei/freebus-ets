@@ -29,6 +29,8 @@ from FB_DATA import FB_Constants
 
 
 ##This class contains all Methods to work with the FB-XML Files
+#For each xml-product file you have to create an instance of "FB_XML"
+#in this version the sax-parser will be used
 class FB_XML:
 
     __LogObj = None
@@ -36,9 +38,16 @@ class FB_XML:
     __xml_file = ""
     __handler = -1     #instance of XML-handler
     __ProductList = None    #List of instances of read Products
+    __AppList = None        #List of instances of read Applications
+    __ManufactList = None   #List of instances of read Manufacturers
+    __CommObjList = None    #List of instances of read Communication Objects
+    __Prod2ProgrList = None #List of instances of read Product to Program
+    __MaskList = None       #List of instances of read Mask
 
     ##Constructor
     #for each product file you have to create an instance of FB_XML
+    #@param LogObj: Log-File-Object to log all events within this inctance
+    #@param file: Path and Filename of the xml-data-file
     def __init__(self,LogObj,file):
         self.__LogObj = LogObj
         self.__xml_file = file
@@ -55,39 +64,84 @@ class FB_XML:
             #self.__DOMObj = self.getDOMObj()
             OutFileObj = open(self.__xml_file,"w")
 
-            parentNode = self.__DOMObj.documentElement
-
-            #suche alle hw_products -> in List
-            SubNodeList =  parentNode.getElementsByTagName(FB_Constants.ProductNode[0])
-            #read out data copy they into DOMObj
-            if(self.__ProductList <> None):
-                #iterate through each Product in ProductList
-                for i in range(len(self.__ProductList)):
-                    #for each element in Node: "ProductNode"
-                    for j in range(1,len(FB_Constants.ProductNode)):
-                        Value = self.__ProductList[i].getProduct(j)
-                        #iterate List of Nodes within MainNode (ex. hw_product)
-                        #find all Elements in hw_product
-                        Element = SubNodeList[i].getElementsByTagName(FB_Constants.ProductNode[j])
-
-                        #does Element-Node exist ? (different ets version-fils -> different element-counts
-                        if(len(Element)>0):
-                            if(FB_Constants.ProductNode[j] == Element[0].tagName):
-                                #save internal Value to XML-Object
-                                Element[0].firstChild.data = Value
-
-            else:
+            #***************************************************************************************
+            #products
+            if(self.SaveElements(FB_Constants.ProductNode, self.__ProductList) == False):
                 self.__LogObj.NewLog("error at saving product data -> no data object available",1)
-
+            #***************************************************************************************
+            #Applications
+            if(self.SaveElements(FB_Constants.AppNode, self.__AppList) == False):
+                self.__LogObj.NewLog("error at saving application data -> no data object available",1)
+            #***************************************************************************************
+            #Manufacturer
+            if(self.SaveElements(FB_Constants.ManufacturerNode, self.__ManufactList) == False):
+                self.__LogObj.NewLog("error at saving manufacturer data -> no data object available",1)
+            #***************************************************************************************
+            #Communication Objects
+            if(self.SaveElements(FB_Constants.CommObjNode, self.__CommObjList) == False):
+                self.__LogObj.NewLog("error at saving communications objects -> no data object available",1)
+            #***************************************************************************************
+            #Product to Program assignment
+            if(self.SaveElements(FB_Constants.Prod2ProgrNode, self.__Prod2ProgrList) == False):
+                self.__LogObj.NewLog("error at saving Product to Program objects -> no data object available",1)
+            #***************************************************************************************
+            #Mask
+            if(self.SaveElements(FB_Constants.MaskNode, self.__MaskList) == False):
+                self.__LogObj.NewLog("error at saving mask data -> no data object available",1)
 
             String = self.__DOMObj.toxml(encoding = "ISO-8859-1")
-
             OutFileObj.write(String)
             OutFileObj.close()
 
         except IOError:
             #LOG File
             self.__LogObj.NewLog(IOError.message + " " + IOError.filename + " " + IOError.errno,2)
+
+    ##copy the internal data to the DOM-Obj -> save data back to file
+    #@param NodeList: List of main-tree Elements (xml-product base data) -> see Constants
+    #@param ElementList: List of elements which should be saved
+    def SaveElements(self,NodeList,ElementList):
+        try:
+            parentNode = self.__DOMObj.documentElement
+            SubNodeList =  parentNode.getElementsByTagName(NodeList[0])
+
+            #read out data copy they into DOMObj
+            if(ElementList <> None):
+                #iterate through each Product in ProductList
+                for i in range(len(ElementList)):
+                    #for each element in Node: "ProductNode"
+
+                    for j in range(1,len(NodeList)):
+
+                        if(NodeList[0] == "manufacturer"):
+                            Value = ElementList[i].getManufacturer(j)
+                        elif(NodeList[0] == "hw_product"):
+                            Value = ElementList[i].getProduct(j)
+                        elif(NodeList[0] == "mask"):
+                            Value = ElementList[i].getMask(j)
+                        elif(NodeList[0] == "application_program"):
+                            Value = ElementList[i].getApp(j)
+                        elif(NodeList[0] == "communication_object"):
+                            Value =  ElementList[i].getCommObj(j)
+                        elif(NodeList[0] == "product_to_program"):
+                            Value = ElementList[i].getProd2Prog(j)
+
+                        #iterate List of Nodes within MainNode (ex. hw_product)
+                        #find all Elements in hw_product
+                        Element = SubNodeList[i].getElementsByTagName(NodeList[j])
+                        #does Element-Node exist ? (different ets version-fils -> different element-counts
+                        if(len(Element)>0):
+                            if(NodeList[j] == Element[0].tagName):
+                                #save internal Value to XML-Object
+                                Element[0].firstChild.data = unicode(Value,"ISO-8859-1")
+
+                return True
+            else:
+                return False
+
+        except:
+            self.__LogObj.NewLog("Exception at saving Elements to xml object at ",2)
+            return False
 
 
     ##parse entire XML-Data-File. All Sub-Handler will be called automatically
@@ -99,6 +153,7 @@ class FB_XML:
         try:
             self.__DOMObj = self.getDOMObj()
 
+            #saxparser
             self.__handler = FB_XMLHandler.FB_XMLHandler(self.__LogObj)
             saxparser = xml.sax.make_parser()
             saxparser.setContentHandler(self.__handler)
@@ -129,10 +184,10 @@ class FB_XML:
     def getApplications(self,xml_handler):
 
         try:
-            AppList = xml_handler.getAppList()
-            Manufac = xml_handler.getManufacturerList()
+            self.__AppList = xml_handler.getAppList()
+            self.__ManufactList = xml_handler.getManufacturerList()
 
-            return [AppList,Manufac]
+            return [self.__AppList,self.__ManufactList]
 
         except:
             self.__LogObj.NewLog("Error at 'getApplications'" ,2)
@@ -144,9 +199,9 @@ class FB_XML:
     def getCommunicationObjects(self,xml_handler):
 
         try:
-            CommObjList = xml_handler.getCommObjList()
+            self.__CommObjList = xml_handler.getCommObjList()
 
-            return CommObjList
+            return self.__CommObjList
 
         except:
             self.__LogObj.NewLog("Error at 'getCommunicationObjects'" ,2)
@@ -158,9 +213,9 @@ class FB_XML:
     def getProd2Progr(self,xml_handler):
 
         try:
-            Prod2Prog = xml_handler.getProd2ProgrList()
+            self.__Prod2ProgrList = xml_handler.getProd2ProgrList()
 
-            return Prod2Prog
+            return self.__Prod2ProgrList
 
         except:
             self.__LogObj.NewLog("Error at 'getProd2Progr'" ,2)
@@ -172,9 +227,9 @@ class FB_XML:
     def getMask(self,xml_handler):
 
         try:
-            Mask = xml_handler.getMaskList()
+            self.__MaskList = xml_handler.getMaskList()
 
-            return Mask
+            return self.__MaskList
 
         except:
             self.__LogObj.NewLog("Error at 'getMaskList'" ,2)
@@ -227,6 +282,13 @@ class FB_XML:
           #virtual_device
             self.CreateNode(newDocument,FB_Constants.VirDeviceNode)
 #----------------------------------------------------------------------------------
+          #product to program...
+            self.CreateNode(newDocument,FB_Constants.Prod2ProgrNode)
+#----------------------------------------------------------------------------------
+          #communication objects
+            self.CreateNode(newDocument,FB_Constants.CommObjNode)
+#----------------------------------------------------------------------------------
+
 #.....ab hier der Rest
 
             #open the new file
@@ -261,16 +323,4 @@ class FB_XML:
         except:
             #LOG File
             self.__LogObj.NewLog("Error at creation of Node:" + Element ,2)
-
-    ##Add text elements to given DOM-Obj of XML-File
-    #@param SubNode: (Sub)-Node which contains al Nodes with textelements which should be edited
-    #@param Element: List of TextElements according to SubNode
-    def EditTextElement(self,SubNode,ElementList):
-        try:pass
-
-            #NodeList = SubNode.childNodes
-            #print NodeList
-        except:
-            #LOG File
-            self.__LogObj.NewLog("Error edit a Textelement:"  ,2)
 

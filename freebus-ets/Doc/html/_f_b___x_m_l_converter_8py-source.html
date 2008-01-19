@@ -85,250 +85,251 @@
 <a name="l00071"></a>00071 
 <a name="l00072"></a>00072                 <span class="comment">#write first two lines</span>
 <a name="l00073"></a>00073                 OutFileObj.write(<span class="stringliteral">"&lt;?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?&gt;\n"</span>)
-<a name="l00074"></a>00074                 OutFileObj.write(<span class="stringliteral">"&lt;eib-products&gt;\n"</span>)
-<a name="l00075"></a>00075 
-<a name="l00076"></a>00076                 <span class="comment">#read first line and compare of signum</span>
-<a name="l00077"></a>00077                 line = InFileObj.readline()
-<a name="l00078"></a>00078                 line = line.split(<span class="stringliteral">"\n"</span>)
-<a name="l00079"></a>00079 
-<a name="l00080"></a>00080                 <span class="keywordflow">if</span>(line[0] != <span class="stringliteral">"EX-IM"</span>):
-<a name="l00081"></a>00081                     <span class="comment">#LOG File</span>
-<a name="l00082"></a>00082                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(<span class="stringliteral">"Falsches Format der *vd_ Datei gefunden"</span>,1)
-<a name="l00083"></a>00083                     <span class="keywordflow">return</span>
-<a name="l00084"></a>00084 
+<a name="l00074"></a>00074 
+<a name="l00075"></a>00075                 OutFileObj.write(<span class="stringliteral">"&lt;eib-products&gt;\n"</span>)
+<a name="l00076"></a>00076 
+<a name="l00077"></a>00077                 <span class="comment">#read first line and compare of signum</span>
+<a name="l00078"></a>00078                 line = InFileObj.readline()
+<a name="l00079"></a>00079                 line = line.split(<span class="stringliteral">"\n"</span>)
+<a name="l00080"></a>00080 
+<a name="l00081"></a>00081                 <span class="keywordflow">if</span>(line[0] != <span class="stringliteral">"EX-IM"</span>):
+<a name="l00082"></a>00082                     <span class="comment">#LOG File</span>
+<a name="l00083"></a>00083                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(<span class="stringliteral">"Falsches Format der *vd_ Datei gefunden"</span>,1)
+<a name="l00084"></a>00084                     <span class="keywordflow">return</span>
 <a name="l00085"></a>00085 
-<a name="l00086"></a>00086                 line = InFileObj.readline()
-<a name="l00087"></a>00087                 line = line.split(<span class="stringliteral">"\n"</span>)
-<a name="l00088"></a>00088 
-<a name="l00089"></a>00089                 <span class="comment">#normal parse-run</span>
-<a name="l00090"></a>00090                 <span class="keywordflow">while</span>(<span class="keyword">True</span>):
-<a name="l00091"></a>00091 
+<a name="l00086"></a>00086 
+<a name="l00087"></a>00087                 line = InFileObj.readline()
+<a name="l00088"></a>00088                 line = line.split(<span class="stringliteral">"\n"</span>)
+<a name="l00089"></a>00089 
+<a name="l00090"></a>00090                 <span class="comment">#normal parse-run</span>
+<a name="l00091"></a>00091                 <span class="keywordflow">while</span>(<span class="keyword">True</span>):
 <a name="l00092"></a>00092 
-<a name="l00093"></a>00093                     next = InFileObj.readline()
-<a name="l00094"></a>00094                     next = next.split(<span class="stringliteral">"\n"</span>)
-<a name="l00095"></a>00095 
+<a name="l00093"></a>00093 
+<a name="l00094"></a>00094                     next = InFileObj.readline()
+<a name="l00095"></a>00095                     next = next.split(<span class="stringliteral">"\n"</span>)
 <a name="l00096"></a>00096 
-<a name="l00097"></a>00097                     <span class="keywordflow">if</span>(line[0] == <span class="stringliteral">"XXX"</span>):
-<a name="l00098"></a>00098                         self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#1db3ceaab798f7adfccc006390d73e76">parseLine</a>(line[0],OutFileObj)
-<a name="l00099"></a>00099 
-<a name="l00100"></a>00100                     <span class="comment">#cancel first While-Loop , if current line is empty</span>
-<a name="l00101"></a>00101                         <span class="keywordflow">break</span>
-<a name="l00102"></a>00102 
-<a name="l00103"></a>00103                     <span class="comment">#parse Symbol-Information</span>
-<a name="l00104"></a>00104                     re = compile(<span class="stringliteral">'^\\\\'</span>)
-<a name="l00105"></a>00105                     <span class="keywordflow">while</span>(re.match(next[0])):
-<a name="l00106"></a>00106                         <span class="comment">#separate "\\"</span>
-<a name="l00107"></a>00107                         line[0] = line[0] + next[0].strip(<span class="stringliteral">"\\\\"</span>)
-<a name="l00108"></a>00108 
+<a name="l00097"></a>00097 
+<a name="l00098"></a>00098                     <span class="keywordflow">if</span>(line[0] == <span class="stringliteral">"XXX"</span>):
+<a name="l00099"></a>00099                         self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#1db3ceaab798f7adfccc006390d73e76">parseLine</a>(line[0],OutFileObj)
+<a name="l00100"></a>00100 
+<a name="l00101"></a>00101                     <span class="comment">#cancel first While-Loop , if current line is empty</span>
+<a name="l00102"></a>00102                         <span class="keywordflow">break</span>
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104                     <span class="comment">#parse Symbol-Information</span>
+<a name="l00105"></a>00105                     re = compile(<span class="stringliteral">'^\\\\'</span>)
+<a name="l00106"></a>00106                     <span class="keywordflow">while</span>(re.match(next[0])):
+<a name="l00107"></a>00107                         <span class="comment">#separate "\\"</span>
+<a name="l00108"></a>00108                         line[0] = line[0] + next[0].strip(<span class="stringliteral">"\\\\"</span>)
 <a name="l00109"></a>00109 
-<a name="l00110"></a>00110                         next = InFileObj.readline()
-<a name="l00111"></a>00111                         next = next.split(<span class="stringliteral">"\n"</span>)
-<a name="l00112"></a>00112 
-<a name="l00113"></a>00113                         <span class="keywordflow">if</span>(next[0] == <span class="stringliteral">""</span>):
-<a name="l00114"></a>00114                             <span class="keywordflow">if</span>(line[0] != <span class="stringliteral">""</span>):
-<a name="l00115"></a>00115                                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#1db3ceaab798f7adfccc006390d73e76">parseLine</a>(line[0],OutFileObj)
-<a name="l00116"></a>00116 
-<a name="l00117"></a>00117                     <span class="comment">#parse lines after symbolinformation</span>
-<a name="l00118"></a>00118                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#1db3ceaab798f7adfccc006390d73e76">parseLine</a>(line[0],OutFileObj);
-<a name="l00119"></a>00119                     line=next
-<a name="l00120"></a>00120 
+<a name="l00110"></a>00110 
+<a name="l00111"></a>00111                         next = InFileObj.readline()
+<a name="l00112"></a>00112                         next = next.split(<span class="stringliteral">"\n"</span>)
+<a name="l00113"></a>00113 
+<a name="l00114"></a>00114                         <span class="keywordflow">if</span>(next[0] == <span class="stringliteral">""</span>):
+<a name="l00115"></a>00115                             <span class="keywordflow">if</span>(line[0] != <span class="stringliteral">""</span>):
+<a name="l00116"></a>00116                                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#1db3ceaab798f7adfccc006390d73e76">parseLine</a>(line[0],OutFileObj)
+<a name="l00117"></a>00117 
+<a name="l00118"></a>00118                     <span class="comment">#parse lines after symbolinformation</span>
+<a name="l00119"></a>00119                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#1db3ceaab798f7adfccc006390d73e76">parseLine</a>(line[0],OutFileObj);
+<a name="l00120"></a>00120                     line=next
 <a name="l00121"></a>00121 
-<a name="l00122"></a>00122                 OutFileObj.flush()
-<a name="l00123"></a>00123                 OutFileObj.close()
-<a name="l00124"></a>00124                 InFileObj.close()
-<a name="l00125"></a>00125                 <span class="comment">#LOG File</span>
-<a name="l00126"></a>00126                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#d1565a29f2858612f1a6acaa8bb5b360">vd_datei</a>+<span class="stringliteral">" geschlossen"</span>,0)
-<a name="l00127"></a>00127                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c1b87333bece499b5b9c5b5cb78ce253">xml_datei</a>+<span class="stringliteral">" geschlossen"</span>,0)
-<a name="l00128"></a>00128 
-<a name="l00129"></a>00129         <span class="keywordflow">except</span> IOError:
-<a name="l00130"></a>00130 
-<a name="l00131"></a>00131             <span class="comment">#LOG File</span>
-<a name="l00132"></a>00132             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(<span class="stringliteral">"Fehler beim Öffnen der vd_ Datei"</span>,2)
-<a name="l00133"></a>00133 
-<a name="l00134"></a>00134             <span class="keywordflow">if</span>(OutFileObj != <span class="keywordtype">None</span>):
-<a name="l00135"></a>00135                 OutFileObj.close()
-<a name="l00136"></a>00136 
-<a name="l00137"></a>00137             <span class="keywordflow">if</span>(InFileObj != <span class="keywordtype">None</span>):
-<a name="l00138"></a>00138                 InFileObj.close()
-<a name="l00139"></a>00139 
-<a name="l00140"></a>00140             <span class="comment">#LOG File</span>
-<a name="l00141"></a>00141             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#d1565a29f2858612f1a6acaa8bb5b360">vd_datei</a>+<span class="stringliteral">" geschlossen"</span>,0)
-<a name="l00142"></a>00142             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c1b87333bece499b5b9c5b5cb78ce253">xml_datei</a>+<span class="stringliteral">" geschlossen"</span>,0)
-<a name="l00143"></a>00143 
+<a name="l00122"></a>00122 
+<a name="l00123"></a>00123                 OutFileObj.flush()
+<a name="l00124"></a>00124                 OutFileObj.close()
+<a name="l00125"></a>00125                 InFileObj.close()
+<a name="l00126"></a>00126                 <span class="comment">#LOG File</span>
+<a name="l00127"></a>00127                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#d1565a29f2858612f1a6acaa8bb5b360">vd_datei</a>+<span class="stringliteral">" geschlossen"</span>,0)
+<a name="l00128"></a>00128                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c1b87333bece499b5b9c5b5cb78ce253">xml_datei</a>+<span class="stringliteral">" geschlossen"</span>,0)
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130         <span class="keywordflow">except</span> IOError:
+<a name="l00131"></a>00131 
+<a name="l00132"></a>00132             <span class="comment">#LOG File</span>
+<a name="l00133"></a>00133             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(<span class="stringliteral">"Fehler beim Öffnen der vd_ Datei"</span>,2)
+<a name="l00134"></a>00134 
+<a name="l00135"></a>00135             <span class="keywordflow">if</span>(OutFileObj != <span class="keywordtype">None</span>):
+<a name="l00136"></a>00136                 OutFileObj.close()
+<a name="l00137"></a>00137 
+<a name="l00138"></a>00138             <span class="keywordflow">if</span>(InFileObj != <span class="keywordtype">None</span>):
+<a name="l00139"></a>00139                 InFileObj.close()
+<a name="l00140"></a>00140 
+<a name="l00141"></a>00141             <span class="comment">#LOG File</span>
+<a name="l00142"></a>00142             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#d1565a29f2858612f1a6acaa8bb5b360">vd_datei</a>+<span class="stringliteral">" geschlossen"</span>,0)
+<a name="l00143"></a>00143             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c1b87333bece499b5b9c5b5cb78ce253">xml_datei</a>+<span class="stringliteral">" geschlossen"</span>,0)
 <a name="l00144"></a>00144 
 <a name="l00145"></a>00145 
-<a name="l00146"></a>00146         <span class="keywordflow">except</span>:
-<a name="l00147"></a>00147 
-<a name="l00148"></a>00148             <span class="comment">#LOG File</span>
-<a name="l00149"></a>00149 
-<a name="l00150"></a>00150             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(<span class="stringliteral">"Allgemeiner Fehler beim Parsen der vd_ Datei"</span> \
-<a name="l00151"></a>00151                                  + <span class="stringliteral">" in Zeile: "</span> + str(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#ed5dde865a57734ab4c23f50aa9c3836">lineCounter</a>)  \
-<a name="l00152"></a>00152                                  +<span class="stringliteral">" "</span> + line[0],2)
-<a name="l00153"></a>00153 
-<a name="l00154"></a>00154             <span class="keywordflow">if</span>(OutFileObj != <span class="keywordtype">None</span>):
-<a name="l00155"></a>00155                 OutFileObj.close()
-<a name="l00156"></a>00156                 <span class="comment">#LOG File</span>
-<a name="l00157"></a>00157                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c1b87333bece499b5b9c5b5cb78ce253">xml_datei</a>+<span class="stringliteral">" geschlossen"</span>,0)
-<a name="l00158"></a>00158 
-<a name="l00159"></a>00159             <span class="keywordflow">elif</span>(InFileObj != <span class="keywordtype">None</span>):
-<a name="l00160"></a>00160                 InFileObj.close()
-<a name="l00161"></a>00161                 <span class="comment">#LOG File</span>
-<a name="l00162"></a>00162                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#d1565a29f2858612f1a6acaa8bb5b360">vd_datei</a>+<span class="stringliteral">" geschlossen"</span>,0)
-<a name="l00163"></a>00163 
+<a name="l00146"></a>00146 
+<a name="l00147"></a>00147         <span class="keywordflow">except</span>:
+<a name="l00148"></a>00148 
+<a name="l00149"></a>00149             <span class="comment">#LOG File</span>
+<a name="l00150"></a>00150 
+<a name="l00151"></a>00151             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(<span class="stringliteral">"Allgemeiner Fehler beim Parsen der vd_ Datei"</span> \
+<a name="l00152"></a>00152                                  + <span class="stringliteral">" in Zeile: "</span> + str(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#ed5dde865a57734ab4c23f50aa9c3836">lineCounter</a>)  \
+<a name="l00153"></a>00153                                  +<span class="stringliteral">" "</span> + line[0],2)
+<a name="l00154"></a>00154 
+<a name="l00155"></a>00155             <span class="keywordflow">if</span>(OutFileObj != <span class="keywordtype">None</span>):
+<a name="l00156"></a>00156                 OutFileObj.close()
+<a name="l00157"></a>00157                 <span class="comment">#LOG File</span>
+<a name="l00158"></a>00158                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c1b87333bece499b5b9c5b5cb78ce253">xml_datei</a>+<span class="stringliteral">" geschlossen"</span>,0)
+<a name="l00159"></a>00159 
+<a name="l00160"></a>00160             <span class="keywordflow">elif</span>(InFileObj != <span class="keywordtype">None</span>):
+<a name="l00161"></a>00161                 InFileObj.close()
+<a name="l00162"></a>00162                 <span class="comment">#LOG File</span>
+<a name="l00163"></a>00163                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#5af43ee56a9aeefe7516c4474c692238">__LogObj</a>.NewLog(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#d1565a29f2858612f1a6acaa8bb5b360">vd_datei</a>+<span class="stringliteral">" geschlossen"</span>,0)
 <a name="l00164"></a>00164 
-<a name="l00165"></a>00165     <span class="keyword">def </span>parseLine(self,_line,_OutFileObj):
-<a name="l00166"></a>00166 
-<a name="l00167"></a>00167         tmp=<span class="stringliteral">""</span>
-<a name="l00168"></a>00168 
-<a name="l00169"></a>00169         <span class="keywordflow">try</span>:
-<a name="l00170"></a>00170             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#ed5dde865a57734ab4c23f50aa9c3836">lineCounter</a> = self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#ed5dde865a57734ab4c23f50aa9c3836">lineCounter</a> + 1
-<a name="l00171"></a>00171 
-<a name="l00172"></a>00172             <span class="comment">#line empty ?</span>
-<a name="l00173"></a>00173             <span class="keywordflow">if</span>(len(_line) &gt; 0):
-<a name="l00174"></a>00174                 <span class="comment">#erstes Zeichen laden</span>
-<a name="l00175"></a>00175                 start=_line[0:1]
-<a name="l00176"></a>00176 
+<a name="l00165"></a>00165 
+<a name="l00166"></a>00166     <span class="keyword">def </span>parseLine(self,_line,_OutFileObj):
+<a name="l00167"></a>00167 
+<a name="l00168"></a>00168         tmp=<span class="stringliteral">""</span>
+<a name="l00169"></a>00169 
+<a name="l00170"></a>00170         <span class="keywordflow">try</span>:
+<a name="l00171"></a>00171             self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#ed5dde865a57734ab4c23f50aa9c3836">lineCounter</a> = self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#ed5dde865a57734ab4c23f50aa9c3836">lineCounter</a> + 1
+<a name="l00172"></a>00172 
+<a name="l00173"></a>00173             <span class="comment">#line empty ?</span>
+<a name="l00174"></a>00174             <span class="keywordflow">if</span>(len(_line) &gt; 0):
+<a name="l00175"></a>00175                 <span class="comment">#erstes Zeichen laden</span>
+<a name="l00176"></a>00176                 start=_line[0:1]
 <a name="l00177"></a>00177 
-<a name="l00178"></a>00178                 <span class="comment">#Start with "T " ? -&gt;</span>
-<a name="l00179"></a>00179                 <span class="keywordflow">if</span>(_line[0:2] == <span class="stringliteral">"T "</span>):
-<a name="l00180"></a>00180                     start=<span class="stringliteral">' '</span>
-<a name="l00181"></a>00181 
-<a name="l00182"></a>00182             <span class="keywordflow">else</span>:
-<a name="l00183"></a>00183                 _line=<span class="stringliteral">""</span>
-<a name="l00184"></a>00184 
-<a name="l00185"></a>00185             <span class="keywordflow">if</span>(_line[0:2] == <span class="stringliteral">"N "</span> ):
-<a name="l00186"></a>00186                 <span class="comment">#Path of vd_ Datei</span>
-<a name="l00187"></a>00187 
-<a name="l00188"></a>00188                 leer = 0
-<a name="l00189"></a>00189             <span class="keywordflow">elif</span>(_line[0:2] == <span class="stringliteral">"K "</span> ):
-<a name="l00190"></a>00190                 <span class="comment">#Manufacturer tool,Kommentar</span>
-<a name="l00191"></a>00191                 leer = 0
-<a name="l00192"></a>00192             <span class="keywordflow">elif</span>(_line[0:2] == <span class="stringliteral">"D "</span> ):
-<a name="l00193"></a>00193                 <span class="comment">#Date of file</span>
-<a name="l00194"></a>00194                 leer = 0
-<a name="l00195"></a>00195             <span class="keywordflow">elif</span>(_line[0:2] == <span class="stringliteral">"V "</span> ):
-<a name="l00196"></a>00196                 <span class="comment">#Version</span>
-<a name="l00197"></a>00197                 leer = 0
-<a name="l00198"></a>00198             <span class="keywordflow">elif</span>(_line[0:2] == <span class="stringliteral">"H "</span> ):
-<a name="l00199"></a>00199                 <span class="comment">#Typ of Device</span>
-<a name="l00200"></a>00200                 leer = 0
-<a name="l00201"></a>00201             <span class="keywordflow">elif</span>(_line[0:1] == <span class="stringliteral">"-"</span> ):
-<a name="l00202"></a>00202 
-<a name="l00203"></a>00203                 <span class="comment">#Blockende</span>
-<a name="l00204"></a>00204 
-<a name="l00205"></a>00205                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#032fba7de9a0742402a7d8f899dd2b95">read_caption</a>=<span class="keyword">False</span>    <span class="comment">#C-Block</span>
-<a name="l00206"></a>00206                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#632783d407ac623a63a8a3d6691ce36f">read_record</a>=<span class="keyword">False</span>     <span class="comment">#R-Block</span>
-<a name="l00207"></a>00207                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#336db0de56d056230e408490c7924499">read_table</a>=<span class="keyword">False</span>      <span class="comment">#T-Block</span>
-<a name="l00208"></a>00208                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#8054aabc8adea9862a8694f3203e2b27">read_value</a>=<span class="keyword">False</span>      <span class="comment">#Values</span>
-<a name="l00209"></a>00209 
+<a name="l00178"></a>00178 
+<a name="l00179"></a>00179                 <span class="comment">#Start with "T " ? -&gt;</span>
+<a name="l00180"></a>00180                 <span class="keywordflow">if</span>(_line[0:2] == <span class="stringliteral">"T "</span>):
+<a name="l00181"></a>00181                     start=<span class="stringliteral">' '</span>
+<a name="l00182"></a>00182 
+<a name="l00183"></a>00183             <span class="keywordflow">else</span>:
+<a name="l00184"></a>00184                 _line=<span class="stringliteral">""</span>
+<a name="l00185"></a>00185 
+<a name="l00186"></a>00186             <span class="keywordflow">if</span>(_line[0:2] == <span class="stringliteral">"N "</span> ):
+<a name="l00187"></a>00187                 <span class="comment">#Path of vd_ Datei</span>
+<a name="l00188"></a>00188 
+<a name="l00189"></a>00189                 leer = 0
+<a name="l00190"></a>00190             <span class="keywordflow">elif</span>(_line[0:2] == <span class="stringliteral">"K "</span> ):
+<a name="l00191"></a>00191                 <span class="comment">#Manufacturer tool,Kommentar</span>
+<a name="l00192"></a>00192                 leer = 0
+<a name="l00193"></a>00193             <span class="keywordflow">elif</span>(_line[0:2] == <span class="stringliteral">"D "</span> ):
+<a name="l00194"></a>00194                 <span class="comment">#Date of file</span>
+<a name="l00195"></a>00195                 leer = 0
+<a name="l00196"></a>00196             <span class="keywordflow">elif</span>(_line[0:2] == <span class="stringliteral">"V "</span> ):
+<a name="l00197"></a>00197                 <span class="comment">#Version</span>
+<a name="l00198"></a>00198                 leer = 0
+<a name="l00199"></a>00199             <span class="keywordflow">elif</span>(_line[0:2] == <span class="stringliteral">"H "</span> ):
+<a name="l00200"></a>00200                 <span class="comment">#Typ of Device</span>
+<a name="l00201"></a>00201                 leer = 0
+<a name="l00202"></a>00202             <span class="keywordflow">elif</span>(_line[0:1] == <span class="stringliteral">"-"</span> ):
+<a name="l00203"></a>00203 
+<a name="l00204"></a>00204                 <span class="comment">#Blockende</span>
+<a name="l00205"></a>00205 
+<a name="l00206"></a>00206                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#032fba7de9a0742402a7d8f899dd2b95">read_caption</a>=<span class="keyword">False</span>    <span class="comment">#C-Block</span>
+<a name="l00207"></a>00207                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#632783d407ac623a63a8a3d6691ce36f">read_record</a>=<span class="keyword">False</span>     <span class="comment">#R-Block</span>
+<a name="l00208"></a>00208                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#336db0de56d056230e408490c7924499">read_table</a>=<span class="keyword">False</span>      <span class="comment">#T-Block</span>
+<a name="l00209"></a>00209                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#8054aabc8adea9862a8694f3203e2b27">read_value</a>=<span class="keyword">False</span>      <span class="comment">#Values</span>
 <a name="l00210"></a>00210 
-<a name="l00211"></a>00211             <span class="comment">#start with "T " followed by a number -&gt; new table</span>
-<a name="l00212"></a>00212             <span class="keywordflow">elif</span>(_line[0:2] == <span class="stringliteral">"T "</span> <span class="keywordflow">and</span> _line[2:3].isdigit() == <span class="keyword">True</span>):
-<a name="l00213"></a>00213                 linedata = _line.split()
-<a name="l00214"></a>00214 
-<a name="l00215"></a>00215                 <span class="keywordflow">try</span>:
-<a name="l00216"></a>00216 
-<a name="l00217"></a>00217                     <span class="comment">#extract Table-Number</span>
-<a name="l00218"></a>00218                     parseInt = int(linedata[1])
-<a name="l00219"></a>00219                     <span class="comment">#delete Caption-Array</span>
-<a name="l00220"></a>00220                     del self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#edf6c3184bc8c936a6b649a2d12715b0">captions</a>[0:len(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#edf6c3184bc8c936a6b649a2d12715b0">captions</a>)]
-<a name="l00221"></a>00221                     <span class="comment">#found new Table</span>
-<a name="l00222"></a>00222                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#336db0de56d056230e408490c7924499">read_table</a>=<span class="keyword">True</span>
-<a name="l00223"></a>00223 
+<a name="l00211"></a>00211 
+<a name="l00212"></a>00212             <span class="comment">#start with "T " followed by a number -&gt; new table</span>
+<a name="l00213"></a>00213             <span class="keywordflow">elif</span>(_line[0:2] == <span class="stringliteral">"T "</span> <span class="keywordflow">and</span> _line[2:3].isdigit() == <span class="keyword">True</span>):
+<a name="l00214"></a>00214                 linedata = _line.split()
+<a name="l00215"></a>00215 
+<a name="l00216"></a>00216                 <span class="keywordflow">try</span>:
+<a name="l00217"></a>00217 
+<a name="l00218"></a>00218                     <span class="comment">#extract Table-Number</span>
+<a name="l00219"></a>00219                     parseInt = int(linedata[1])
+<a name="l00220"></a>00220                     <span class="comment">#delete Caption-Array</span>
+<a name="l00221"></a>00221                     del self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#edf6c3184bc8c936a6b649a2d12715b0">captions</a>[0:len(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#edf6c3184bc8c936a6b649a2d12715b0">captions</a>)]
+<a name="l00222"></a>00222                     <span class="comment">#found new Table</span>
+<a name="l00223"></a>00223                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#336db0de56d056230e408490c7924499">read_table</a>=<span class="keyword">True</span>
 <a name="l00224"></a>00224 
-<a name="l00225"></a>00225                 <span class="keywordflow">except</span> TypeError:
-<a name="l00226"></a>00226                     <span class="comment"># not a number</span>
-<a name="l00227"></a>00227                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#8054aabc8adea9862a8694f3203e2b27">read_value</a>=<span class="keyword">True</span>
-<a name="l00228"></a>00228                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#632783d407ac623a63a8a3d6691ce36f">read_record</a>=<span class="keyword">False</span>
-<a name="l00229"></a>00229 
+<a name="l00225"></a>00225 
+<a name="l00226"></a>00226                 <span class="keywordflow">except</span> TypeError:
+<a name="l00227"></a>00227                     <span class="comment"># not a number</span>
+<a name="l00228"></a>00228                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#8054aabc8adea9862a8694f3203e2b27">read_value</a>=<span class="keyword">True</span>
+<a name="l00229"></a>00229                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#632783d407ac623a63a8a3d6691ce36f">read_record</a>=<span class="keyword">False</span>
 <a name="l00230"></a>00230 
-<a name="l00231"></a>00231             <span class="comment">#start with "C " followed by a number -&gt; new Caption</span>
-<a name="l00232"></a>00232             <span class="keywordflow">elif</span>(_line[0:1] == <span class="stringliteral">"C"</span> <span class="keywordflow">and</span> _line[1:2].isdigit() == <span class="keyword">True</span>):
-<a name="l00233"></a>00233                 <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#336db0de56d056230e408490c7924499">read_table</a> == <span class="keyword">True</span> <span class="keywordflow">and</span> self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#032fba7de9a0742402a7d8f899dd2b95">read_caption</a> == <span class="keyword">False</span>):
-<a name="l00234"></a>00234                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#032fba7de9a0742402a7d8f899dd2b95">read_caption</a>=<span class="keyword">True</span>
-<a name="l00235"></a>00235 
-<a name="l00236"></a>00236             <span class="comment">#start with "R " followed by a number -&gt; new Record</span>
-<a name="l00237"></a>00237             <span class="keywordflow">elif</span>(_line[0:2] == <span class="stringliteral">"R "</span> <span class="keywordflow">and</span> _line[2:3].isdigit() == <span class="keyword">True</span>):
-<a name="l00238"></a>00238 
-<a name="l00239"></a>00239                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#8054aabc8adea9862a8694f3203e2b27">read_value</a>=<span class="keyword">False</span>
-<a name="l00240"></a>00240                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#032fba7de9a0742402a7d8f899dd2b95">read_caption</a>=<span class="keyword">False</span>
-<a name="l00241"></a>00241                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#632783d407ac623a63a8a3d6691ce36f">read_record</a>=<span class="keyword">True</span>
-<a name="l00242"></a>00242                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#336db0de56d056230e408490c7924499">read_table</a>=<span class="keyword">False</span>
-<a name="l00243"></a>00243 
+<a name="l00231"></a>00231 
+<a name="l00232"></a>00232             <span class="comment">#start with "C " followed by a number -&gt; new Caption</span>
+<a name="l00233"></a>00233             <span class="keywordflow">elif</span>(_line[0:1] == <span class="stringliteral">"C"</span> <span class="keywordflow">and</span> _line[1:2].isdigit() == <span class="keyword">True</span>):
+<a name="l00234"></a>00234                 <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#336db0de56d056230e408490c7924499">read_table</a> == <span class="keyword">True</span> <span class="keywordflow">and</span> self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#032fba7de9a0742402a7d8f899dd2b95">read_caption</a> == <span class="keyword">False</span>):
+<a name="l00235"></a>00235                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#032fba7de9a0742402a7d8f899dd2b95">read_caption</a>=<span class="keyword">True</span>
+<a name="l00236"></a>00236 
+<a name="l00237"></a>00237             <span class="comment">#start with "R " followed by a number -&gt; new Record</span>
+<a name="l00238"></a>00238             <span class="keywordflow">elif</span>(_line[0:2] == <span class="stringliteral">"R "</span> <span class="keywordflow">and</span> _line[2:3].isdigit() == <span class="keyword">True</span>):
+<a name="l00239"></a>00239 
+<a name="l00240"></a>00240                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#8054aabc8adea9862a8694f3203e2b27">read_value</a>=<span class="keyword">False</span>
+<a name="l00241"></a>00241                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#032fba7de9a0742402a7d8f899dd2b95">read_caption</a>=<span class="keyword">False</span>
+<a name="l00242"></a>00242                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#632783d407ac623a63a8a3d6691ce36f">read_record</a>=<span class="keyword">True</span>
+<a name="l00243"></a>00243                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#336db0de56d056230e408490c7924499">read_table</a>=<span class="keyword">False</span>
 <a name="l00244"></a>00244 
-<a name="l00245"></a>00245                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#a0d69cb6b198937b69c2a23cf1b7a340">__ValueCount</a> = len(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#edf6c3184bc8c936a6b649a2d12715b0">captions</a>)
-<a name="l00246"></a>00246                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#fb6845e0aede87064ca74464ac1f5c70">val_count</a> = 0
-<a name="l00247"></a>00247 
+<a name="l00245"></a>00245 
+<a name="l00246"></a>00246                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#a0d69cb6b198937b69c2a23cf1b7a340">__ValueCount</a> = len(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#edf6c3184bc8c936a6b649a2d12715b0">captions</a>)
+<a name="l00247"></a>00247                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#fb6845e0aede87064ca74464ac1f5c70">val_count</a> = 0
 <a name="l00248"></a>00248 
-<a name="l00249"></a>00249             <span class="comment">#last entry</span>
-<a name="l00250"></a>00250             <span class="keywordflow">elif</span>(_line[0:3] == <span class="stringliteral">"XXX"</span>):
-<a name="l00251"></a>00251 
-<a name="l00252"></a>00252                 _OutFileObj.write(<span class="stringliteral">"\t&lt;/"</span>+self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c39c7a120b51933a34e8fa3d1cb240a9">recordname</a>+<span class="stringliteral">"&gt;"</span>)
-<a name="l00253"></a>00253                 _OutFileObj.write(<span class="stringliteral">"&lt;/eib-products&gt;"</span>)
-<a name="l00254"></a>00254                 _OutFileObj.flush()
-<a name="l00255"></a>00255 
-<a name="l00256"></a>00256                 <span class="keywordflow">return</span>
-<a name="l00257"></a>00257 
+<a name="l00249"></a>00249 
+<a name="l00250"></a>00250             <span class="comment">#last entry</span>
+<a name="l00251"></a>00251             <span class="keywordflow">elif</span>(_line[0:3] == <span class="stringliteral">"XXX"</span>):
+<a name="l00252"></a>00252 
+<a name="l00253"></a>00253                 _OutFileObj.write(<span class="stringliteral">"\t&lt;/"</span>+self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c39c7a120b51933a34e8fa3d1cb240a9">recordname</a>+<span class="stringliteral">"&gt;"</span>)
+<a name="l00254"></a>00254                 _OutFileObj.write(<span class="stringliteral">"&lt;/eib-products&gt;"</span>)
+<a name="l00255"></a>00255                 _OutFileObj.flush()
+<a name="l00256"></a>00256 
+<a name="l00257"></a>00257                 <span class="keywordflow">return</span>
 <a name="l00258"></a>00258 
-<a name="l00259"></a>00259             <span class="comment">#else: read Values</span>
-<a name="l00260"></a>00260             <span class="keywordflow">else</span>:
-<a name="l00261"></a>00261                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#8054aabc8adea9862a8694f3203e2b27">read_value</a>=<span class="keyword">True</span>
-<a name="l00262"></a>00262                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#632783d407ac623a63a8a3d6691ce36f">read_record</a>=<span class="keyword">False</span>
-<a name="l00263"></a>00263 
+<a name="l00259"></a>00259 
+<a name="l00260"></a>00260             <span class="comment">#else: read Values</span>
+<a name="l00261"></a>00261             <span class="keywordflow">else</span>:
+<a name="l00262"></a>00262                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#8054aabc8adea9862a8694f3203e2b27">read_value</a>=<span class="keyword">True</span>
+<a name="l00263"></a>00263                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#632783d407ac623a63a8a3d6691ce36f">read_record</a>=<span class="keyword">False</span>
 <a name="l00264"></a>00264 
-<a name="l00265"></a>00265             <span class="comment">#Do we read a table ?</span>
-<a name="l00266"></a>00266             <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#336db0de56d056230e408490c7924499">read_table</a> == <span class="keyword">True</span>):
-<a name="l00267"></a>00267                 tunix=0
-<a name="l00268"></a>00268 
-<a name="l00269"></a>00269             <span class="comment">#Do we read a Record ?</span>
-<a name="l00270"></a>00270             <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#632783d407ac623a63a8a3d6691ce36f">read_record</a> == <span class="keyword">True</span>):
-<a name="l00271"></a>00271 
-<a name="l00272"></a>00272                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#1b728db27eb659027e963640326cdad2">atmp</a>=_line.split(<span class="stringliteral">" "</span>)
-<a name="l00273"></a>00273 
-<a name="l00274"></a>00274                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#fb6845e0aede87064ca74464ac1f5c70">val_count</a>=0
-<a name="l00275"></a>00275 
-<a name="l00276"></a>00276                 <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c39c7a120b51933a34e8fa3d1cb240a9">recordname</a> != <span class="stringliteral">""</span>):
-<a name="l00277"></a>00277                     <span class="comment">#record end</span>
-<a name="l00278"></a>00278                     _OutFileObj.write(<span class="stringliteral">"\t&lt;/"</span>+self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c39c7a120b51933a34e8fa3d1cb240a9">recordname</a>+<span class="stringliteral">"&gt;\n"</span>)
-<a name="l00279"></a>00279 
-<a name="l00280"></a>00280                 <span class="comment">#z.Bsp: R 1 T 3 manufacturer</span>
-<a name="l00281"></a>00281                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c39c7a120b51933a34e8fa3d1cb240a9">recordname</a>=self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#1b728db27eb659027e963640326cdad2">atmp</a>[4]
-<a name="l00282"></a>00282                 _OutFileObj.write(<span class="stringliteral">"\t&lt;"</span>+self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c39c7a120b51933a34e8fa3d1cb240a9">recordname</a>+<span class="stringliteral">"&gt;\n"</span>)
-<a name="l00283"></a>00283 
+<a name="l00265"></a>00265 
+<a name="l00266"></a>00266             <span class="comment">#Do we read a table ?</span>
+<a name="l00267"></a>00267             <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#336db0de56d056230e408490c7924499">read_table</a> == <span class="keyword">True</span>):
+<a name="l00268"></a>00268                 tunix=0
+<a name="l00269"></a>00269 
+<a name="l00270"></a>00270             <span class="comment">#Do we read a Record ?</span>
+<a name="l00271"></a>00271             <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#632783d407ac623a63a8a3d6691ce36f">read_record</a> == <span class="keyword">True</span>):
+<a name="l00272"></a>00272 
+<a name="l00273"></a>00273                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#1b728db27eb659027e963640326cdad2">atmp</a>=_line.split(<span class="stringliteral">" "</span>)
+<a name="l00274"></a>00274 
+<a name="l00275"></a>00275                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#fb6845e0aede87064ca74464ac1f5c70">val_count</a>=0
+<a name="l00276"></a>00276 
+<a name="l00277"></a>00277                 <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c39c7a120b51933a34e8fa3d1cb240a9">recordname</a> != <span class="stringliteral">""</span>):
+<a name="l00278"></a>00278                     <span class="comment">#record end</span>
+<a name="l00279"></a>00279                     _OutFileObj.write(<span class="stringliteral">"\t&lt;/"</span>+self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c39c7a120b51933a34e8fa3d1cb240a9">recordname</a>+<span class="stringliteral">"&gt;\n"</span>)
+<a name="l00280"></a>00280 
+<a name="l00281"></a>00281                 <span class="comment">#z.Bsp: R 1 T 3 manufacturer</span>
+<a name="l00282"></a>00282                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c39c7a120b51933a34e8fa3d1cb240a9">recordname</a>=self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#1b728db27eb659027e963640326cdad2">atmp</a>[4]
+<a name="l00283"></a>00283                 _OutFileObj.write(<span class="stringliteral">"\t&lt;"</span>+self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#c39c7a120b51933a34e8fa3d1cb240a9">recordname</a>+<span class="stringliteral">"&gt;\n"</span>)
 <a name="l00284"></a>00284 
-<a name="l00285"></a>00285             <span class="comment">#Do we read a caption ?</span>
-<a name="l00286"></a>00286             <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#032fba7de9a0742402a7d8f899dd2b95">read_caption</a> == <span class="keyword">True</span>):
-<a name="l00287"></a>00287                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#1b728db27eb659027e963640326cdad2">atmp</a>=_line.split(<span class="stringliteral">" "</span>)
-<a name="l00288"></a>00288                 <span class="comment">#add new caption-element</span>
-<a name="l00289"></a>00289                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#edf6c3184bc8c936a6b649a2d12715b0">captions</a>.append(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#1b728db27eb659027e963640326cdad2">atmp</a>[5])
-<a name="l00290"></a>00290 
+<a name="l00285"></a>00285 
+<a name="l00286"></a>00286             <span class="comment">#Do we read a caption ?</span>
+<a name="l00287"></a>00287             <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#032fba7de9a0742402a7d8f899dd2b95">read_caption</a> == <span class="keyword">True</span>):
+<a name="l00288"></a>00288                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#1b728db27eb659027e963640326cdad2">atmp</a>=_line.split(<span class="stringliteral">" "</span>)
+<a name="l00289"></a>00289                 <span class="comment">#add new caption-element</span>
+<a name="l00290"></a>00290                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#edf6c3184bc8c936a6b649a2d12715b0">captions</a>.append(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#1b728db27eb659027e963640326cdad2">atmp</a>[5])
 <a name="l00291"></a>00291 
-<a name="l00292"></a>00292             <span class="comment">#Do we read a Value ?</span>
-<a name="l00293"></a>00293             <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#8054aabc8adea9862a8694f3203e2b27">read_value</a> == <span class="keyword">True</span> <span class="keywordflow">and</span> self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#fb6845e0aede87064ca74464ac1f5c70">val_count</a> &lt;= len(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#edf6c3184bc8c936a6b649a2d12715b0">captions</a>)-1):
-<a name="l00294"></a>00294 
+<a name="l00292"></a>00292 
+<a name="l00293"></a>00293             <span class="comment">#Do we read a Value ?</span>
+<a name="l00294"></a>00294             <span class="keywordflow">if</span>(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#8054aabc8adea9862a8694f3203e2b27">read_value</a> == <span class="keyword">True</span> <span class="keywordflow">and</span> self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#fb6845e0aede87064ca74464ac1f5c70">val_count</a> &lt;= len(self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#edf6c3184bc8c936a6b649a2d12715b0">captions</a>)-1):
 <a name="l00295"></a>00295 
-<a name="l00296"></a>00296                 <span class="keywordflow">if</span>(_line != <span class="stringliteral">""</span>):
-<a name="l00297"></a>00297                     _line = _line.replace(<span class="stringliteral">"&lt;"</span>,<span class="stringliteral">"&amp;lt;"</span>)
-<a name="l00298"></a>00298                     _line = _line.replace(<span class="stringliteral">"&gt;"</span>,<span class="stringliteral">"&amp;gt;"</span>)
-<a name="l00299"></a>00299                     _line = _line.replace(<span class="stringliteral">"&amp;"</span>, <span class="stringliteral">"&amp;amp;"</span>)
-<a name="l00300"></a>00300                     <span class="comment">#write Values to file</span>
-<a name="l00301"></a>00301                     _OutFileObj.write(<span class="stringliteral">"\t\t&lt;"</span>+self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#edf6c3184bc8c936a6b649a2d12715b0">captions</a>[self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#fb6845e0aede87064ca74464ac1f5c70">val_count</a>]+<span class="stringliteral">"&gt;"</span>+_line+<span class="stringliteral">"&lt;/"</span>+self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#edf6c3184bc8c936a6b649a2d12715b0">captions</a>[self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#fb6845e0aede87064ca74464ac1f5c70">val_count</a>]+<span class="stringliteral">"&gt;\n"</span>)
-<a name="l00302"></a>00302                     <span class="comment">#LOG File</span>
-<a name="l00303"></a>00303                     <span class="comment">#self.__LogObj.NewLog("\t\t&lt;"+self.captions[self.val_count]+"&gt;"+_line+"&lt;/"+self.captions[self.val_count]+"&gt;\n",0)</span>
-<a name="l00304"></a>00304 
+<a name="l00296"></a>00296 
+<a name="l00297"></a>00297                 <span class="keywordflow">if</span>(_line != <span class="stringliteral">""</span>):
+<a name="l00298"></a>00298                     _line = _line.replace(<span class="stringliteral">"&lt;"</span>,<span class="stringliteral">"&amp;lt;"</span>)
+<a name="l00299"></a>00299                     _line = _line.replace(<span class="stringliteral">"&gt;"</span>,<span class="stringliteral">"&amp;gt;"</span>)
+<a name="l00300"></a>00300                     _line = _line.replace(<span class="stringliteral">"&amp;"</span>, <span class="stringliteral">"&amp;amp;"</span>)
+<a name="l00301"></a>00301                     <span class="comment">#write Values to file</span>
+<a name="l00302"></a>00302                     _OutFileObj.write(<span class="stringliteral">"\t\t&lt;"</span>+self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#edf6c3184bc8c936a6b649a2d12715b0">captions</a>[self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#fb6845e0aede87064ca74464ac1f5c70">val_count</a>]+<span class="stringliteral">"&gt;"</span>+_line+<span class="stringliteral">"&lt;/"</span>+self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#edf6c3184bc8c936a6b649a2d12715b0">captions</a>[self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#fb6845e0aede87064ca74464ac1f5c70">val_count</a>]+<span class="stringliteral">"&gt;\n"</span>)
+<a name="l00303"></a>00303                     <span class="comment">#LOG File</span>
+<a name="l00304"></a>00304                     <span class="comment">#self.__LogObj.NewLog("\t\t&lt;"+self.captions[self.val_count]+"&gt;"+_line+"&lt;/"+self.captions[self.val_count]+"&gt;\n",0)</span>
 <a name="l00305"></a>00305 
-<a name="l00306"></a>00306                 <span class="keywordflow">else</span>:
-<a name="l00307"></a>00307                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#a0d69cb6b198937b69c2a23cf1b7a340">__ValueCount</a> = 0
-<a name="l00308"></a>00308                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#8054aabc8adea9862a8694f3203e2b27">read_value</a> == <span class="keyword">False</span>
-<a name="l00309"></a>00309 
-<a name="l00310"></a>00310                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#fb6845e0aede87064ca74464ac1f5c70">val_count</a> = self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#fb6845e0aede87064ca74464ac1f5c70">val_count</a> + 1
-<a name="l00311"></a>00311 
-<a name="l00312"></a>00312             _line=<span class="stringliteral">""</span>
-<a name="l00313"></a>00313 
+<a name="l00306"></a>00306 
+<a name="l00307"></a>00307                 <span class="keywordflow">else</span>:
+<a name="l00308"></a>00308                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#a0d69cb6b198937b69c2a23cf1b7a340">__ValueCount</a> = 0
+<a name="l00309"></a>00309                     self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#8054aabc8adea9862a8694f3203e2b27">read_value</a> == <span class="keyword">False</span>
+<a name="l00310"></a>00310 
+<a name="l00311"></a>00311                 self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#fb6845e0aede87064ca74464ac1f5c70">val_count</a> = self.<a class="code" href="class_x_m_l_1_1_f_b___x_m_l_converter_1_1_f_b___x_m_l_converter.html#fb6845e0aede87064ca74464ac1f5c70">val_count</a> + 1
+<a name="l00312"></a>00312 
+<a name="l00313"></a>00313             _line=<span class="stringliteral">""</span>
 <a name="l00314"></a>00314 
-<a name="l00315"></a>00315         <span class="keywordflow">except</span>(IOError):
-<a name="l00316"></a>00316             <span class="keywordflow">print</span> <span class="stringliteral">"Fehler"</span>
-</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Sun Dec 30 20:49:03 2007 for Freebus ETS by&nbsp;
+<a name="l00315"></a>00315 
+<a name="l00316"></a>00316         <span class="keywordflow">except</span>(IOError):
+<a name="l00317"></a>00317             <span class="keywordflow">print</span> <span class="stringliteral">"Fehler"</span>
+</pre></div><hr size="1"><address style="text-align: right;"><small>Generated on Sat Jan 19 16:02:08 2008 for Freebus ETS by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.4 </small></address>
 </body>

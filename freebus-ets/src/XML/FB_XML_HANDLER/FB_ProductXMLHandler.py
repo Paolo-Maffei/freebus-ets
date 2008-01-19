@@ -216,51 +216,51 @@ class FB_ProductXMLHandler():
 
         #print char.encode( "iso-8859-1" )
         if(self.__isProductID == True):
-            self.__Index = 1
-            #self.__prod.setProductID(char.encode( "iso-8859-1" ))
+            #self.__Index = 1
+            self.__prod.setProductID(char.encode( "iso-8859-1" ))
         if(self.__isManufacturerID == True):
-            self.__Index = 2
-            #self.__prod.setManufactuerID(char.encode( "iso-8859-1" ))
+            #self.__Index = 2
+            self.__prod.setManufactuerID(char.encode( "iso-8859-1" ))
         if(self.__isSymbolID  == True):
-            self.__Index = 3
-            #self.__prod.setSymbolID(char.encode( "iso-8859-1" ))
+            #self.__Index = 3
+            self.__prod.setSymbolID(char.encode( "iso-8859-1" ))
         if(self.__isProductName == True):
-            self.__Index = 4
-            #self.__prod.setProductName(char.encode( "iso-8859-1" ))
+            #self.__Index = 4
+            self.__prod.setProductName(char.encode( "iso-8859-1" ))
         if(self.__isProductVersion == True):
-            self.__Index = 5
-            #self.__prod.setProductVersion(char.encode( "iso-8859-1" ))
+            #self.__Index = 5
+            self.__prod.setProductVersion(char.encode( "iso-8859-1" ))
         if(self.__isCompType == True):
-            self.__Index = 6
-            #self.__prod.setCompType(char.encode( "iso-8859-1" ))
+            #self.__Index = 6
+            self.__prod.setCompType(char.encode( "iso-8859-1" ))
         if(self.__isCompAttr == True):
-            self.__Index = 7
-            #self.__prod.setCompAttr(char.encode( "iso-8859-1" ))
+            #self.__Index = 7
+            self.__prod.setCompAttr(char.encode( "iso-8859-1" ))
         if(self.__isBusCurrent == True):
-            self.__Index = 8
-            #self.__prod.setBusCurrent(char.encode( "iso-8859-1" ))
+            #self.__Index = 8
+            self.__prod.setBusCurrent(char.encode( "iso-8859-1" ))
         if(self.__isProductSN == True):
-            self.__Index = 9
-            #self.__prod.setProductSN(char.encode( "iso-8859-1" ))
+            #self.__Index = 9
+            self.__prod.setProductSN(char.encode( "iso-8859-1" ))
         if(self.__isCompTypeNo == True):
-            self.__Index = 10
-            #self.__prod.setCompTypeNo(char.encode( "iso-8859-1" ))
+            #self.__Index = 10
+            self.__prod.setCompTypeNo(char.encode( "iso-8859-1" ))
         if(self.__isProductPic == True):
-            self.__Index = 11
-            #self.__prod.setProductPic(char.encode( "iso-8859-1" ))
+            #self.__Index = 11
+            self.__prod.setProductPic(char.encode( "iso-8859-1" ))
         if(self.__isBCUType == True):
-            self.__Index = 12
-            #self.__prod.setBCUType(char.encode( "iso-8859-1" ))
+            #self.__Index = 12
+            self.__prod.setBCUType(char.encode( "iso-8859-1" ))
         if(self.__isProductHandling == True):
-            self.__Index = 13
-            #self.__prod.setProductHandling(char.encode( "iso-8859-1" ))
+            #self.__Index = 13
+            self.__prod.setProductHandling(char.encode( "iso-8859-1" ))
         if(self.__isProductDLL == True):
-            self.__Index = 14
-            #self.__prod.setProductDLL(char.encode( "iso-8859-1" ))
+            #self.__Index = 14
+            self.__prod.setProductDLL(char.encode( "iso-8859-1" ))
         if(self.__isOrigManID == True):
-            self.__Index = 15
-            #self.__prod.setOrigManID(char.encode( "iso-8859-1" ))
+            #self.__Index = 15
+            self.__prod.setOrigManID(char.encode( "iso-8859-1" ))
 
-        if(self.__Index <> 0):
-            self.__prod.setProduct(self.__Index,char.encode( "iso-8859-1" ))
-            self.__Index = 0
+        #if(self.__Index <> 0):
+        #    self.__prod.setProduct(self.__Index,char.encode( "iso-8859-1" ))
+        #    self.__Index = 0

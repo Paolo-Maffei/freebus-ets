@@ -32,10 +32,80 @@ class FB_CommObj:
     __ObjPriority = ""      #OBJECT_PRIORITY
     __ObjUpdateEnabled = "" #OBJECT_UPDATEENABLED
     __ObjUniqueNumber = ""  #OBJECT_UNIQUE_NUMBER
+    __return = None
 
     def __init__(self):
         #print "okk"
         pass
+
+    def setCommObj(self,Index, Value):
+
+        if(Index == 1):
+            self.__ProgID = Value
+        elif(Index == 2):
+            self.__ObjName = Value
+        elif(Index == 3):
+            self.__ObjFunction = Value
+        elif(Index == 4):
+            self.__ObjReadEnabled = Value
+        elif(Index == 5):
+            self.__ObjWriteEnabled = Value
+        elif(Index == 6):
+            self.__ObjCommEnabled = Value
+        elif(Index == 7):
+            self.__ObjTransEnabled = Value
+        elif(Index == 8):
+            self.__ObjDisplayOrder = Value
+        elif(Index == 9):
+            self.__ParentParamValue = Value
+        elif(Index == 10):
+            self.__ObjID = Value
+        elif(Index == 11):
+            self.__ParamID = Value
+        elif(Index == 12):
+            self.__ObjNumber = Value
+        elif(Index == 13):
+            self.__ObjType = Value
+        elif(Index == 14):
+            self.__ObjPriority = Value
+        elif(Index == 15):
+            self.__ObjUpdateEnabled = Value
+        elif(Index == 16):
+            self.__ObjUniqueNumber = Value
+
+    def getCommObj(self,Index):
+        if(Index == 1):
+            return self.__ProgID
+        elif(Index == 2):
+            return self.__ObjName
+        elif(Index == 3):
+            return self.__ObjFunction
+        elif(Index == 4):
+            return self.__ObjReadEnabled
+        elif(Index == 5):
+            return self.__ObjWriteEnabled
+        elif(Index == 6):
+            return self.__ObjCommEnabled
+        elif(Index == 7):
+            return self.__ObjTransEnabled
+        elif(Index == 8):
+            return self.__ObjDisplayOrder
+        elif(Index == 9):
+            return self.__ParentParamValue
+        elif(Index == 10):
+            return self.__ObjID
+        elif(Index == 11):
+            return self.__ParamID
+        elif(Index == 12):
+            return self.__ObjNumber
+        elif(Index == 13):
+            return self.__ObjType
+        elif(Index == 14):
+            return self.__ObjPriority
+        elif(Index == 15):
+            return self.__ObjUpdateEnabled
+        elif(Index == 16):
+            return self.__ObjUniqueNumber
 
 #**********************************************************************
     #Handling PROGRAM_ID
@@ -48,6 +118,7 @@ class FB_CommObj:
     #Handling OBJECT_NAME
     def setObjName(self,O_Name):
         self.__ObjName = O_Name
+
 
     def getObjName(self):
         return self.__ObjName

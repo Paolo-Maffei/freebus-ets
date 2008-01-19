@@ -105,7 +105,6 @@ class FB_AppXMLHandler():
     def startElement(self, eName, attrs):
 
         try:
-            #self.__LogObj.NewLog("startElement: " ,0)
         #Look at SubNodes manufacturer
             if(eName == "manufacturer"):
                 self.__isMan = True
@@ -114,9 +113,11 @@ class FB_AppXMLHandler():
                 if(self.__isMan == True):
                     self.__isManName = True
 
-            elif(eName == "MANUFACTURER_ID"):
+            elif(eName == "MANUFACTURER_ID" ):
                 if(self.__isMan == True):
                     self.__isManID = True
+                if(self.__isApp == True):
+                    self.__isAppManID = True
 
         #Look at SubNodes application_program
             elif(eName == "application_program"):
@@ -183,10 +184,6 @@ class FB_AppXMLHandler():
                 if(self.__isApp == True):
                     self.__isProgSN = True
 
-            elif(eName == "MANUFACTURER_ID"):
-                if(self.__isApp == True):
-                    self.__isAppManID = True
-
             elif(eName == "EEPROM_DATA"):
                 if(self.__isApp == True):
                     self.__isEEPROMData = True
@@ -220,7 +217,7 @@ class FB_AppXMLHandler():
                     self.__isDynamicMng = True
 
             elif(eName == "PROGRAM_TYPE"):
-                if(self.__isMan == True):
+                if(self.__isApp == True):
                     self.__isProgType = True
 
             elif(eName == "RAM_SIZE"):
@@ -255,13 +252,15 @@ class FB_AppXMLHandler():
                 if(self.__isApp == True):
                     self.__isMinEtsVersion = True
 
+
         except SAXException:
             print "Error again"
 
     def endElement(self,eName):
 
         try:
-             #self.__LogObj.NewLog("endElement: " ,0)
+
+            #self.__LogObj.NewLog("endElement: " ,0)
             if(eName == "manufacturer"):
                 self.__isMan=False
                 #add Instanz to the list
@@ -271,6 +270,7 @@ class FB_AppXMLHandler():
 
             elif(eName == "application_program"):
                 self.__isApp=False
+
                 #add Instanz to the list
                 self.__Applications.append(self.__App)
                 self.__App = None
@@ -284,6 +284,9 @@ class FB_AppXMLHandler():
             elif(eName == "MANUFACTURER_ID"):
                 if(self.__isMan == True):
                     self.__isManID = False
+                if(self.__isApp == True):
+                    self.__isAppManID = False
+
 
             #Look at SubNodes of application_program
             elif(eName == "PROGRAM_ID"):
@@ -346,10 +349,6 @@ class FB_AppXMLHandler():
                 if(self.__isApp == True):
                     self.__isProgSN = False
 
-            elif(eName == "MANUFACTURER_ID"):
-                if(self.__isApp == True):
-                    self.__isAppManID = False
-
             elif(eName == "EEPROM_DATA"):
                 if(self.__isApp == True):
                     self.__isEEPROMData = False
@@ -383,7 +382,7 @@ class FB_AppXMLHandler():
                     self.__isDynamicMng = False
 
             elif(eName == "PROGRAM_TYPE"):
-                if(self.__isMan == True):
+                if(self.__isApp == True):
                     self.__isProgType = False
 
             elif(eName == "RAM_SIZE"):
