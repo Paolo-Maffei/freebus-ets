@@ -301,10 +301,10 @@ class FB_Mask:
 #**********************************************************************
     #MASK_DATA_LENGTH
     def setMaskDataLength(self,MaskDataLength):
-        self.__EEPROMData = MaskDataLength
+        self.__Mask_Data_Length = MaskDataLength
 
     def getMaskDataLength(self):
-        return self.__EEPROMData
+        return self.__Mask_Data_Length
 
 #**********************************************************************
 

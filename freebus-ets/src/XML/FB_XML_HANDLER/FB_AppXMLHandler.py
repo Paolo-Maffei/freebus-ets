@@ -108,10 +108,12 @@ class FB_AppXMLHandler():
         #Look at SubNodes manufacturer
             if(eName == "manufacturer"):
                 self.__isMan = True
+                #print "Manufact Start"
 
             elif(eName == "MANUFACTURER_NAME"):
                 if(self.__isMan == True):
                     self.__isManName = True
+                    #print "Manu Name Start"
 
             elif(eName == "MANUFACTURER_ID" ):
                 if(self.__isMan == True):
@@ -267,6 +269,7 @@ class FB_AppXMLHandler():
                 self.__Manufacturer.append(self.__Man)
                 self.__Man = None
                 self.__Man = FB_Manufacturer.FB_Manufacturer()
+                #print "Manufact Ende"
 
             elif(eName == "application_program"):
                 self.__isApp=False
@@ -280,6 +283,7 @@ class FB_AppXMLHandler():
             elif(eName == "MANUFACTURER_NAME"):
                 if(self.__isMan == True):
                     self.__isManName=False
+                    #print "Manufact Name Ende"
 
             elif(eName == "MANUFACTURER_ID"):
                 if(self.__isMan == True):
@@ -423,6 +427,7 @@ class FB_AppXMLHandler():
     def characters(self ,char):
         #print char
  #       self.__LogObj.NewLog("char: " + char.encode( "iso-8859-1" ) ,0)
+
         if(self.__isManName == True):
             self.__Man.setManufactName(char.encode( "iso-8859-1" ))
 

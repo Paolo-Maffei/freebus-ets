@@ -30,6 +30,7 @@ class FB_Manufacturer:
 
     def getManufacturer(self,Index):
         if(Index == 1):
+
             return self.__ManName
         elif(Index == 2):
             return self.__ManID
@@ -44,8 +45,8 @@ class FB_Manufacturer:
 #**********************************************************************
     #MANUFACTURER_ID
     def setManufactID(self,M_ID):
-        self.__Manufacturer_ID = M_ID
+        self.__ManID = M_ID
 
     def getManufactID(self):
-        return self.__Manufacturer_ID
+        return self.__ManID
 

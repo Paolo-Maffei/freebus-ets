@@ -62,7 +62,6 @@ class FB_Prod2ProgrXMLHandler():
 
     def startElement(self, eName, attrs):
         try:
-            #print eName
 
             if(eName == "product_to_program"):
                 self.__isProd2Prog = True
@@ -83,7 +82,7 @@ class FB_Prod2ProgrXMLHandler():
                 if(self.__isProd2Prog == True):
                     self.__isProd2Prog_Status_Code = True
 
-            elif(eName == "REGISTRATION_TS"):
+            elif(eName == "REGISTRATION_NUMBER"):
                 if(self.__isProd2Prog == True):
                     self.__isReg_Number = True
 
@@ -102,7 +101,6 @@ class FB_Prod2ProgrXMLHandler():
             elif(eName == "REGISTRATION_TS"):
                 if(self.__isProd2Prog == True):
                     self.__isReg_TS = True
-
 
         except SAXException:
             print "Error again"
@@ -132,7 +130,7 @@ class FB_Prod2ProgrXMLHandler():
             if(self.__isProd2Prog == True):
                 self.__isProd2Prog_Status_Code = False
 
-        elif(eName == "REGISTRATION_TS"):
+        elif(eName == "REGISTRATION_NUMBER"):
             if(self.__isProd2Prog == True):
                 self.__isReg_Number = False
 
@@ -151,7 +149,6 @@ class FB_Prod2ProgrXMLHandler():
         elif(eName == "REGISTRATION_TS"):
             if(self.__isProd2Prog == True):
                 self.__isReg_TS = False
-
 
 
     def characters(self ,char):

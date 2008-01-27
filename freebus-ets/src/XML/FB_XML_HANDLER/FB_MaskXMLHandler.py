@@ -280,7 +280,6 @@ class FB_MaskXMLHandler():
                 if(self.__isMask == True):
                     self.__isMaskEEpromData = False
 
-
             elif(eName == "MASK_DATA_LENGTH"):
                 if(self.__isMask == True):
                     self.__isMask_Data_Length = False
@@ -329,6 +328,7 @@ class FB_MaskXMLHandler():
     def characters(self ,char):
         #print char
  #       self.__LogObj.NewLog("char: " + char.encode( "iso-8859-1" ) ,0)
+
         if(self.__isMaskID == True):
             self.__Mask.setMaskID(char.encode( "iso-8859-1" ))
 

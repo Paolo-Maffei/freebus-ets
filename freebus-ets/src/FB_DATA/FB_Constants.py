@@ -268,16 +268,5 @@ mask2maskNode =    ["mask_to_mask_feature","MASK_TO_MASK_FEATURE_ID",
                                            "MASK_ID",
                                            "MASK_FEATURE_ID"]
 
-#List of Productfile entries
-MainNodes = [ManufacturerNode[0],
-             FunctionalNode[0],
-             BCUNode[0],
-             SymbolNode[0],
-             ProductNode[0],
-             CatalogNode[0],
-             MediumNode[0],
-             MaskNode[0],
-             AppNode[0],
-             VirDeviceNode[0],
-             ]
+#-----------------------------------------------------------------------
 

@@ -7,7 +7,11 @@
 #===============================================================================
 
 from XML import FB_XMLConverter
-from XML import FB_XML
+from XML import FB_XML_PRODUCT
+from XML import FB_XMLDataModel
+from FB_PROJECT import FB_ArchitecturalDataModel
+
+
 from LOG import Logging
 
 
@@ -23,16 +27,22 @@ Options = 0
 LOG_XML = Logging.Logging("FB_XML",LogFileName,Options)
 
 file = "J:/Elektronik/Projekte/EIB/ETS for Freebus/SunXML.xml"
-newfile = "J:/Elektronik/Projekte/EIB/ETS for Freebus/TestXML.xml"
+
+projectfile = "J:/Elektronik/Projekte/EIB/ETS for Freebus/Test.xml"
 
 
 XML = FB_XMLConverter.FB_XMLConverter("J:/Elektronik/Projekte/EIB/ETS for Freebus/CSuntracer2.vd_", \
                                   file, LOG_XML)
 
-#XML.convertToXML()
 
-FB_XML_new = FB_XML.FB_XML(LOG_XML, newfile)
-FB_XML = FB_XML.FB_XML(LOG_XML, file)
+
+#XML.convertToXML()
+ProjectModel = FB_ArchitecturalDataModel.FB_ArchitecturalDataModel(LOG_XML, projectfile)
+#print test
+
+
+#FB_XML_new = FB_XML_PRODUCT.FB_XML_PRODUCT(LOG_XML, newfile)
+FB_XML = FB_XML_PRODUCT.FB_XML_PRODUCT(LOG_XML, file)
 #new product-file
 #FB_XML_new.CreateProductFile() #create also DOM-Object
 
@@ -42,8 +52,8 @@ FB_XML = FB_XML.FB_XML(LOG_XML, file)
 
 #create parse-object and parse xml-file -> all sub-handler will be called automatically
 
-XMLHandler = FB_XML.parseXMLFile() #call also after creation of file
-#XMLHandler = -1
+#XMLHandler = FB_XML.parseXMLFile() #call also after creation of file
+XMLHandler = -1
 if(XMLHandler != -1):
     #Product-List
     productList = FB_XML.getProducts(XMLHandler)
@@ -58,6 +68,7 @@ if(XMLHandler != -1):
 
     productList[0].setProductName("Freebus")
     CommObjList[0].setObjName("Schalt Dings Bums הההh")
+    Mask[0].setMaskVersion("4.05")
 
     FB_XML.SaveDocument()
 #    print AppManList[0][0].getProgramName()
