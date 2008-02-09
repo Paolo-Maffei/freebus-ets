@@ -13,9 +13,9 @@
 #email: j.leisner@ing-automation.de
 #===============================================================================
 
-
-from xml.dom import minidom
-from xml.dom.minidom import *
+import xml.dom
+#from xml.dom import dom
+#from xml.dom.minidom import *
 
 
 ##general class for handling project data which are based on XML
@@ -27,12 +27,10 @@ class FB_XMLDataModel:
     ##Constructor for an empty
     #@param LogObj: Log-File-Object to log all events within this inctance
     #@param projectname: Path and name of project
-    def __init__(self,LogObj, projectname):
+    def __init__(self,LogObj, Document, projectname):
         self.__LogObj = LogObj
         #create an DOMObj
-        Start = """<?xml version=\"1.0\" ?>\n
-                <architectural-data></architectural-data>"""
-        self.__DOMObj = minidom.parseString(Start)
+        self.__DOMObj = Document
 
 
     ##return the current DOM-Object
@@ -52,12 +50,12 @@ class FB_XMLDataModel:
     #get the name of a Node
     def getName(self,ID):
         Node = self.getDataRootNode(ID)
-        return  "" #this.readDOMNodeValue(Node, new StringTokenizer("name", "/"));
+        return self.readDOMNodeValue(Node, "name" )
 
     #set the name of Node
     def setName(self,ID,Name):
         Node = self.getDataRootNode(ID)
-         #this.writeDOMNodeValue(n, new StringTokenizer("name", "/"), name);
+        self.writeDOMNodeValue(Node, "name", Name)
 
     #get comment
     def getComment(self, ID):
@@ -130,23 +128,28 @@ class FB_XMLDataModel:
         NodeName = ""
 
         if(end <> -1):
-            NodeName = ID[0, end]
+            NodeName = ID[0: end]
         else:
             NodeName = ID
-
+        #print self.__DOMObj
         NodeList = self.__DOMObj.getElementsByTagName(NodeName)
 
         if(len(NodeList) > 0):
             for i in range(len(NodeList)):
-                Node = NodeList.item(i)
-                attr = Node.getAttributes()
 
-                if(attr <> ""):
+                Node = NodeList.item(i)
+
+                #attr = Node.getAttribute("id")
+                attr = Node.attributes
+                #print attr
+                if(attr <> None):
                     idNode = None
                     idNode = attr.getNamedItem("id")
+
                     if(idNode <> None):
-                        if(idNode.getNodeValue() == ID):
+                        if(idNode.nodeValue == ID):
                             drNode = Node
+                            #print drNode
                             break
 
         return drNode
@@ -156,40 +159,83 @@ class FB_XMLDataModel:
     #@param path path to the node
     #@param value the value that will be written
     def writeDOMNodeValue(self, Node, Path, Value):
+
         self.writeNodeValue(Node, Path, Value)
         self.__DOMObj.normalize()
 
 
     #Recursively DFS method for writing node values. If no such nod exists the method creates them.
     def writeNodeValue(self, Node, Path, Value):
-        pass
-#        if(n.getChildNodes()==null)
-#                Node ne=n.appendChild(n.getOwnerDocument().createElement(next)); // build tag
-#                writeNodeValue(ne, path, value);
+        #there are no entries
+        if(Node.childNodes == None):
+            print "look at writeNodeValue..."
+        #if(len(Node.childNodes) == 0):
 
-#            else
-#                NodeList nl=n.getChildNodes();
- #               boolean found=false;
+        #    NewNode = Node.appendChild(self.__DOMObj.createElement(Path))
+        #    print NewNode
+            #self.writeNodeValue(NewNode, Path, Value)
 
-  #              for(int i=0; i<nl.getLength(); i++)
-   #                 if(nl.item(i).getNodeName().equals(next))
-    #                    found=true;
-     #                   writeNodeValue(nl.item(i), path, value);
-     #                   break;
-#                if(!found)
-#                    Node nu=n.appendChild(n.getOwnerDocument().createElement(next));
-#                    writeNodeValue(nu, path, value);
-#        else // end of path
-#            if(n.hasChildNodes())
-#                if(n.getChildNodes().item(0).getNodeType()==Node.TEXT_NODE)
-#                    n.getChildNodes().item(0).setNodeValue(value);
-#                    return;
-#                else
+        else:
+            NodeList = Node.childNodes
+            if(len(NodeList) > 0):
+                found = False
+                if(NodeList[0].nodeType == Node.ELEMENT_NODE):
+                    for i in range(len(NodeList)):
+                        #check if Node already exist
+                        if(NodeList.item(i).nodeName == Path):
+                            found = True
+                            self.writeNodeValue(NodeList.item(i), Path, Value)
+                            break
 
- #                   n.appendChild(n.getOwnerDocument().createTextNode(value));
+                        if(found == False):
+                            if(Node.nodeType == Node.ELEMENT_NODE):
+                                #print Node.parentNode
+                                #Child = Node.documentElement.createElement(Path)
+                                #NewNode = Node.appendChild(Child)
+                                #self.writeNodeValue(NewNode, Path, Value)
+                                pass
+                #Nodetyp TEXT -> found correct level
+                else:
+                    Node.firstChild.data = unicode(Value,"ISO-8859-1")
+                    return
+            #Len of NodeList = 0 -> writable Node doesnt exist
+            else:
 
-#                    return;
-#            else
-#                n.appendChild(n.getOwnerDocument().createTextNode(value));
-#                return;
+                if(Node.hasChildNodes == True):
 
+                    if(Node.childNodes.item(0).nodeType == Node.TEXT_NODE):
+                        Node.firstChild.data = unicode(Value,"ISO-8859-1")
+                        return
+                    else:
+                        Node.appendChild(self.__DOMObj.createTextNode(unicode(Value,"ISO-8859-1")))
+                        return
+                else:
+                    Node.appendChild(self.__DOMObj.createTextNode(unicode(Value,"ISO-8859-1")))
+                    return
+
+
+    ##BFS method for reading node values
+    def readDOMNodeValue(self, Node, path):
+
+        #NodeList contains all childnodes within Parent Node "Node"
+        NodeList = Node.childNodes
+
+        if(len(NodeList) > 0):
+                cnt = 0
+                for cnt in range(len(NodeList)):
+                    if(NodeList.item(cnt).nodeName == path):
+                        #get NodeObject with given path
+                        actualVisited = NodeList.item(cnt)
+                        break
+        else:
+            return ""
+
+        #are there more subnodes of given path-node?
+        if(actualVisited.hasChildNodes()):
+            if(actualVisited.firstChild.nodeType == Node.TEXT_NODE):
+                   Value = actualVisited.firstChild.data
+                   return Value.encode("ISO-8859-1")
+        else:
+            return ""
+
+        return ""

@@ -10,10 +10,10 @@ from XML import FB_XMLConverter
 from XML import FB_XML_PRODUCT
 from XML import FB_XMLDataModel
 from FB_PROJECT import FB_ArchitecturalDataModel
-
+from FB_PROJECT import FB_Project
 
 from LOG import Logging
-
+from GUI import FB_MainFrame
 
 LogFileName = "J:/Elektronik/Projekte/EIB/ETS for Freebus/Log/XMLLog.log"
 Options = 0
@@ -34,11 +34,25 @@ projectfile = "J:/Elektronik/Projekte/EIB/ETS for Freebus/Test.xml"
 XML = FB_XMLConverter.FB_XMLConverter("J:/Elektronik/Projekte/EIB/ETS for Freebus/CSuntracer2.vd_", \
                                   file, LOG_XML)
 
+FBMain = FB_MainFrame.FB_MainFrame()
+FBMain.main()
 
+#******* CONVERT ***************
 
 #XML.convertToXML()
-ProjectModel = FB_ArchitecturalDataModel.FB_ArchitecturalDataModel(LOG_XML, projectfile)
-#print test
+
+#******* PROJECT *********************************
+#Project = FB_Project.FB_Project(LOG_XML,"doof" ,None)
+#Project.setProjectName("Pooopel")
+#Project.setPrefferedBusSystem("LON")
+#Project.setComment("is doch alles klar...‰‰h?")
+
+#print Project.getProjectName()
+#print Project.getComment()
+#print Project.getPrefferedBusSystem()
+#print Project.getProjectDirectoryName()
+
+#Project.SaveProject()
 
 
 #FB_XML_new = FB_XML_PRODUCT.FB_XML_PRODUCT(LOG_XML, newfile)
