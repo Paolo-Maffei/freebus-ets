@@ -6,6 +6,7 @@
 #Autor: Jerome Leisner
 #===============================================================================
 
+import os
 from XML import FB_XMLConverter
 from XML import FB_XML_PRODUCT
 from XML import FB_XMLDataModel
@@ -14,6 +15,7 @@ from FB_PROJECT import FB_Project
 
 from LOG import Logging
 from GUI import FB_MainFrame
+
 
 LogFileName = "J:/Elektronik/Projekte/EIB/ETS for Freebus/Log/XMLLog.log"
 Options = 0
@@ -33,6 +35,7 @@ projectfile = "J:/Elektronik/Projekte/EIB/ETS for Freebus/Test.xml"
 
 XML = FB_XMLConverter.FB_XMLConverter("J:/Elektronik/Projekte/EIB/ETS for Freebus/CSuntracer2.vd_", \
                                   file, LOG_XML)
+
 
 FBMain = FB_MainFrame.FB_MainFrame()
 FBMain.main()

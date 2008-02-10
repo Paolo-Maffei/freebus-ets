@@ -1,0 +1,195 @@
+<?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->
+<!DOCTYPE glade-interface SYSTEM "http://glade.gnome.org/glade-2.0.dtd">
+
+<glade-interface>
+
+<widget class="GtkWindow" id="MainFrame">
+  <property name="visible">True</property>
+  <property name="title" translatable="yes">Freebus-ETS</property>
+  <property name="type">GTK_WINDOW_TOPLEVEL</property>
+  <property name="window_position">GTK_WIN_POS_CENTER</property>
+  <property name="modal">False</property>
+  <property name="default_width">1024</property>
+  <property name="default_height">768</property>
+  <property name="resizable">True</property>
+  <property name="destroy_with_parent">False</property>
+  <property name="icon">freebuslogo1bit.bmp</property>
+  <property name="decorated">True</property>
+  <property name="skip_taskbar_hint">False</property>
+  <property name="skip_pager_hint">False</property>
+  <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
+  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+  <signal name="destroy" handler="on_MainFrame_destroy" last_modification_time="Sun, 10 Feb 2008 11:47:22 GMT"/>
+
+  <child>
+    <widget class="GtkAlignment" id="alignment1">
+      <property name="visible">True</property>
+      <property name="xalign">0</property>
+      <property name="yalign">0</property>
+      <property name="xscale">1</property>
+      <property name="yscale">0</property>
+      <property name="top_padding">0</property>
+      <property name="bottom_padding">0</property>
+      <property name="left_padding">0</property>
+      <property name="right_padding">0</property>
+
+      <child>
+	<widget class="GtkMenuBar" id="MainMenu">
+	  <property name="visible">True</property>
+
+	  <child>
+	    <widget class="GtkMenuItem" id="menuitem1">
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes">_Datei</property>
+	      <property name="use_underline">True</property>
+
+	      <child>
+		<widget class="GtkMenu" id="menuitem1_menu">
+
+		  <child>
+		    <widget class="GtkImageMenuItem" id="new_project">
+		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">erzeugt ein neues Projekt</property>
+		      <property name="label" translatable="yes">_Neues Projekt</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_new_project_activate" last_modification_time="Sat, 09 Feb 2008 19:33:05 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image125">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-new</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkImageMenuItem" id="open_project">
+		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">öffnet ein vorhandenes Projekt</property>
+		      <property name="label" translatable="yes">Öffne Pr_ojekt</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_open_project_activate" last_modification_time="Sat, 09 Feb 2008 19:33:05 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image126">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-open</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkImageMenuItem" id="Save">
+		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">speichert Projekt unter aktuellen Namen</property>
+		      <property name="label" translatable="yes">_Speichern</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_Save_activate" last_modification_time="Sat, 09 Feb 2008 19:33:05 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image127">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-save</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkImageMenuItem" id="Save_As">
+		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">speichert das Projekt unter einem neuen Namen</property>
+		      <property name="label" translatable="yes">S_peichern unter</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_Save_As_activate" last_modification_time="Sat, 09 Feb 2008 19:33:05 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image128">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-save-as</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkSeparatorMenuItem" id="separatormenuitem1">
+		      <property name="visible">True</property>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkImageMenuItem" id="Quitt">
+		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">beendet das schöne Programm</property>
+		      <property name="label" translatable="yes">_Beenden</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_Quitt_activate" last_modification_time="Sun, 10 Feb 2008 13:09:30 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image129">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-quit</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
+		</widget>
+	      </child>
+	    </widget>
+	  </child>
+
+	  <child>
+	    <widget class="GtkImageMenuItem" id="About">
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes">Ü_ber...</property>
+	      <property name="use_underline">True</property>
+	      <signal name="activate" handler="on_About_activate" last_modification_time="Sat, 09 Feb 2008 19:33:05 GMT"/>
+
+	      <child internal-child="image">
+		<widget class="GtkImage" id="image130">
+		  <property name="visible">True</property>
+		  <property name="stock">gtk-about</property>
+		  <property name="icon_size">1</property>
+		  <property name="xalign">0.5</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		</widget>
+	      </child>
+	    </widget>
+	  </child>
+	</widget>
+      </child>
+    </widget>
+  </child>
+</widget>
+
+</glade-interface>
