@@ -19,7 +19,8 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 import gtk.glade
-from GUI import *
+from GUI import FB_NewProjectWindow
+
 
 class FB_MainFrame:
 
@@ -33,12 +34,17 @@ class FB_MainFrame:
         self.__WindowHeigth = gtk.gdk.screen_height()
 
         GUIDirPath = os.path.dirname(__file__) + os.sep
-        self.wTree = gtk.glade.XML(GUIDirPath + "freebus.glade")
+        self.wTree = gtk.glade.XML(GUIDirPath + "freebus.glade", "MainFrame")
         self.window = self.wTree.get_widget
 
         dic = { "on_MainFrame_destroy" : gtk.main_quit ,
-                "on_Quitt_activate" : gtk.main_quit }
+                "on_Quitt_activate" : gtk.main_quit,
+                "on_new_project_activate": self.MenuNewProject }
         self.wTree.signal_autoconnect(dic)
+
+    #create a new project
+    def MenuNewProject(self,widget, data=None):
+        newProjectWin = FB_NewProjectWindow.FB_NEWPROJECTWINDOW()
 
     def main(self):
     # All PyGTK applications must have a gtk.main(). Control ends here
