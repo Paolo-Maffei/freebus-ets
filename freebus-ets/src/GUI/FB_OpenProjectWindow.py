@@ -7,7 +7,7 @@
 #   / __/ / _, _/ /___/ /___/ /_/ / /_/ /___/ /
 #  /_/   /_/ |_/_____/_____/_____/\____//____/
 #
-#Source File: FB_NewProjectWindow.py
+#Source File: FB_OpenProjectWindow.py
 #Version: V0.1 , 17.02.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
@@ -24,7 +24,7 @@ from FB_PROJECT import FB_ArchitecturalDataModel
 from FB_PROJECT import FB_Project
 
 
-class FB_NEWPROJECTWINDOW:
+class FB_OPENPROJECTWINDOW:
 
     __WindowWidth = 0
     __WindowHeigth = 0
@@ -37,26 +37,31 @@ class FB_NEWPROJECTWINDOW:
     __Project = None    #general Project Object
     __MainFrame = None  #MainFrame Object
 
-    def __init__(self, LogObj,MainFrame):
+    def __init__(self, LogObj, MainFrame):
         self.__LogObj = LogObj
         self.__MainFrame = MainFrame
 
         GUIDirPath = os.path.dirname(__file__) + os.sep
-        self.__wTree = gtk.glade.XML(GUIDirPath + "freebus.glade", "New_Project")
-        self.__window = self.__wTree.get_widget("New_Project")
+        self.__wTree = gtk.glade.XML(GUIDirPath + "freebus.glade", "Open_Project")
+        self.__window = self.__wTree.get_widget("Open_Project")
 
-        dic = { "on_New_Project_destroy" : self.CloseWindow ,
+        dic = { "on_Open_Project_destroy" : self.CloseWindow ,
                 "on_bCancel_clicked" : self.bCancel,
                 "on_bOK_clicked" :self.bOK}
 
         self.__wTree.signal_autoconnect(dic)
+
+        #create file-filter
+        filter = gtk.FileFilter()
+        filter.add_pattern("*.xml")
+        filter.set_name("Freebus XML")
+        self.__window.add_filter(filter)
+
         self.__SelFolder = ""
         self.__SelFile = ""
 
-
     def CloseWindow(self,widget):
         gtk.Widget.destroy(self.__window)
-
 
     #Cancel Button has been pressed
     def bCancel(self,widget):
@@ -65,39 +70,29 @@ class FB_NEWPROJECTWINDOW:
     #OK Button has been pressed
     def bOK(self,widget):
         #get data from FileChooser
-        w1 = self.__wTree.get_widget("FileChooser")
-        w2 = self.__wTree.get_widget("editProjectName")
 
-        checkProjDir = self.__wTree.get_widget("checkCreateProjDir")
+        #check if choosen file is a correct freebus structure file
+        self.__SelFolder = self.__window.get_current_folder()
+        FileFolder = self.__window.get_filename()
 
-        self.__SelFile = w2.get_text()
-        self.__SelFolder = w1.get_current_folder()
+        #split SelFile (get_filename return complete path + filename)
+        List = FileFolder.split("\\")
+        tFileName = List[len(List)-1]
 
-        #check if user wants to create a projject directory
-        checked = checkProjDir.get_active()
-        NewPath = self.__SelFolder + "\\" + self.__SelFile
+        #check for xml file
+        if(tFileName.find(".xml") <> -1):
+            self.__SelFile = tFileName
+            #create Projectstructure to current working direytroy
+            self.__Project = FB_Project.FB_Project(self.__LogObj,self.__SelFile ,self.__SelFolder)
+            self.__Project.setProjectPath(self.__SelFolder)
+        else:
+            self.__Project = None
+            self.__LogObj.NewLog("There was no project file choosen; Please choose a valid freebus xml structure file. ",1)
 
-        os.chdir(self.__SelFolder)
-
-        if(checked == True and self.__SelFile <> ""):
-           #check if path already exist
-           if(os.path.exists(NewPath) == True):
-               self.__LogObj.NewLog("Try to create an existing directory for a project: Directory already exist! ",1)
-           #create new directory
-           else:
-               os.mkdir(NewPath)
-               os.chdir(NewPath)
-
-        #create Projectstructure to current working direytroy
-        self.__Project = FB_Project.FB_Project(self.__LogObj,self.__SelFile ,None)
-        #set path of project
-        self.__Project.setProjectPath(os.getcwd())
-
+        #close Dialog
         #give back current project object
         self.__MainFrame.SetCurrProject(self.__Project)
-        #close Dialog
         gtk.Widget.destroy(self.__window)
-
 
     def getProject(self):
         return self.__Project

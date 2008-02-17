@@ -33,41 +33,36 @@ class FB_Project:
     #@param projectname: Path and name of project
     def __init__(self, LogObj, projectname, projectpath):
         self.__LogObj = LogObj
+        ArchDocument = None
 
-        #create new directory of projectname
-
-
+        #create new directory of projectname -> for opening projects
         if(projectpath != None):
-            prj = projectpath + "/" + projectname
-            #create directory if it doesnt exist
-            if(os.path.exists(prj) == False):
-                os.mkdir(prj)
-            ArchDocument = minidom.parse(prj + "/structure.xml")
-
+            ArchDocument = minidom.parse(projectpath + "\\structure.xml")
+            self.__archmodel = FB_ArchitecturalDataModel.FB_ArchitecturalDataModel(self.__LogObj,ArchDocument,projectname,False)
+        #new project
         else:
-            prj = os.getcwd() + "/" + projectname
-            if(os.path.exists(prj) == False):
-                os.mkdir(prj)
-            #change to new project directory
-            os.chdir(prj)
             #create empty structure file
             impl = getDOMImplementation()
             ArchDocument = impl.createDocument(None, "architectural-data", None)
-
-        self.__archmodel = FB_ArchitecturalDataModel.FB_ArchitecturalDataModel(self.__LogObj,ArchDocument,projectname)
+            self.__archmodel = FB_ArchitecturalDataModel.FB_ArchitecturalDataModel(self.__LogObj,ArchDocument,projectname,True)
 
         #XMLLoader load2=new XMLLoader(new File(projectpath.getPath()+"/installation.xml"));
         #instamodell=new InstallationModel(load2.getDocument());
+#*****************************************************************************
+    def setProjectPath(self,projectPath):
+        self.__archmodel.setProjectPath(projectPath)
 
+    def getProjectPath(self):
+        return self.__archmodel.getProjectPath()
 #*****************************************************************************
     def setProjectName(self, projectName):
-          self.__archmodel.setProjectName(projectName)
+        self.__archmodel.setProjectName(projectName)
 
     def getProjectName(self):
         return self.__archmodel.getProjectName()
 #*****************************************************************************
     def setComment(self, comment):
-          self.__archmodel.setComment(comment)
+        self.__archmodel.setComment(comment)
 
     def getComment(self):
         return self.__archmodel.getComment()
@@ -82,5 +77,5 @@ class FB_Project:
         return self.__archmodel.getPrefferedBusSystem()
 #*****************************************************************************
 
-    def SaveProject(self):
+    def SaveProject(self,):
         self.__archmodel.SaveArchmodel()

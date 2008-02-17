@@ -11,8 +11,6 @@ import os
 from XML import FB_XMLConverter
 from XML import FB_XML_PRODUCT
 from XML import FB_XMLDataModel
-from FB_PROJECT import FB_ArchitecturalDataModel
-from FB_PROJECT import FB_Project
 
 from LOG import Logging
 from GUI import FB_MainFrame
@@ -38,7 +36,7 @@ XML = FB_XMLConverter.FB_XMLConverter("J:/Elektronik/Projekte/EIB/ETS for Freebu
                                   file, LOG_XML)
 
 
-FBMain = FB_MainFrame.FB_MainFrame()
+FBMain = FB_MainFrame.FB_MainFrame(LOG_XML)
 FBMain.main()
 
 #******* CONVERT ***************
@@ -46,7 +44,6 @@ FBMain.main()
 #XML.convertToXML()
 
 #******* PROJECT *********************************
-#Project = FB_Project.FB_Project(LOG_XML,"doof" ,None)
 #Project.setProjectName("Pooopel")
 #Project.setPrefferedBusSystem("LON")
 #Project.setComment("is doch alles klar...‰‰h?")

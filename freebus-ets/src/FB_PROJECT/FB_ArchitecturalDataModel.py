@@ -17,7 +17,7 @@
 from xml.dom import minidom
 from xml.dom.minidom import *
 from XML.FB_XMLDataModel import FB_XMLDataModel #import class as base class
-
+import os
 
 ##general class for handling project data which are based on XML
 class FB_ArchitecturalDataModel(FB_XMLDataModel):
@@ -32,11 +32,12 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
     __ROOM_PREFIX="room"
     __JUNCTION_BOX_PREFIX="junctionbox"
     __archDocument = None
+    __PATH = ""         #Project Path
 
     ##Constructor
     #@param LogObj: Log-File-Object to log all events within this inctance
     #@param projectname: Path and name of project
-    def __init__(self, LogObj, ArchDocument, projectname):
+    def __init__(self, LogObj, ArchDocument,projectname, new):
         FB_XMLDataModel.__init__(self,LogObj,ArchDocument,projectname)
 
         self.__LogObj = LogObj
@@ -44,20 +45,21 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
 
         #archNode = Document.appendChild(Document.createElement("architectural-data"))
         #find mainnode "architectural-data"
-        archNode = self.__archDocument.documentElement
-        pNode = archNode.appendChild(self.__archDocument.createElement("project"))
+        if(new == True):
+            archNode = self.__archDocument.documentElement
+            pNode = archNode.appendChild(self.__archDocument.createElement("project"))
 
-        pNode.setAttribute("id", self.__ROOT_ID)
-        pNode.appendChild(self.__archDocument.createElement("name")).appendChild(self.__archDocument.createTextNode(projectname))
-        pNode.appendChild(self.__archDocument.createElement("comment"))
-        DirTextNode = self.__archDocument.createTextNode(self.makeProjectDirectoryName())
-        pNode.appendChild(self.__archDocument.createElement("directoryname")).appendChild(DirTextNode)
-        pNode.appendChild(self.__archDocument.createElement("preffered-bus-system"))
+            pNode.setAttribute("id", self.__ROOT_ID)
+            pNode.appendChild(self.__archDocument.createElement("name")).appendChild(self.__archDocument.createTextNode(projectname))
+            pNode.appendChild(self.__archDocument.createElement("comment"))
+            DirTextNode = self.__archDocument.createTextNode(self.makeProjectDirectoryName())
+            pNode.appendChild(self.__archDocument.createElement("directoryname")).appendChild(DirTextNode)
+            pNode.appendChild(self.__archDocument.createElement("preffered-bus-system"))
 
-        OutFileObj = open("structure.xml","w")
-        String = self.__archDocument.toxml(encoding = "ISO-8859-1")
-        OutFileObj.write(String)
-        OutFileObj.close()
+            OutFileObj = open("structure.xml","w")
+            String = self.__archDocument.toxml(encoding = "ISO-8859-1")
+            OutFileObj.write(String)
+            OutFileObj.close()
 
     ##Returns the data model root node ID.
     def getRootID(self):
@@ -180,7 +182,12 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
 
         return name
 #****************************************************************************
+    def setProjectPath(self,projectPath):
+        self.__PATH = projectPath
 
+    def getProjectPath(self):
+        return self.__PATH
+#****************************************************************************
     def getProjectName(self):
         return self.getName(self.__ROOT_ID)
 
@@ -214,6 +221,7 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
         return name
 #****************************************************************************
     def SaveArchmodel(self):
+        os.chdir(self.getProjectPath())
         OutFileObj = open("structure.xml","w")
         String = self.__archDocument.toxml(encoding = "ISO-8859-1")
         OutFileObj.write(String)
