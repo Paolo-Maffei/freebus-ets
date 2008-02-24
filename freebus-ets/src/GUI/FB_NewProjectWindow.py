@@ -42,14 +42,16 @@ class FB_NEWPROJECTWINDOW:
         self.__MainFrame = MainFrame
 
         GUIDirPath = os.path.dirname(__file__) + os.sep
-        self.__wTree = gtk.glade.XML(GUIDirPath + "freebus.glade", "New_Project")
-        self.__window = self.__wTree.get_widget("New_Project")
+
+        GladeObj = gtk.glade.XML(GUIDirPath + "freebus.glade","New_Project")
+
+        self.__window = GladeObj.get_widget("New_Project")
 
         dic = { "on_New_Project_destroy" : self.CloseWindow ,
                 "on_bCancel_clicked" : self.bCancel,
                 "on_bOK_clicked" :self.bOK}
 
-        self.__wTree.signal_autoconnect(dic)
+        GladeObj.signal_autoconnect(dic)
         self.__SelFolder = ""
         self.__SelFile = ""
 

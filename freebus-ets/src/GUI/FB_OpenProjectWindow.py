@@ -42,18 +42,20 @@ class FB_OPENPROJECTWINDOW:
         self.__MainFrame = MainFrame
 
         GUIDirPath = os.path.dirname(__file__) + os.sep
-        self.__wTree = gtk.glade.XML(GUIDirPath + "freebus.glade", "Open_Project")
-        self.__window = self.__wTree.get_widget("Open_Project")
+
+        GladeObj = gtk.glade.XML(GUIDirPath + "freebus.glade","Open_Project")
+
+        self.__window = GladeObj.get_widget("Open_Project")
 
         dic = { "on_Open_Project_destroy" : self.CloseWindow ,
                 "on_bCancel_clicked" : self.bCancel,
                 "on_bOK_clicked" :self.bOK}
 
-        self.__wTree.signal_autoconnect(dic)
+        GladeObj.signal_autoconnect(dic)
 
         #create file-filter
         filter = gtk.FileFilter()
-        filter.add_pattern("*.xml")
+        filter.add_pattern("structure.xml")
         filter.set_name("Freebus XML")
         self.__window.add_filter(filter)
 

@@ -48,6 +48,11 @@ class FB_Project:
 
         #XMLLoader load2=new XMLLoader(new File(projectpath.getPath()+"/installation.xml"));
         #instamodell=new InstallationModel(load2.getDocument());
+  
+        
+#*****************************************************************************
+    def getArchModel(self):
+        return self.__archmodel
 #*****************************************************************************
     def setProjectPath(self,projectPath):
         self.__archmodel.setProjectPath(projectPath)

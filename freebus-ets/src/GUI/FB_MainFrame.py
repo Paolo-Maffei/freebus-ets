@@ -21,6 +21,7 @@ import gtk
 import gtk.glade
 from GUI import FB_NewProjectWindow
 from GUI import FB_OpenProjectWindow
+from GUI.Tree import FB_ArchitecturalTree
 
 
 class FB_MainFrame:
@@ -29,6 +30,13 @@ class FB_MainFrame:
     __WindowHeigth = 0
     __LogObj = None
     __CurProjectObj = None
+    __GladeObj = None
+    __GUIPath = ""
+    __ImagePath = ""
+    __ProjTree = None
+    __TreeIterator = None        #Iterator-Object for Tree
+    treestore = None
+    __ArchTree = None            #Object for Tree-Class
 
     def __init__(self, LogObj):
     # create a new window
@@ -39,16 +47,32 @@ class FB_MainFrame:
         self.__WindowWidth = gtk.gdk.screen_width()
         self.__WindowHeigth = gtk.gdk.screen_height()
 
-        GUIDirPath = os.path.dirname(__file__) + os.sep
-        self.wTree = gtk.glade.XML(GUIDirPath + "freebus.glade", "MainFrame")
-        self.window = self.wTree.get_widget
+
+        self.__GUIPath = os.path.dirname(__file__) + os.sep
+
+        self.__GladeObj = gtk.glade.XML(self.__GUIPath + "freebus.glade","MainFrame")
+
+        if(self.__GladeObj == None):
+           self.__LogObj.NewLog("Error at intializing GUI-Interface (Glade-Object)",1)
+           return
+
+        self.window = self.__GladeObj.get_widget("MainFrame")
+
+        #get widget object of PanelLeft (Project-Tree)
+        self.Tree = self.__GladeObj.get_widget("ProjectTree")
+        self.__ProjTree = self.Tree
 
         dic = { "on_MainFrame_destroy" : gtk.main_quit ,
                 "on_Quitt_activate" : gtk.main_quit,
                 "on_new_project_activate" : self.MenuNewProject,
                 "on_open_project_activate" : self.MenuOpenProject,
                 "on_Save_activate" : self.MenuSaveProject }
-        self.wTree.signal_autoconnect(dic)
+        self.__GladeObj.signal_autoconnect(dic)
+
+        #create Project Tree
+
+        self.__ArchTree = FB_ArchitecturalTree.FB_ArchitecturalTree(self.__LogObj,self.__ProjTree)
+
 
     #create a new project
     def MenuNewProject(self,widget, data=None):
@@ -67,13 +91,60 @@ class FB_MainFrame:
             print "Fehler save "
             self.__LogObj.NewLog("Error at saving Projectdata -> CurProjectObj is Nonetype",1)
 
-
     #set current project object
     def SetCurrProject(self, ProjObj):
         self.__CurProjectObj = ProjObj
-        self.__CurProjectObj.setPrefferedBusSystem("FREEBUS-EIB")
+        #reorganize our project-tree
+        if(self.__ProjTree <> None):
+            self.__ArchTree.CreateNewTree(self.__CurProjectObj)
+
+    def BuildTree(self):
+        return
+        #set iterator to first position
+        Iter = self.treestore.get_iter_first()
+        if(True):
+            self.treestore.set_value(Iter,1,self.__CurProjectObj.getProjectName())
+            ArchModel = self.__CurProjectObj.getArchModel()
+
+            #first iteration through tree-structure 1..5
+            Node = ArchModel.getDataRootNode(ArchModel.getRootID())
+
+
+            image = gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "building.png")
+
+            for i in range(2,6):
+                Prefix = ArchModel.getPrefix(i)
+                #get count of each part
+                IDList = ArchModel.getIDList(Node,Prefix)
+                NodeList = Node.getElementsByTagName(Prefix)
+
+                #Test = NodeList.getElementsByTagName("name")
+                print IDList
+                doc = ArchModel.getDOMObj()
+
+                for j in range(len(IDList)):
+
+                    child = doc.getElementById(IDList[j])
+                    #child = NodeList[j].getElementByID(IDList(j)) #getElementsByTagName("name")
+                    print child
+                    #Test = Node.getElementById(IDList[j])
+                    #print Test
+#                    iter =  self.treestore.append(Iter, [image, child[0].firstChild.data])
+
+                Iter = iter
+
+
+        else:
+        #except:
+            self.__LogObj.NewLog("Error at building project tree",2)
+
+
+    def getTreeIterator(self):
+        return self.__TreeIterator
+
 
     def main(self):
     # All PyGTK applications must have a gtk.main(). Control ends here
     # and waits for an event to occur (like a key press or mouse event).
+
         gtk.main()

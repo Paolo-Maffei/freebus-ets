@@ -15,6 +15,8 @@ from XML import FB_XMLDataModel
 from LOG import Logging
 from GUI import FB_MainFrame
 
+#List of Prefixes for Project-Structure
+Prefix = [" ", "Project","Building","Floor", "Room", "Junction"]
 
 LogFileName = "J:/Elektronik/Projekte/EIB/ETS for Freebus/Log/XMLLog.log"
 Options = 0

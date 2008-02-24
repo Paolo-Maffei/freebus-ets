@@ -60,12 +60,12 @@ class FB_XMLDataModel:
     #get comment
     def getComment(self, ID):
         Node = self.getDataRootNode(ID)
-        return "" #this.readDOMNodeValue((Element)n, new StringTokenizer("comment", "/"));
+        return self.readDOMNodeValue(Node, "comment")
 
     #set comment
     def setComment(self,ID,Comment):
         Node = self.getDataRootNode(ID)
-        #this.writeDOMNodeValue(n, new StringTokenizer("comment", "/"), comment);
+        self.writeDOMNodeValue(Node,"comment", comment)
 
 
     ##Return the id list for all child nodes with namen name from the given stat node
@@ -73,15 +73,21 @@ class FB_XMLDataModel:
     #@param childname the child node name
     #@return the id String collection
     def getIDList(self,Node,ChildName):
-        NodeList = Node.getElementsByTagName(Childname)
 
-        IDList = []
-        for i in range(len(NodeList)):
-            Element = NodeList.item(i)
-            if(Element.hasAttribute("id")):
-                IDList.append(Element.getAttribute("id"))
+        if(Node <> None):
+            NodeList = Node.getElementsByTagName(ChildName)
 
-        return IDList
+            IDList = []
+            for i in range(len(NodeList)):
+                Element = NodeList.item(i)
+                if(Element.hasAttribute("id")):
+                    IDList.append(Element.getAttribute("id"))
+
+            return IDList
+
+        else:
+            self.__LogObj.NewLog("Error at getIDList, Parameter Node is None",1)
+            return None
 
     ##Create a new standard child data node. This node includes a name with id and a comment tag.
     #@param tagname the child root tag name
@@ -131,8 +137,11 @@ class FB_XMLDataModel:
             NodeName = ID[0: end]
         else:
             NodeName = ID
+
         #print self.__DOMObj
         NodeList = self.__DOMObj.getElementsByTagName(NodeName)
+
+        #print NodeList
 
         if(len(NodeList) > 0):
             for i in range(len(NodeList)):
@@ -141,15 +150,16 @@ class FB_XMLDataModel:
 
                 #attr = Node.getAttribute("id")
                 attr = Node.attributes
-                #print attr
+
                 if(attr <> None):
                     idNode = None
                     idNode = attr.getNamedItem("id")
 
+                    #print idNode.nodeValue
                     if(idNode <> None):
+
                         if(idNode.nodeValue == ID):
                             drNode = Node
-                            #print drNode
                             break
 
         return drNode

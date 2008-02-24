@@ -19,18 +19,19 @@ from xml.dom.minidom import *
 from XML.FB_XMLDataModel import FB_XMLDataModel #import class as base class
 import os
 
+
 ##general class for handling project data which are based on XML
 class FB_ArchitecturalDataModel(FB_XMLDataModel):
 
 
     __LogObj = None
     __DOMObj = None
-    __ROOT_ID="project-1"
-    __PROJECT_PREFIX="project"
-    __BUILDING_PREFIX="building"
-    __FLOOR_PREFIX="floor"
-    __ROOM_PREFIX="room"
-    __JUNCTION_BOX_PREFIX="junctionbox"
+    __ROOT_ID = ""
+    __PROJECT_PREFIX=""
+    __BUILDING_PREFIX=""
+    __FLOOR_PREFIX=""
+    __ROOM_PREFIX=""
+    __JUNCTION_BOX_PREFIX=""
     __archDocument = None
     __PATH = ""         #Project Path
 
@@ -42,6 +43,12 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
 
         self.__LogObj = LogObj
         self.__archDocument = ArchDocument
+        self.__ROOT_ID = "project-1"
+        self.__PROJECT_PREFIX = "project"
+        self.__BUILDING_PREFIX = "building"
+        self.__FLOOR_PREFIX = "floor"
+        self.__ROOM_PREFIX = "room"
+        self.__JUNCTION_BOX_PREFIX = "junctionbox"
 
         #archNode = Document.appendChild(Document.createElement("architectural-data"))
         #find mainnode "architectural-data"
@@ -61,23 +68,45 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
             OutFileObj.write(String)
             OutFileObj.close()
 
+    ##get the prefix-string with a given index
+    #@param Index: 0 for project, 1 for building ...
+    def getPrefix(self,Index):
+
+        if(Index == 1):
+            return self.__PROJECT_PREFIX
+        elif(Index == 2):
+            return self.__BUILDING_PREFIX
+        elif(Index == 3):
+            return self.__FLOOR_PREFIX
+        elif(Index == 4):
+            return self.__ROOM_PREFIX
+        elif(Index == 5):
+            return self.__JUNCTION_BOX_PREFIX
+
     ##Returns the data model root node ID.
     def getRootID(self):
         return self.__ROOT_ID;
 
+
     def getChildIDs(self, parentID):
         if(parentID.find(self.__PROJECT_PREFIX) > -1):
+
             return self.getIDList(self.getDataRootNode(parentID), self.__BUILDING_PREFIX)
+
         elif(parentID.find(self.__BUILDING_PREFIX) > -1):
-            return this.getIDList(self.getDataRootNode(parentID), self.__FLOOR_PREFIX)
+            return self.getIDList(self.getDataRootNode(parentID), self.__FLOOR_PREFIX)
+
         elif(parentID.find(self.__FLOOR_PREFIX) > -1):
-            return this.getIDList(self.getDataRootNode(parentID), self.__ROOM_PREFIX)
+            return self.getIDList(self.getDataRootNode(parentID), self.__ROOM_PREFIX)
+
         elif(parentID.find(self.__BUILDING_PREFIX) > -1):
-            return this.getIDList(self.getDataRootNode(parentID), self.__FLOOR_PREFIX)
+            return self.getIDList(self.getDataRootNode(parentID), self.__FLOOR_PREFIX)
+
         elif(parentID.find(self.__FLOOR_PREFIX) > -1):
-            return this.getIDList(self.getDataRootNode(parentID), self.__ROOM_PREFIX)
+            return self.getIDList(self.getDataRootNode(parentID), self.__ROOM_PREFIX)
+
         elif(parentID.find(self.__ROOM_PREFIX) > -1):
-            return this.getIDList(self.getDataRootNode(parentID), self.__JUNCTION_BOX_PREFIX)
+            return self.getIDList(self.getDataRootNode(parentID), self.__JUNCTION_BOX_PREFIX)
         else:
             return None
 #****************************************************************************
