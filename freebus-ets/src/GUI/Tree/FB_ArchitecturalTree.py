@@ -53,6 +53,7 @@ class FB_ArchitecturalTree:
 
         self.__TreeObj.set_model(self.__treestore)
 
+
         image=gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "New.gif")
 
         self.__TreeIterator = self.__treestore.append(None, [image, "  kein Projekt aktiv"])
@@ -83,59 +84,75 @@ class FB_ArchitecturalTree:
         self.__ArchModel = self.__CurProjectObj.getArchModel()
 
         #set iterator to first position
-        Iter = self.__treestore.get_iter_first()
+        BuildingIter = self.__treestore.get_iter_first()
+
         #get root node
         Node = self.__ArchModel.getDataRootNode(self.__ArchModel.getRootID())
 
-        self.__treestore.set_value(Iter,1,self.__CurProjectObj.getProjectName())
+        self.__treestore.set_value(BuildingIter,1,self.__CurProjectObj.getProjectName())
 
-        Index = 2 #2 = buildings
-        Prefix = self.__ArchModel.getPrefix(Index)
-        #get count of each part
-
-        IDList = self.__ArchModel.getIDList(Node,Prefix)
-        print IDList
-        #getNode with given ID from IDList
         Obj = self.__ArchModel.getDOMObj()
-        NodeList = Obj.getElementsByTagName(Prefix)[0].attributes
-        Attr =  NodeList.getNamedItem("id").nodeValue
-        #get node back to current ID
-        if(Attr == IDList[0]):
-            Node = Obj.getElementsByTagName(Prefix)[0]
-            childs =  Node.childNodes
-            #get element
-            #name of Node
-            print childs[1].nodeName
-            #add Object to tree and get back new iteration object
 
 
-            image = self.getImage(Prefix)
-            iter =  self.__treestore.append(Iter, [image, childs[1].firstChild.data])
+        #get all buildings
+        BuildingPrefix = self.__ArchModel.getPrefix(2)
 
-            #value of Node
-            print childs[1].childNodes[0].nodeValue
-            #check if existing sub nodes (floors, rooms ...)
-            if(Node.hasChildNodes() == True):
-                print "FLOOR"
+        #get List of ID of given Prefix (building-1,building-2,...)
+        IDList = self.__ArchModel.getIDList(Node,BuildingPrefix)
 
+        #for all buildings....
+        for buildings in range(len(IDList)):
+            LastBuildingIter = self.CreateTreeNode(IDList[buildings],BuildingIter,BuildingPrefix)
+
+            #get all floors of given building
+            FloorNode = self.__ArchModel.getDataRootNode(IDList[buildings])
+            FloorPrefix = self.__ArchModel.getPrefix(3)
+            FloorList = self.__ArchModel.getIDList(FloorNode,FloorPrefix)
+            #save last Iter
+            FloorIter = LastBuildingIter
+            #for all floors in current building
+            for floors in range(len(FloorList)):
+                LastFloorIter = self.CreateTreeNode(FloorList[floors],FloorIter,FloorPrefix)
+
+                #get all rooms of given floor
+                RoomNode = self.__ArchModel.getDataRootNode(FloorList[floors])
+                RoomPrefix = self.__ArchModel.getPrefix(4)
+                RoomList = self.__ArchModel.getIDList(RoomNode,RoomPrefix)
+                #save last Iter
+                RoomIter = LastFloorIter
+                #for all rooms in current floor
+                for rooms in range(len(RoomList)):
+                    LastRoomIter = self.CreateTreeNode(RoomList[rooms],RoomIter,RoomPrefix)
+                    #get all junctions of given room
+                    JunctionNode = self.__ArchModel.getDataRootNode(RoomList[rooms])
+                    JunctionPrefix = self.__ArchModel.getPrefix(5)
+                    JunctionList = self.__ArchModel.getIDList(JunctionNode,JunctionPrefix)
+                    #save last Iter
+                    JunctionIter = LastRoomIter
+                    #for all junctions in current room
+                    for junction in range(len(JunctionList)):
+                        LastJunctionIter = self.CreateTreeNode(JunctionList[junction],JunctionIter,JunctionPrefix)
+
+
+    def CreateTreeNode(self,ID,Iterator,Prefix):
+        BuildingNode = self.__ArchModel.getDataRootNode(ID)
+        Value = self.__ArchModel.readDOMNodeValue(BuildingNode,"name")
+
+        image = self.getImage(Prefix)
+        iter =  self.__treestore.append(Iterator, [image, unicode(Value,"ISO-8859-1")])
+
+        return iter
 
     def getImage(self,Prefix):
         #get back buidling image
         print Prefix
         if(Prefix == 'building'):
             return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "building.png")
+        elif(Prefix == 'floor'):
+            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "floor.png")
+        elif(Prefix == 'room'):
+            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "room.png")
+        elif(Prefix == 'junctionbox'):
+            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "junctionbox.png")
 
-
-    #creates a new node at the project-tree under a given Parent-ID
-    def NewTreeNode(self,NodePrefix,ParentID):
-        #get node with given ID
-        Obj = self.__ArchModel.getDOMObj()
-        NodeList = Obj.getElementsByTagName(NodePrefix)
-
-        if(len(NodeList) > 0):
-            for i in range(len(NodeList)):
-                childs = NodeList[i].childNodes
-                #print childs.item(i).getAttribute("id")
-                #for j in range(len(childs)):
-                #print childs[2].
 

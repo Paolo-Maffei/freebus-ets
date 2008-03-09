@@ -98,50 +98,6 @@ class FB_MainFrame:
         if(self.__ProjTree <> None):
             self.__ArchTree.CreateNewTree(self.__CurProjectObj)
 
-    def BuildTree(self):
-        return
-        #set iterator to first position
-        Iter = self.treestore.get_iter_first()
-        if(True):
-            self.treestore.set_value(Iter,1,self.__CurProjectObj.getProjectName())
-            ArchModel = self.__CurProjectObj.getArchModel()
-
-            #first iteration through tree-structure 1..5
-            Node = ArchModel.getDataRootNode(ArchModel.getRootID())
-
-
-            image = gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "building.png")
-
-            for i in range(2,6):
-                Prefix = ArchModel.getPrefix(i)
-                #get count of each part
-                IDList = ArchModel.getIDList(Node,Prefix)
-                NodeList = Node.getElementsByTagName(Prefix)
-
-                #Test = NodeList.getElementsByTagName("name")
-                print IDList
-                doc = ArchModel.getDOMObj()
-
-                for j in range(len(IDList)):
-
-                    child = doc.getElementById(IDList[j])
-                    #child = NodeList[j].getElementByID(IDList(j)) #getElementsByTagName("name")
-                    print child
-                    #Test = Node.getElementById(IDList[j])
-                    #print Test
-#                    iter =  self.treestore.append(Iter, [image, child[0].firstChild.data])
-
-                Iter = iter
-
-
-        else:
-        #except:
-            self.__LogObj.NewLog("Error at building project tree",2)
-
-
-    def getTreeIterator(self):
-        return self.__TreeIterator
-
 
     def main(self):
     # All PyGTK applications must have a gtk.main(). Control ends here

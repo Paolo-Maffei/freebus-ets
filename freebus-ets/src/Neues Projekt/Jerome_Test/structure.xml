@@ -19,6 +19,10 @@
             <comment/>
           </junctionbox>
         </room>
+	  <room id="room-2">
+          <name>Wohnzimmer</name>
+          <comment/>
+        </room>
       </floor>
     </building>
     <building id="building-2">
