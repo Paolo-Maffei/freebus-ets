@@ -96,6 +96,7 @@ class FB_MainFrame:
         self.__CurProjectObj = ProjObj
         #reorganize our project-tree
         if(self.__ProjTree <> None):
+            self.__ArchTree.ClearTree()
             self.__ArchTree.CreateNewTree(self.__CurProjectObj)
 
 

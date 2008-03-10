@@ -48,18 +48,16 @@ class FB_ArchitecturalTree:
 
         self.__ImagePath = os.getcwd() + os.sep + "Image" + os.sep
 
+
         #create data structure/model
+
         self.__treestore = gtk.TreeStore(gtk.gdk.Pixbuf,str)
-
         self.__TreeObj.set_model(self.__treestore)
-
-
         image=gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "New.gif")
-
         self.__TreeIterator = self.__treestore.append(None, [image, "  kein Projekt aktiv"])
 
         #get TreePath for TreeRowReference
-        TreePath = self.__treestore.get_path(self.__TreeIterator)
+        #TreePath = self.__treestore.get_path(self.__TreeIterator)
         #for later use with gtk 2.4 or higher
         #treerowref = TreeRowReference(TreeObj.get_model(), TreePath)
 
@@ -76,8 +74,16 @@ class FB_ArchitecturalTree:
         # Allow drag and drop reordering of rows
         TreeObj.set_reorderable(True)
 
+    def ClearTree(self):
+        self.__treestore.clear()
+        self.__TreeObj.set_model(self.__treestore)
+        image=gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "New.gif")
+        self.__TreeIterator = self.__treestore.append(None, [image, "  kein Projekt aktiv"])
+
     #build the project tree, every time you create a new project or open an existing project
     def CreateNewTree(self, ProjectObj):
+
+
         #set current project object
         self.__CurProjectObj = ProjectObj
         #object of our achrchitect
@@ -145,7 +151,7 @@ class FB_ArchitecturalTree:
 
     def getImage(self,Prefix):
         #get back buidling image
-        print Prefix
+
         if(Prefix == 'building'):
             return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "building.png")
         elif(Prefix == 'floor'):
