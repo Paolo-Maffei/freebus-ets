@@ -15,6 +15,7 @@
 
 import os
 import pygtk
+from Global import Global
 pygtk.require("2.0")
 import gtk
 import gtk.glade
@@ -47,14 +48,14 @@ class FB_ArchitecturalTree:
         self.__TreeObj = TreeObj
 
         #self.__ImagePath = os.getcwd() + os.sep + "Image" + os.sep
-        self.__ImagePath = "../src/Image/"
+        self.__ImagePath = Global.ImagePath
 
         #create data structure/model
 
-        self.__treestore = gtk.TreeStore(gtk.gdk.Pixbuf,str)
+        self.__treestore = gtk.TreeStore(gtk.gdk.Pixbuf,str,str)
         self.__TreeObj.set_model(self.__treestore)
         image=gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "New.gif")
-        self.__TreeIterator = self.__treestore.append(None, [image, "  kein Projekt aktiv"])
+        self.__TreeIterator = self.__treestore.append(None, [image, "  kein Projekt aktiv", "OK"])
 
         #get TreePath for TreeRowReference
         #TreePath = self.__treestore.get_path(self.__TreeIterator)
@@ -70,6 +71,7 @@ class FB_ArchitecturalTree:
         column.add_attribute(text_cell, "text", 1)
         column.set_attributes(text_cell, markup=1)
         self.__TreeObj.append_column(column)                #add objects t ofirst line of tree
+        self.__TreeObj.expand_all()
 
         # Allow drag and drop reordering of rows
         TreeObj.set_reorderable(True)
@@ -78,9 +80,10 @@ class FB_ArchitecturalTree:
         self.__treestore.clear()
         self.__TreeObj.set_model(self.__treestore)
         image=gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "New.gif")
-        self.__TreeIterator = self.__treestore.append(None, [image, "  kein Projekt aktiv"])
+        self.__TreeIterator = self.__treestore.append(None, [image, "  kein Projekt aktiv", "OK"])
 
     #build the project tree, every time you create a new project or open an existing project
+    #should be developed a better solution.... ;-)
     def CreateNewTree(self, ProjectObj):
 
 
@@ -98,7 +101,6 @@ class FB_ArchitecturalTree:
         self.__treestore.set_value(BuildingIter,1,self.__CurProjectObj.getProjectName())
 
         Obj = self.__ArchModel.getDOMObj()
-
 
         #get all buildings
         BuildingPrefix = self.__ArchModel.getPrefix(2)
@@ -139,13 +141,15 @@ class FB_ArchitecturalTree:
                     for junction in range(len(JunctionList)):
                         LastJunctionIter = self.CreateTreeNode(JunctionList[junction],JunctionIter,JunctionPrefix)
 
+        self.__TreeObj.expand_all()
 
     def CreateTreeNode(self,ID,Iterator,Prefix):
         BuildingNode = self.__ArchModel.getDataRootNode(ID)
+        #attr. will be saved in tree without visibilty
+        Attr = self.__ArchModel.getChildID(BuildingNode)
         Value = self.__ArchModel.readDOMNodeValue(BuildingNode,"name")
-
         image = self.getImage(Prefix)
-        iter =  self.__treestore.append(Iterator, [image, unicode(Value,"ISO-8859-1")])
+        iter =  self.__treestore.append(Iterator, [image, unicode(Value,"ISO-8859-1"), Attr])
 
         return iter
 

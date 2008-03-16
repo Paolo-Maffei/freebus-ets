@@ -15,6 +15,7 @@
 
 import os
 import sys
+from Global import Global
 import pygtk
 pygtk.require("2.0")
 import gtk
@@ -48,11 +49,7 @@ class FB_MainFrame:
         self.__WindowWidth = gtk.gdk.screen_width()
         self.__WindowHeigth = gtk.gdk.screen_height()
 
-
-        self.__GUIPath = os.path.dirname(__file__) + os.sep
-        #print self.__GUIPath
-#'../src/GUI/'
-        self.__GladeObj = gtk.glade.XML(GUIPath  + "freebus.glade","MainFrame")
+        self.__GladeObj = gtk.glade.XML(Global.GUIPath  + "freebus.glade","MainFrame")
 
         if(self.__GladeObj == None):
            self.__LogObj.NewLog("Error at intializing GUI-Interface (Glade-Object)",1)

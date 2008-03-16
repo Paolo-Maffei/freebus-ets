@@ -17,6 +17,7 @@
 import os
 import sys
 
+from Global import Global
 from XML import FB_XMLConverter
 from XML import FB_XML_PRODUCT
 from XML import FB_XMLDataModel
@@ -24,24 +25,16 @@ from LOG import Logging
 from GUI import FB_MainFrame
 
 
-#add Directory Structure
-#GUI Path
-GUIPath = os.getcwd() + "\\GUI\\"
-LogPath = "../Logging/"
 
-print GUIPath
 
-#List of Prefixes for Project-Structure
-Prefix = [" ", "Project","Building","Floor", "Room", "Junction"]
-
-LogFileName = LogPath + 'Log.log' #"J:/Elektronik/Projekte/EIB/ETS for Freebus/Log/XMLLog.log"
+LogFileName = Global.LogPath + 'MainFrame.log'
 Options = 0
 
 #LOG_XML = Logging.Logging("XML_Converter",LogFileName,Options)
 
 
 
-LOG_XML = Logging.Logging("FB_XML",LogFileName,Options)
+LOG_MainFrame = Logging.Logging("FB_MainFrame",LogFileName,Options)
 
 #file = "J:/Elektronik/Projekte/EIB/ETS for Freebus/SunXML.xml"
 
@@ -52,7 +45,7 @@ LOG_XML = Logging.Logging("FB_XML",LogFileName,Options)
 #                                  file, LOG_XML)
 
 
-FBMain = FB_MainFrame.FB_MainFrame(LOG_XML)
+FBMain = FB_MainFrame.FB_MainFrame(LOG_MainFrame)
 FBMain.main()
 
 #******* CONVERT ***************
@@ -73,7 +66,7 @@ FBMain.main()
 
 
 #FB_XML_new = FB_XML_PRODUCT.FB_XML_PRODUCT(LOG_XML, newfile)
-FB_XML = FB_XML_PRODUCT.FB_XML_PRODUCT(LOG_XML, file)
+#FB_XML = FB_XML_PRODUCT.FB_XML_PRODUCT(LOG_XML, file)
 #new product-file
 #FB_XML_new.CreateProductFile() #create also DOM-Object
 

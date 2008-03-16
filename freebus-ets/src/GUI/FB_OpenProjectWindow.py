@@ -15,6 +15,7 @@
 
 import os
 import sys
+from Global import Global
 import pygtk
 pygtk.require("2.0")
 import gtk
@@ -41,10 +42,7 @@ class FB_OPENPROJECTWINDOW:
         self.__LogObj = LogObj
         self.__MainFrame = MainFrame
 
-        #GUIDirPath = os.path.dirname(__file__) + os.sep
-        GUIDirPath = "../src/GUI/"
-
-        GladeObj = gtk.glade.XML(GUIDirPath + "freebus.glade","Open_Project")
+        GladeObj = gtk.glade.XML(Global.GUIPath + "freebus.glade","Open_Project")
 
         self.__window = GladeObj.get_widget("Open_Project")
 
@@ -88,13 +86,14 @@ class FB_OPENPROJECTWINDOW:
             #create Projectstructure to current working direytroy
             self.__Project = FB_Project.FB_Project(self.__LogObj,self.__SelFile ,self.__SelFolder)
             self.__Project.setProjectPath(self.__SelFolder)
+            self.__MainFrame.SetCurrProject(self.__Project)
         else:
             self.__Project = None
             self.__LogObj.NewLog("There was no project file choosen; Please choose a valid freebus xml structure file. ",1)
 
         #close Dialog
         #give back current project object
-        self.__MainFrame.SetCurrProject(self.__Project)
+
         gtk.Widget.destroy(self.__window)
 
     def getProject(self):

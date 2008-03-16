@@ -15,6 +15,7 @@
 
 import os
 import sys
+from Global import Global
 import pygtk
 pygtk.require("2.0")
 import gtk
@@ -41,10 +42,7 @@ class FB_NEWPROJECTWINDOW:
         self.__LogObj = LogObj
         self.__MainFrame = MainFrame
 
-        #GUIDirPath = os.path.dirname(__file__) + os.sep
-        GUIDirPath = "../src/GUI/"
-
-        GladeObj = gtk.glade.XML(GUIDirPath + "freebus.glade","New_Project")
+        GladeObj = gtk.glade.XML(Global.GUIPath + "freebus.glade","New_Project")
 
         self.__window = GladeObj.get_widget("New_Project")
 
