@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><architectural-data>
+  <project id="project-1">
+    <name>Test</name>
+    <comment/>
+    <directoryname>Test</directoryname>
+    <preffered-bus-system>EIB</preffered-bus-system>
+    <building id="building-1">
+      <name>Haus 1</name>
+      <comment/>
+      <floor id="floor-1">
+        <name>EG</name>
+        <comment/>
+        <room id="room-1">
+          <name>Küche</name>
+          <comment/>
+          <junctionbox id="junctionbox-1">
+            <name>Verteiler 1</name>
+            <comment/>
+          </junctionbox>
+          <junctionbox id="junctionbox-2">
+            <name>Verteiler 2</name>
+            <comment/>
+          </junctionbox>
+        </room>
+        <room id="room-2">
+          <name>Wohnzimmer</name>
+          <comment/>
+          <junctionbox id="junctionbox-3">
+            <name>Verteiler 3</name>
+            <comment/>
+          </junctionbox>
+          <junctionbox id="junctionbox-4">
+            <name>Verteiker 4</name>
+            <comment/>
+          </junctionbox>
+        </room>
+      </floor>
+      <floor id="floor-2">
+        <name>OG</name>
+        <comment/>
+        <room id="room-3">
+          <name>Schlafzimmer</name>
+          <comment/>
+        </room>
+        <room id="room-4">
+          <name>Boden</name>
+          <comment/>
+        </room>
+      </floor>
+    </building>
+    <building id="building-2">
+      <name>Haus 2</name>
+      <comment/>
+      <floor id="floor-3">
+        <name>EG</name>
+        <comment/>
+      </floor>
+    </building>
+  </project>
+</architectural-data>

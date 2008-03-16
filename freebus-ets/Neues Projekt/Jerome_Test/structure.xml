@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<architectural-data>
+  <project id="project-1">
+    <name>Hallo</name>
+    <comment/>
+    <directoryname>Jerome_Test</directoryname>
+    <preffered-bus-system>EIB</preffered-bus-system>
+    <building id="building-1">
+      <name>Mein Haus</name>
+      <comment/>
+      <floor id="floor-1">
+        <name>EG</name>
+        <comment/>
+        <room id="room-1">
+          <name>Küche</name>
+          <comment/>
+          <junctionbox id="junctionbox-1">
+            <name>Verteiler 1</name>
+            <comment/>
+          </junctionbox>
+        </room>
+	  <room id="room-2">
+          <name>Wohnzimmer</name>
+          <comment/>
+        </room>
+      </floor>
+    </building>
+    <building id="building-2">
+      <name>TestHaus</name>
+      <comment/>
+    </building>
+  </project>
+</architectural-data>
