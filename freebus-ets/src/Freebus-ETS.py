@@ -6,36 +6,50 @@
 #Autor: Jerome Leisner
 #===============================================================================
 
+#Path-structure
+#Installation-Path
+#    ->    Dist (name of directory of setup procedure
+#    ->    Logging
+#    ->    src
+#            -> GUI
+#            -> Image
+
 import os
+import sys
 
 from XML import FB_XMLConverter
 from XML import FB_XML_PRODUCT
 from XML import FB_XMLDataModel
-
 from LOG import Logging
 from GUI import FB_MainFrame
+
+
+#add Directory Structure
+#GUI Path
+GUIPath = os.getcwd() + "\\GUI\\"
+LogPath = "../Logging/"
+
+print GUIPath
 
 #List of Prefixes for Project-Structure
 Prefix = [" ", "Project","Building","Floor", "Room", "Junction"]
 
-LogFileName = "J:/Elektronik/Projekte/EIB/ETS for Freebus/Log/XMLLog.log"
+LogFileName = LogPath + 'Log.log' #"J:/Elektronik/Projekte/EIB/ETS for Freebus/Log/XMLLog.log"
 Options = 0
 
-LOG_XML = Logging.Logging("XML_Converter",LogFileName,Options)
+#LOG_XML = Logging.Logging("XML_Converter",LogFileName,Options)
 
 
-LogFileName = "J:/Elektronik/Projekte/EIB/ETS for Freebus/Log/FB_XMLLog.log"
-Options = 0
 
 LOG_XML = Logging.Logging("FB_XML",LogFileName,Options)
 
-file = "J:/Elektronik/Projekte/EIB/ETS for Freebus/SunXML.xml"
+#file = "J:/Elektronik/Projekte/EIB/ETS for Freebus/SunXML.xml"
 
-projectfile = "J:/Elektronik/Projekte/EIB/ETS for Freebus/Test.xml"
+#projectfile = "J:/Elektronik/Projekte/EIB/ETS for Freebus/Test.xml"
 
 
-XML = FB_XMLConverter.FB_XMLConverter("J:/Elektronik/Projekte/EIB/ETS for Freebus/CSuntracer2.vd_", \
-                                  file, LOG_XML)
+#XML = FB_XMLConverter.FB_XMLConverter("J:/Elektronik/Projekte/EIB/ETS for Freebus/CSuntracer2.vd_", \
+#                                  file, LOG_XML)
 
 
 FBMain = FB_MainFrame.FB_MainFrame(LOG_XML)
