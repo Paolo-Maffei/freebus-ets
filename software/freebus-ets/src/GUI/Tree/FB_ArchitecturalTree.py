@@ -74,7 +74,8 @@ class FB_ArchitecturalTree:
         self.__TreeObj.expand_all()
 
         # Allow drag and drop reordering of rows
-        TreeObj.set_reorderable(True)
+        #TreeObj.set_reorderable(True)
+        self.__TreeObj.enable_model_drag_dest([('text/plain', 0,Global.DND_BUILDING)],gtk.gdk.ACTION_COPY)
 
     def ClearTree(self):
         self.__treestore.clear()
@@ -99,6 +100,7 @@ class FB_ArchitecturalTree:
         Node = self.__ArchModel.getDataRootNode(self.__ArchModel.getRootID())
 
         self.__treestore.set_value(BuildingIter,1,self.__CurProjectObj.getProjectName())
+        self.__treestore.set_value(BuildingIter,2,self.__ArchModel.getPrefix(1))
 
         Obj = self.__ArchModel.getDOMObj()
 
@@ -143,6 +145,7 @@ class FB_ArchitecturalTree:
 
         self.__TreeObj.expand_all()
 
+
     def CreateTreeNode(self,ID,Iterator,Prefix):
         BuildingNode = self.__ArchModel.getDataRootNode(ID)
         #attr. will be saved in tree without visibilty
@@ -152,6 +155,7 @@ class FB_ArchitecturalTree:
         iter =  self.__treestore.append(Iterator, [image, unicode(Value,"ISO-8859-1"), Attr])
 
         return iter
+
 
     def getImage(self,Prefix):
         #get back buidling image
@@ -165,4 +169,9 @@ class FB_ArchitecturalTree:
         elif(Prefix == 'junctionbox'):
             return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "junctionbox.png")
 
+    #gets the iterator of a given path ( comes from a drop action)
+    def getIterator(self,path):
+        return self.__treestore.get_iter(path)
 
+    def getTreeValue(self,Iterator, position):
+        return self.__treestore.get_value(Iterator, position)

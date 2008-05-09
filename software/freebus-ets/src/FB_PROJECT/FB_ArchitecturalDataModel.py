@@ -90,7 +90,6 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
 
     def getChildIDs(self, parentID):
         if(parentID.find(self.__PROJECT_PREFIX) > -1):
-
             return self.getIDList(self.getDataRootNode(parentID), self.__BUILDING_PREFIX)
 
         elif(parentID.find(self.__BUILDING_PREFIX) > -1):

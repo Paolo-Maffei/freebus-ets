@@ -29,7 +29,6 @@ class FB_NEWPROJECTWINDOW:
 
     __WindowWidth = 0
     __WindowHeigth = 0
-    __wTree = None
     __window = None
     __TreeView = None
     __SelFolder = ""    #selected Folder for Project
@@ -37,20 +36,21 @@ class FB_NEWPROJECTWINDOW:
     __LogObj = None
     __Project = None    #general Project Object
     __MainFrame = None  #MainFrame Object
+    __GladeObj = None   #general object to glade interface
 
     def __init__(self, LogObj,MainFrame):
         self.__LogObj = LogObj
         self.__MainFrame = MainFrame
 
-        GladeObj = gtk.glade.XML(Global.GUIPath + "freebus.glade","New_Project")
+        self.__GladeObj = gtk.glade.XML(Global.GUIPath + "freebus.glade","New_Project")
 
-        self.__window = GladeObj.get_widget("New_Project")
+        self.__window = self.__GladeObj.get_widget("New_Project")
 
         dic = { "on_New_Project_destroy" : self.CloseWindow ,
                 "on_bCancel_clicked" : self.bCancel,
                 "on_bOK_clicked" :self.bOK}
 
-        GladeObj.signal_autoconnect(dic)
+        self.__GladeObj.signal_autoconnect(dic)
         self.__SelFolder = ""
         self.__SelFile = ""
 
@@ -66,10 +66,10 @@ class FB_NEWPROJECTWINDOW:
     #OK Button has been pressed
     def bOK(self,widget):
         #get data from FileChooser
-        w1 = self.__wTree.get_widget("FileChooser")
-        w2 = self.__wTree.get_widget("editProjectName")
+        w1 = self.__GladeObj.get_widget("FileChooser")
+        w2 = self.__GladeObj.get_widget("editProjectName")
 
-        checkProjDir = self.__wTree.get_widget("checkCreateProjDir")
+        checkProjDir = self.__GladeObj.get_widget("checkCreateProjDir")
 
         self.__SelFile = w2.get_text()
         self.__SelFolder = w1.get_current_folder()
