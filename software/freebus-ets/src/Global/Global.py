@@ -28,7 +28,9 @@ LogPath = "..\\Logging\\"
 Prefix = [" ", "Project","Building","Floor", "Room", "Junction"]
 
 #DragNDrop Idendifier
-DND_BUILDING = 10
-DND_FLOOR = 11
-DND_ROOM = 12
-DND_JUNCTION = 13
+DND_PROJECT = 1
+DND_BUILDING = 2
+DND_FLOOR = 3
+DND_ROOM = 4
+DND_JUNCTION = 5
+

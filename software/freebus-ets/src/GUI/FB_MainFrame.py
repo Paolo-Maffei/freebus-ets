@@ -15,6 +15,7 @@
 
 import os
 import sys
+import time
 from Global import Global
 import pygtk
 pygtk.require("2.0")
@@ -23,6 +24,7 @@ import gtk.glade
 from GUI import FB_NewProjectWindow
 from GUI import FB_OpenProjectWindow
 from GUI.Tree import FB_ArchitecturalTree
+from FB_PROJECT import FB_ArchitecturalDataModel
 
 
 
@@ -31,15 +33,19 @@ class FB_MainFrame:
     __WindowWidth = 0
     __WindowHeigth = 0
     __LogObj = None
-    __CurProjectObj = None
+    __CurProjectObj = None         #Project object
+    __CurArchObj = None            #architectural model of current project
     __GladeObj = None
     __GUIPath = ""
     __ImagePath = ""
     __ProjTree = None
     __TreeIterator = None        #Iterator-Object for Tree
-    treestore = None
     __ArchTree = None            #Object for Tree-Class
     __handelboxToolbar = None    #widget object of handlebox toolbar
+    __mnuPopup = None            #Object for popup menu
+
+    treestore = None
+    curDragDataType = 0            #the current Type of draged data (builidng,floor,rooms---)
 
 
     def __init__(self, LogObj):
@@ -54,8 +60,30 @@ class FB_MainFrame:
         self.__GladeObj = gtk.glade.XML(Global.GUIPath  + "freebus.glade","MainFrame")
 
         if(self.__GladeObj == None):
-           self.__LogObj.NewLog("Error at intializing GUI-Interface (Glade-Object)",1)
+           self.__LogObj.NewLog("Error at intializing GUI-Interface (Glade-Object-MainFrame)",1)
            return
+
+        #-------------------------------------------------------------------------------------
+
+        #popupmenu init
+        PopupGlade = gtk.glade.XML(Global.GUIPath  + "freebus.glade","mnuPopupTree")
+        self.__mnuPopup =  PopupGlade.get_widget("mnuPopupTree")
+
+        if(self.__mnuPopup == None):
+           self.__LogObj.NewLog("Error at intializing GUI-Interface (Glade-Object-Popup Menu)",1)
+           return
+
+        pop = {
+                #Popupmenu
+                "on_mnuChangeName_activate": self.PopupChangeName,
+                "on_mnuDeleteGroup_activate": self.PopupDelete,
+                "on_mnuPropertyGroup_activate":self.PopupProperty
+                }
+
+        PopupGlade.signal_autoconnect(pop)
+
+
+       #-------------------------------------------------------------------------------------
 
         #get widget of window
         self.window = self.__GladeObj.get_widget("MainFrame")
@@ -90,18 +118,22 @@ class FB_MainFrame:
                 "on_new_project_activate" : self.MenuNewProject,
                 "on_open_project_activate" : self.MenuOpenProject,
                 "on_Save_activate" : self.MenuSaveProject,
+                "on_button_drag_data_get" : self.DragDataGet,
 
-                "on_button_building_drag_data_get" : self.BuildingDragDataGet,
-
+                #ProjectTree
                 "on_ProjectTree_drag_data_received" : self.ProjectTreeDropData,
-                "on_ProjectTree_drag_motion" : self.ProjectTreeDragMotion
+                "on_ProjectTree_drag_motion" : self.ProjectTreeDragMotion,
+                "on_ProjectTree_button_press_event": self.TreeButtonPress,
 
                 }
         self.__GladeObj.signal_autoconnect(dic)
 
-        #create Project Tree
+       #-------------------------------------------------------------------------------------
 
+
+        #create Project Tree
         self.__ArchTree = FB_ArchitecturalTree.FB_ArchitecturalTree(self.__LogObj,self.__ProjTree)
+
 
 
     #create a new project
@@ -118,12 +150,14 @@ class FB_MainFrame:
 
             self.__CurProjectObj.SaveProject()
         else:
-            print "Fehler save "
+            #print "Fehler save "
             self.__LogObj.NewLog("Error at saving Projectdata -> CurProjectObj is Nonetype",1)
 
     #set current project object
     def SetCurrProject(self, ProjObj):
         self.__CurProjectObj = ProjObj
+        self.__CurArchObj = self.__CurProjectObj.getArchModel
+
         #reorganize our project-tree
         if(self.__ProjTree <> None):
             self.__ArchTree.ClearTree()
@@ -131,29 +165,94 @@ class FB_MainFrame:
             self.__handelboxToolbar.show()
 
 
-    def BuildingDragDataGet(self,widget, drag_context, selection_data, info, time):
-        pass
+    #get the type of the draged data
+    def DragDataGet(self,widget, drag_context, selection, targetID, time):
+        self.curDragDataType = targetID
 
     #add object to tree -> drop object over treeview
-    def ProjectTreeDropData(self,treeview, drag_context, x, y, selection, info, timestamp):
+    def ProjectTreeDropData(self,treeview, drag_context, x, y, selection, targetID, timestamp):
         drop_info = treeview.get_dest_row_at_pos(x, y)
         if drop_info:
             model = treeview.get_model()
             path, position = drop_info
-            data = selection.data
+
             #compare info with position/path object and add building,florr,room ...
-            ArchModel = self.__CurProjectObj.getArchModel
             #get ID of selected item in treeview (iter path)
-
             Iterator = model.get_iter(path)
-            value = model.get_value(Iterator, position)
+            #position is always 2 (column) to idendifiy the type of node
+            #child-element (ex: project-1,building-1 ...
+            Attr = model.get_value(Iterator, 2)
+            #selected ID (ex:project, building,room, floor...
+            SelID = self.__ArchTree.ArchModel.getPrefix(self.curDragDataType-1)
+
+            #remove last part (-1 ..)
+            end = Attr.find('-')
+            if(end <> -1):
+                Type = Attr[0: end]
+            else:
+                Type = Attr
+
             #wenn value = project, dann darf nur Typ building eingefügt werden usw...
-            print value
+            #thats why -> targetID - 1 (building -> project; floor->building ...)
+            if (SelID == Type):
+                #add object
+                ID = self.__ArchTree.ArchModel.addChild(Attr)
+                #Default Name
+                self.__ArchTree.ArchModel.setName(ID,ID)
+                self.__ArchTree.CreateTreeNode(ID, Iterator, self.__ArchTree.ArchModel.getPrefix(self.curDragDataType))
 
-    def ProjectTreeDragMotion(self,widget, drag_context, x, y, time):
-        pass
+    #check if type ok for drop position (cursorlayout!)
+    #currently not completed --- for later use ti optimize
+    def ProjectTreeDragMotion(self,treeview, drag_context, x, y, time):
+        drop_info = treeview.get_dest_row_at_pos(x, y)
+        if drop_info:
+            model = treeview.get_model()
+            path, position = drop_info
+            #compare info with position/path object and add building,florr,room ...
+            #get ID of selected item in treeview (iter path)
+            Iterator = model.get_iter(path)
+            #position is always 2 (column) to idendifiy the type of node
+            value = model.get_value(Iterator, 2)
+
+            #wenn value = project, dann darf nur Typ building eingefügt werden usw...
+            #thats why -> targetID - 1 (building -> project; floor->building ...)
+            if (value == self.__ArchTree.ArchModel.getPrefix(self.curDragDataType-1)):
+                pass
+
+    #general event handler to handle button events
+    def TreeButtonPress(self,widget, event):
+        #Ignore double-clicks and triple-clicks  -> do right click to show popup menu
+        if (event.button == 3 and event.type == gtk.gdk.BUTTON_PRESS):
+            self.__mnuPopup.popup(None,None,None,event.button,event.time)
+
+    #Popup activity
+    def PopupChangeName(self,widget, data=None):
+        #self.__ArchTree.__treestore.
+        print "F2"
+
+    def PopupDelete(self,widget, data=None):
+        #get the selected item
+        treeselection = self.Tree.get_selection()
+        treestore, Iterator = treeselection.get_selected()
+        #get ID of selected item
+        Attr = treestore.get_value(Iterator, 2)
+
+        end = Attr.find('-')
+        if(end <> -1):
+            Type = Attr[0: end]
+        else:
+            Type = Attr
+
+        if(Type <> self.__ArchTree.ArchModel.getPrefix(Global.DND_PROJECT)):
+            #finaly:
+            #delete treeobjects
+            treestore.remove(Iterator)
+            #delete internal data
+            self.__ArchTree.ArchModel.removeData(Attr)
 
 
+    def PopupProperty(self,widget, data=None):
+        print "Prop"
 
     def main(self):
     # All PyGTK applications must have a gtk.main(). Control ends here

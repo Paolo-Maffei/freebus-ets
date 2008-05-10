@@ -119,24 +119,25 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
 
 #****************************************************************************
     def addChild(self, parentID):
+
         parent = self.getDataRootNode(parentID)
         if(parentID.find(self.__PROJECT_PREFIX) > -1):
-            Element = self.createCild(self.__BUILDING_PREFIX)
+            Element = self.createChild(self.__BUILDING_PREFIX)
             parent.appendChild(Element)
             return self.getChildID(Element)
 
         elif(parentID.find(self.__BUILDING_PREFIX) > -1):
-            Element = self.createCild(self.__FLOOR_PREFIX)
+            Element = self.createChild(self.__FLOOR_PREFIX)
             parent.appendChild(Element)
             return self.getChildID(Element)
 
         if(parentID.find(self.__FLOOR_PREFIX) > -1):
-            Element = self.createCild(self.__ROOM_PREFIX)
+            Element = self.createChild(self.__ROOM_PREFIX)
             parent.appendChild(Element)
             return self.getChildID(Element)
 
         if(parentID.find(self.__ROOM_PREFIX) > -1):
-            Element = self.createCild(self.__JUNCTION_BOX_PREFIX)
+            Element = self.createChild(self.__JUNCTION_BOX_PREFIX)
             parent.appendChild(Element)
             return self.getChildID(Element)
         else:

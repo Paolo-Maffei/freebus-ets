@@ -44,7 +44,7 @@ class FB_XMLDataModel:
     #remove data with the given ID
     def removeData(self,ID):
         Node=self.getDataRootNode(ID)
-        Parent = Node.ParentNode()
+        Parent = Node.parentNode
         Parent.removeChild(Node)
 
     #get the name of a Node
@@ -95,7 +95,7 @@ class FB_XMLDataModel:
     def createChild(self,TagName):
         Element = self.__DOMObj.createElement(TagName)
 
-        id = tagname+"-" + self.getNewID(TagName)  # get id for the child
+        id = TagName+"-" + str(self.getNewID(TagName))  # get id for the child
         Element.setAttribute("id", id)
 
         Element.appendChild(self.__DOMObj.createElement("name"))

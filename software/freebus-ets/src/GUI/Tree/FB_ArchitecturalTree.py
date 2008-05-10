@@ -24,12 +24,12 @@ import gtk.glade
 class FB_ArchitecturalTree:
 
     __LogObj = None
-    __ArchModel = None
     __ImagePath = None
     __treestore = None
     __TreeObj = None
     __CurProjectObj = None
 
+    ArchModel = None
 
        #tree-structure:
         #Project-Name                    (1)
@@ -91,33 +91,35 @@ class FB_ArchitecturalTree:
         #set current project object
         self.__CurProjectObj = ProjectObj
         #object of our achrchitect
-        self.__ArchModel = self.__CurProjectObj.getArchModel()
+        self.ArchModel = self.__CurProjectObj.getArchModel()
 
         #set iterator to first position
         BuildingIter = self.__treestore.get_iter_first()
 
         #get root node
-        Node = self.__ArchModel.getDataRootNode(self.__ArchModel.getRootID())
+        Node = self.ArchModel.getDataRootNode(self.ArchModel.getRootID())
 
+        #Column 1
         self.__treestore.set_value(BuildingIter,1,self.__CurProjectObj.getProjectName())
-        self.__treestore.set_value(BuildingIter,2,self.__ArchModel.getPrefix(1))
+        #Column 2
+        self.__treestore.set_value(BuildingIter,2,self.ArchModel.getRootID())
 
-        Obj = self.__ArchModel.getDOMObj()
+        Obj = self.ArchModel.getDOMObj()
 
         #get all buildings
-        BuildingPrefix = self.__ArchModel.getPrefix(2)
+        BuildingPrefix = self.ArchModel.getPrefix(Global.DND_BUILDING)
 
         #get List of ID of given Prefix (building-1,building-2,...)
-        IDList = self.__ArchModel.getIDList(Node,BuildingPrefix)
+        IDList = self.ArchModel.getIDList(Node,BuildingPrefix)
 
         #for all buildings....
         for buildings in range(len(IDList)):
             LastBuildingIter = self.CreateTreeNode(IDList[buildings],BuildingIter,BuildingPrefix)
 
             #get all floors of given building
-            FloorNode = self.__ArchModel.getDataRootNode(IDList[buildings])
-            FloorPrefix = self.__ArchModel.getPrefix(3)
-            FloorList = self.__ArchModel.getIDList(FloorNode,FloorPrefix)
+            FloorNode = self.ArchModel.getDataRootNode(IDList[buildings])
+            FloorPrefix = self.ArchModel.getPrefix(Global.DND_FLOOR)
+            FloorList = self.ArchModel.getIDList(FloorNode,FloorPrefix)
             #save last Iter
             FloorIter = LastBuildingIter
             #for all floors in current building
@@ -125,18 +127,18 @@ class FB_ArchitecturalTree:
                 LastFloorIter = self.CreateTreeNode(FloorList[floors],FloorIter,FloorPrefix)
 
                 #get all rooms of given floor
-                RoomNode = self.__ArchModel.getDataRootNode(FloorList[floors])
-                RoomPrefix = self.__ArchModel.getPrefix(4)
-                RoomList = self.__ArchModel.getIDList(RoomNode,RoomPrefix)
+                RoomNode = self.ArchModel.getDataRootNode(FloorList[floors])
+                RoomPrefix = self.ArchModel.getPrefix(Global.DND_ROOM)
+                RoomList = self.ArchModel.getIDList(RoomNode,RoomPrefix)
                 #save last Iter
                 RoomIter = LastFloorIter
                 #for all rooms in current floor
                 for rooms in range(len(RoomList)):
                     LastRoomIter = self.CreateTreeNode(RoomList[rooms],RoomIter,RoomPrefix)
                     #get all junctions of given room
-                    JunctionNode = self.__ArchModel.getDataRootNode(RoomList[rooms])
-                    JunctionPrefix = self.__ArchModel.getPrefix(5)
-                    JunctionList = self.__ArchModel.getIDList(JunctionNode,JunctionPrefix)
+                    JunctionNode = self.ArchModel.getDataRootNode(RoomList[rooms])
+                    JunctionPrefix = self.ArchModel.getPrefix(Global.DND_JUNCTION)
+                    JunctionList = self.ArchModel.getIDList(JunctionNode,JunctionPrefix)
                     #save last Iter
                     JunctionIter = LastRoomIter
                     #for all junctions in current room
@@ -147,10 +149,10 @@ class FB_ArchitecturalTree:
 
 
     def CreateTreeNode(self,ID,Iterator,Prefix):
-        BuildingNode = self.__ArchModel.getDataRootNode(ID)
+        BuildingNode = self.ArchModel.getDataRootNode(ID)
         #attr. will be saved in tree without visibilty
-        Attr = self.__ArchModel.getChildID(BuildingNode)
-        Value = self.__ArchModel.readDOMNodeValue(BuildingNode,"name")
+        Attr = self.ArchModel.getChildID(BuildingNode)
+        Value = self.ArchModel.readDOMNodeValue(BuildingNode,"name")
         image = self.getImage(Prefix)
         iter =  self.__treestore.append(Iterator, [image, unicode(Value,"ISO-8859-1"), Attr])
 
