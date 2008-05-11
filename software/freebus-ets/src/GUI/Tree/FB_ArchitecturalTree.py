@@ -28,6 +28,9 @@ class FB_ArchitecturalTree:
     __treestore = None
     __TreeObj = None
     __CurProjectObj = None
+    text_cell = None            #public object for treeview -> textcellrenderer
+    img_cell = None             #public object for treeview -> cellrenderer
+    column = None               #public object for treeview -> treeview column
 
     ArchModel = None
 
@@ -62,17 +65,17 @@ class FB_ArchitecturalTree:
         #for later use with gtk 2.4 or higher
         #treerowref = TreeRowReference(TreeObj.get_model(), TreePath)
 
-        text_cell = gtk.CellRendererText()            #Text Object
-        img_cell = gtk.CellRendererPixbuf()           #Image Object
-        column = gtk.TreeViewColumn()
-        column.pack_start(img_cell, False)
-        column.pack_start(text_cell,True)
-        column.add_attribute(img_cell, "pixbuf",0)
-        column.add_attribute(text_cell, "text", 1)
-        column.set_attributes(text_cell, markup=1)
-        self.__TreeObj.append_column(column)                #add objects t ofirst line of tree
+        self.text_cell = gtk.CellRendererText()            #Text Object
+        self.img_cell = gtk.CellRendererPixbuf()           #Image Object
+        self.column = gtk.TreeViewColumn()
+        self.column.pack_start(self.img_cell, False)
+        self.column.pack_start(self.text_cell,True)
+        self.column.add_attribute(self.img_cell, "pixbuf",0)
+        self.column.add_attribute(self.text_cell, "text", 1)
+        self.column.set_attributes(self.text_cell, markup=1)
+        self.__TreeObj.append_column(self.column)                #add objects t ofirst line of tree
         self.__TreeObj.expand_all()
-
+        #text_cell.set_property("editable",True)
         # Allow drag and drop reordering of rows
         #TreeObj.set_reorderable(True)
         self.__TreeObj.enable_model_drag_dest([('text/plain', 0,Global.DND_BUILDING)],gtk.gdk.ACTION_COPY)
@@ -155,7 +158,9 @@ class FB_ArchitecturalTree:
         Value = self.ArchModel.readDOMNodeValue(BuildingNode,"name")
         image = self.getImage(Prefix)
         iter =  self.__treestore.append(Iterator, [image, unicode(Value,"ISO-8859-1"), Attr])
-
+        path = self.__treestore.get_path(Iterator)
+        self.__TreeObj.expand_row(path, True)
+        self.__CurProjectObj.isChanged = True
         return iter
 
 

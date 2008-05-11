@@ -27,6 +27,8 @@ class FB_Project:
     __archmodel = None        #object: architectural model
     __instamodell = None      #object: installation model
    # __parent = None           #object: Application
+    isChanged = False
+
 
     ##Constructor for new Project
     #@param LogObj: Log-File-Object to log all events within this inctance
@@ -85,3 +87,4 @@ class FB_Project:
 
     def SaveProject(self,):
         self.__archmodel.SaveArchmodel()
+        self.isChanged = False

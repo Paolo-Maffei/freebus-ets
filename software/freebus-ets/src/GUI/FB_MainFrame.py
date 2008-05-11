@@ -28,6 +28,7 @@ from FB_PROJECT import FB_ArchitecturalDataModel
 
 
 
+
 class FB_MainFrame:
 
     __WindowWidth = 0
@@ -46,7 +47,6 @@ class FB_MainFrame:
 
     treestore = None
     curDragDataType = 0            #the current Type of draged data (builidng,floor,rooms---)
-
 
     def __init__(self, LogObj):
     # create a new window
@@ -114,7 +114,7 @@ class FB_MainFrame:
         self.__ProjTree = self.Tree
 
         dic = { "on_MainFrame_destroy" : gtk.main_quit ,
-                "on_Quitt_activate" : gtk.main_quit,
+                "on_Quitt_activate" : self.QuittApp,
                 "on_new_project_activate" : self.MenuNewProject,
                 "on_open_project_activate" : self.MenuOpenProject,
                 "on_Save_activate" : self.MenuSaveProject,
@@ -123,7 +123,8 @@ class FB_MainFrame:
                 #ProjectTree
                 "on_ProjectTree_drag_data_received" : self.ProjectTreeDropData,
                 "on_ProjectTree_drag_motion" : self.ProjectTreeDragMotion,
-                "on_ProjectTree_button_press_event": self.TreeButtonPress,
+                "on_ProjectTree_button_press_event": self.TreeButtonPress
+
 
                 }
         self.__GladeObj.signal_autoconnect(dic)
@@ -195,11 +196,25 @@ class FB_MainFrame:
             #wenn value = project, dann darf nur Typ building eingefügt werden usw...
             #thats why -> targetID - 1 (building -> project; floor->building ...)
             if (SelID == Type):
-                #add object
-                ID = self.__ArchTree.ArchModel.addChild(Attr)
-                #Default Name
-                self.__ArchTree.ArchModel.setName(ID,ID)
-                self.__ArchTree.CreateTreeNode(ID, Iterator, self.__ArchTree.ArchModel.getPrefix(self.curDragDataType))
+                #open dialog to give a new name
+                #AddStructureElement = FB_AddStructureElement.FB_AddStructureElement(self.__LogObj, self,"Reserve")
+                GladeObj = gtk.glade.XML(Global.GUIPath + "freebus.glade","DlgAddStructureElement")
+
+                window = GladeObj.get_widget("DlgAddStructureElement")
+                txtElementName = GladeObj.get_widget("txtElementName")
+                #wait for closing dialog
+                response = window.run()
+
+                if(response == gtk.RESPONSE_OK):
+                    #Default Name
+                    Name = txtElementName.get_text()
+                    window.destroy()
+                    #add object
+                    ID = self.__ArchTree.ArchModel.addChild(Attr)
+                    self.__ArchTree.ArchModel.setName(ID,Name)
+                    self.__ArchTree.CreateTreeNode(ID, Iterator, self.__ArchTree.ArchModel.getPrefix(self.curDragDataType))
+                else:
+                    window.destroy()
 
     #check if type ok for drop position (cursorlayout!)
     #currently not completed --- for later use ti optimize
@@ -225,10 +240,33 @@ class FB_MainFrame:
         if (event.button == 3 and event.type == gtk.gdk.BUTTON_PRESS):
             self.__mnuPopup.popup(None,None,None,event.button,event.time)
 
+
     #Popup activity
     def PopupChangeName(self,widget, data=None):
-        #self.__ArchTree.__treestore.
-        print "F2"
+        #change to editmode
+        self.__ArchTree.text_cell.set_property('editable', True)
+        #find current selected position at treeview
+        path,column = self.__ProjTree.get_cursor()
+        self.__ProjTree.set_cursor( path,column ,True )
+        model = self.__ProjTree.get_model()
+        self.__ArchTree.text_cell.connect('edited', self.CellChanged, model)
+
+    #will be called if a item has been changed (name of node...)
+    def CellChanged(self,cell, path, new_text, user_data):
+        #get treeview object from context (user_data)
+        treeview = user_data
+        #write new text to tree at column 1
+        treeview[path][1] = new_text
+        #get Iterator of given path (selected item)
+        Iterator = treeview.get_iter(path)
+        #find ID from cloumn 2 (building-2 etc.)
+        ID = treeview.get_value(Iterator, 2)
+        #write new text to architectural model (internal data)
+        self.__ArchTree.ArchModel.setName(ID,new_text)
+        #reset editable property of tree
+        self.__ArchTree.text_cell.set_property('editable', False)
+        self.__CurProjectObj.isChanged = True
+
 
     def PopupDelete(self,widget, data=None):
         #get the selected item
@@ -249,13 +287,37 @@ class FB_MainFrame:
             treestore.remove(Iterator)
             #delete internal data
             self.__ArchTree.ArchModel.removeData(Attr)
-
+            self.__CurProjectObj.isChanged = True
 
     def PopupProperty(self,widget, data=None):
         print "Prop"
+
+
+
 
     def main(self):
     # All PyGTK applications must have a gtk.main(). Control ends here
     # and waits for an event to occur (like a key press or mouse event).
 
         gtk.main()
+
+    #quitt Application
+    def QuittApp(self,widget, data=None):
+        if(self.__CurProjectObj <> None):
+            if(self.__CurProjectObj.isChanged == True):
+                msgbox = gtk.MessageDialog(parent = self.window, buttons = gtk.BUTTONS_YES_NO,
+                                           flags = gtk.DIALOG_MODAL, type = gtk.MESSAGE_QUESTION,
+                                           message_format = Global.QUITTWITHOUTSAVE )
+
+                msgbox.set_title(Global.QUITMSGTITLE)
+                result = msgbox.run()
+                msgbox.destroy()
+                if result == gtk.RESPONSE_YES:
+                    pass
+                else:
+                    #Quitt without saving
+                    gtk.main_quit()
+            else:
+                gtk.main_quit()
+        else:
+            gtk.main_quit()

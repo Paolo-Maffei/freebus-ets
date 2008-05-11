@@ -221,7 +221,7 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
         return self.getName(self.__ROOT_ID)
 
     def setProjectName(self, name):
-        self.setName(self.__ROOT_ID, name)
+        self.setName(self.__ROOT_ID, unicode(name))
 #****************************************************************************
     def getComment(self):
         Node = self.getDataRootNode(self.__ROOT_ID)
@@ -229,7 +229,7 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
 
     def setComment(self, comment):
         Node = self.getDataRootNode(self.__ROOT_ID)
-        self.writeDOMNodeValue(Node, "comment", comment)
+        self.writeDOMNodeValue(Node, "comment", unicode(comment))
 #****************************************************************************
     def getPrefferedBusSystem(self):
         Node = self.getDataRootNode(self.__ROOT_ID)
@@ -237,7 +237,7 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
 
     def setPrefferedBusSystem(self, pbs):
         Node = self.getDataRootNode(self.__ROOT_ID)
-        self.writeDOMNodeValue(Node, "preffered-bus-system", pbs)
+        self.writeDOMNodeValue(Node, "preffered-bus-system", unicode(pbs))
 #****************************************************************************
     def getProjectDirectoryName(self):
         Node = self.getDataRootNode(self.__ROOT_ID);

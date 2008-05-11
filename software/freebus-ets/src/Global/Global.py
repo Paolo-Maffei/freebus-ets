@@ -34,3 +34,5 @@ DND_FLOOR = 3
 DND_ROOM = 4
 DND_JUNCTION = 5
 
+QUITTWITHOUTSAVE = U"Das Projekt wurde noch nicht gespeichert. \nMöchten Sie Ihre Daten jetzt speichern oder sofort beenden?"
+QUITMSGTITLE = U"Warnung vor Datenverlust"

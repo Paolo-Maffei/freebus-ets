@@ -55,7 +55,7 @@ class FB_XMLDataModel:
     #set the name of Node
     def setName(self,ID,Name):
         Node = self.getDataRootNode(ID)
-        self.writeDOMNodeValue(Node, "name", Name)
+        self.writeDOMNodeValue(Node, "name", unicode(Name))
 
     #get comment
     def getComment(self, ID):
@@ -65,7 +65,7 @@ class FB_XMLDataModel:
     #set comment
     def setComment(self,ID,Comment):
         Node = self.getDataRootNode(ID)
-        self.writeDOMNodeValue(Node,"comment", comment)
+        self.writeDOMNodeValue(Node,"comment", unicode(comment))
 
 
     ##Return the id list for all child nodes with namen name from the given stat node
@@ -206,7 +206,7 @@ class FB_XMLDataModel:
                                 pass
                 #Nodetyp TEXT -> found correct level
                 else:
-                    Node.firstChild.data = unicode(Value,"ISO-8859-1")
+                    Node.firstChild.data = Value
                     return
             #Len of NodeList = 0 -> writable Node doesnt exist
             else:
@@ -214,13 +214,14 @@ class FB_XMLDataModel:
                 if(Node.hasChildNodes == True):
 
                     if(Node.childNodes.item(0).nodeType == Node.TEXT_NODE):
-                        Node.firstChild.data = unicode(Value,"ISO-8859-1")
+                        Node.firstChild.data = Value
                         return
                     else:
-                        Node.appendChild(self.__DOMObj.createTextNode(unicode(Value,"ISO-8859-1")))
+                        Node.appendChild(self.__DOMObj.createTextNode(Value))
+                        #unicode(Value,"ISO-8859-1")
                         return
                 else:
-                    Node.appendChild(self.__DOMObj.createTextNode(unicode(Value,"ISO-8859-1")))
+                    Node.appendChild(self.__DOMObj.createTextNode(Value))
                     return
 
 
