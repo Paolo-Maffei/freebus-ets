@@ -27,8 +27,6 @@ from GUI.Tree import FB_ArchitecturalTree
 from FB_PROJECT import FB_ArchitecturalDataModel
 
 
-
-
 class FB_MainFrame:
 
     __WindowWidth = 0
@@ -211,6 +209,9 @@ class FB_MainFrame:
                     window.destroy()
                     #add object
                     ID = self.__ArchTree.ArchModel.addChild(Attr)
+                    if(Name == ""):
+                        Name = ID
+
                     self.__ArchTree.ArchModel.setName(ID,Name)
                     self.__ArchTree.CreateTreeNode(ID, Iterator, self.__ArchTree.ArchModel.getPrefix(self.curDragDataType))
                 else:
