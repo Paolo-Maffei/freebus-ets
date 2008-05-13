@@ -17,6 +17,7 @@ import os
 from xml.dom import minidom
 from xml.dom.minidom import *
 from FB_PROJECT import FB_ArchitecturalDataModel
+from FB_PROJECT import FB_InstallationDataModel
 #from xml.dom.minidom import getDOMImplementation
 
 ##general class for handling project data which are based on XML
@@ -41,16 +42,17 @@ class FB_Project:
         if(projectpath != None):
             ArchDocument = minidom.parse(projectpath + "\\structure.xml")
             self.__archmodel = FB_ArchitecturalDataModel.FB_ArchitecturalDataModel(self.__LogObj,ArchDocument,projectname,False)
+            InstDocument = minidom.parse(projectpath + "\\installation.xml")
+            self.__instamodell = FB_InstallationDataModel.FB_InstallationDataModel(self.__LogObj,InstDocument,projectname,False)
         #new project
         else:
             #create empty structure file
             impl = getDOMImplementation()
             ArchDocument = impl.createDocument(None, "architectural-data", None)
             self.__archmodel = FB_ArchitecturalDataModel.FB_ArchitecturalDataModel(self.__LogObj,ArchDocument,projectname,True)
-
-        #XMLLoader load2=new XMLLoader(new File(projectpath.getPath()+"/installation.xml"));
-        #instamodell=new InstallationModel(load2.getDocument());
-
+            #create empty installation file
+            InstDocument = impl.createDocument(None, "installation-components", None)
+            self.__instamodell = FB_InstallationDataModel.FB_InstallationDataModel(self.__LogObj,InstDocument,projectname,True)
 
 #*****************************************************************************
     #returns the project associated architectural model

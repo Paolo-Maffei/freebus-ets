@@ -113,10 +113,12 @@ class FB_MainFrame:
 
         dic = { "on_MainFrame_destroy" : gtk.main_quit ,
                 "on_Quitt_activate" : self.QuittApp,
+                #Menu items
                 "on_new_project_activate" : self.MenuNewProject,
                 "on_open_project_activate" : self.MenuOpenProject,
                 "on_Save_activate" : self.MenuSaveProject,
                 "on_button_drag_data_get" : self.DragDataGet,
+                "on_ConvertDeviceData_activate":self.Converter,
 
                 #ProjectTree
                 "on_ProjectTree_drag_data_received" : self.ProjectTreeDropData,
@@ -151,6 +153,18 @@ class FB_MainFrame:
         else:
             #print "Fehler save "
             self.__LogObj.NewLog("Error at saving Projectdata -> CurProjectObj is Nonetype",1)
+
+    #start the converter dialog
+    def Converter(self,widget, data=None):
+        #print widget
+        DlgConvertGlade = gtk.glade.XML(Global.GUIPath  + "freebus.glade","DlgConvertDeviceData")
+        DlgConvert = DlgConvertGlade.get_widget("DlgConvertDeviceData")
+        response = DlgConvert.run()
+
+        if(response == gtk.RESPONSE_OK):
+            pass
+        else:
+            DlgConvert.destroy()
 
     #set current project object
     def SetCurrProject(self, ProjObj):

@@ -83,7 +83,7 @@ class FB_ArchitecturalTree:
     def ClearTree(self):
         self.__treestore.clear()
         self.__TreeObj.set_model(self.__treestore)
-        image=gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "New.gif")
+        image = gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "New.gif")
         self.__TreeIterator = self.__treestore.append(None, [image, "  kein Projekt aktiv", "OK"])
 
     #build the project tree, every time you create a new project or open an existing project
