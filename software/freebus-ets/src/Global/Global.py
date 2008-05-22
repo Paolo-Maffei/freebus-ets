@@ -24,6 +24,7 @@ import os
 GUIPath = "..\\GUI\\"
 ImagePath = "..\\Image\\"
 LogPath = "..\\Logging\\"
+dataPath = "..\\data\\"
 
 Prefix = [" ", "Project","Building","Floor", "Room", "Junction"]
 

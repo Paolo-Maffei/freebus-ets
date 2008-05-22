@@ -16,6 +16,12 @@
 import os
 import sys
 import time
+import thread
+import Queue
+import threading
+import thread
+
+
 from Global import Global
 import pygtk
 pygtk.require("2.0")
@@ -25,6 +31,7 @@ from GUI import FB_NewProjectWindow
 from GUI import FB_OpenProjectWindow
 from GUI.Tree import FB_ArchitecturalTree
 from FB_PROJECT import FB_ArchitecturalDataModel
+from XML import FB_XMLConverter
 
 
 class FB_MainFrame:
@@ -56,6 +63,9 @@ class FB_MainFrame:
         self.__WindowHeigth = gtk.gdk.screen_height()
 
         self.__GladeObj = gtk.glade.XML(Global.GUIPath  + "freebus.glade","MainFrame")
+        #get widget of window
+        self.window = self.__GladeObj.get_widget("MainFrame")
+
 
         if(self.__GladeObj == None):
            self.__LogObj.NewLog("Error at intializing GUI-Interface (Glade-Object-MainFrame)",1)
@@ -83,8 +93,6 @@ class FB_MainFrame:
 
        #-------------------------------------------------------------------------------------
 
-        #get widget of window
-        self.window = self.__GladeObj.get_widget("MainFrame")
 
         #setting up DragNDrop of (Source) Toolbarbuttons
         #1. get widget of building button
@@ -120,6 +128,7 @@ class FB_MainFrame:
                 "on_button_drag_data_get" : self.DragDataGet,
                 "on_ConvertDeviceData_activate":self.Converter,
 
+
                 #ProjectTree
                 "on_ProjectTree_drag_data_received" : self.ProjectTreeDropData,
                 "on_ProjectTree_drag_motion" : self.ProjectTreeDragMotion,
@@ -154,17 +163,15 @@ class FB_MainFrame:
             #print "Fehler save "
             self.__LogObj.NewLog("Error at saving Projectdata -> CurProjectObj is Nonetype",1)
 
-    #start the converter dialog
-    def Converter(self,widget, data=None):
-        #print widget
-        DlgConvertGlade = gtk.glade.XML(Global.GUIPath  + "freebus.glade","DlgConvertDeviceData")
-        DlgConvert = DlgConvertGlade.get_widget("DlgConvertDeviceData")
-        response = DlgConvert.run()
 
-        if(response == gtk.RESPONSE_OK):
-            pass
-        else:
-            DlgConvert.destroy()
+#start the converter dialog
+    def Converter(self,widget, data=None):
+        XML = FB_XMLConverter.FB_XMLConverter(self.__LogObj)
+        #thread.start_new(self.ConverterThread, (FB_XMLConverter.FB_XMLConverter(self.__LogObj),))
+
+    def ConverterThread(self, XMLConverter):
+        #
+        XML = XMLConverter()
 
     #set current project object
     def SetCurrProject(self, ProjObj):
@@ -313,7 +320,7 @@ class FB_MainFrame:
     def main(self):
     # All PyGTK applications must have a gtk.main(). Control ends here
     # and waits for an event to occur (like a key press or mouse event).
-
+      #  gtk.gdk.threads_init()
         gtk.main()
 
     #quitt Application

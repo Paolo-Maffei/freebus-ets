@@ -46,6 +46,8 @@ class FB_OPENPROJECTWINDOW:
 
         self.__window = GladeObj.get_widget("Open_Project")
 
+        self.__window.show_all()
+
         dic = { "on_Open_Project_destroy" : self.CloseWindow ,
                 "on_bCancel_clicked" : self.bCancel,
                 "on_bOK_clicked" :self.bOK}

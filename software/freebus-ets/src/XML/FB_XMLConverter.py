@@ -14,13 +14,27 @@
 #===============================================================================
 
 import os
+import time
 import codecs
 import locale
+import gobject
+from time import *
 from re import *
+import threading
+import thread
+import types
 
+from Global import Global
+import pygtk
+pygtk.require("2.0")
+import gtk
+import gtk.glade
+from GUI import *
 
 ##This class contains all Methods to convert a original *.vd_ File to its corresponding
 ##XML-File.
+
+
 class FB_XMLConverter:
 
 
@@ -37,6 +51,21 @@ class FB_XMLConverter:
     __LogObj = None
     lineCounter = 0
     ByteCount = 0
+    Finisch = False
+    DlgConvertGlade = None
+    DlgConvert = None         #widget
+    __txtSourceFile = None    #widget
+    __txtDestFile = None      #widget
+    __progress = None         #widget
+    __SelFolder = ""
+    __SelFile = ""
+    response = 0
+    LineCount = 0        #line count -> visu
+    CurLine = 0
+    visu = 0.0
+    timer = 0
+    ProgressBar = None    #calssobj
+
 
     ## The constructor.
     #
@@ -44,10 +73,88 @@ class FB_XMLConverter:
     # @param InFile : Path and Filename of Input-File (*.vd_)
     # @param InFile : Path and Filename of Output-File (*.xml)
     # @param LogObj : a Object to Logging-Class
-    def __init__(self,InFile,OutFile,LogObj):
-        self.vd_datei = InFile
-        self.xml_datei = OutFile
+    def __init__(self,LogObj):#,jobqueue, ausschalter):
+
+        self.DlgConvertGlade = gtk.glade.XML(Global.GUIPath  + "freebus.glade" ,"DlgConvertDeviceData")
+        self.DlgConvert = self.DlgConvertGlade.get_widget("DlgConvertDeviceData")
+
+        #get widgets of textfields
+        self.__txtSourceFile = self.DlgConvertGlade.get_widget("txtSourceFile")
+        self.__txtDestFile = self.DlgConvertGlade.get_widget("txtDestFile")
+        self.__progress = self.DlgConvertGlade.get_widget("ConvertProgress")
+
+        self.__SelFolder = ""
+        self.__SelFile = ""
+        self.Finisch = False
+
+        dic = {"on_bSelect_clicked": self.FileChooser,
+               "on_bCancel_clicked":self.bCancel,
+               "on_bConvert_clicked":self.bConvert }
+
+        self.DlgConvertGlade.signal_autoconnect(dic)
+
+        self.DlgConvert.show()
+
         self.__LogObj = LogObj
+
+    #open FileChooser
+    def FileChooser(self, widget, data=None):
+
+        DlgFileChooserGlade = gtk.glade.XML(Global.GUIPath  + "freebus.glade","DlgFileChooser")
+        DlgFileChooser = DlgFileChooserGlade.get_widget("DlgFileChooser")
+
+        #create file-filter
+        filter = gtk.FileFilter()
+        filter.add_pattern("*.vd_")
+        filter.set_name("EIB Produktdaten")
+        DlgFileChooser.add_filter(filter)
+
+        response = DlgFileChooser.run()
+
+        if(response == gtk.RESPONSE_OK):
+            self.__SelFolder = DlgFileChooser.get_current_folder()
+            FileFolder = DlgFileChooser.get_filename()
+
+            #split SelFile (get_filename return complete path + filename)
+            List = FileFolder.split("\\")
+            tFileName = List[len(List)-1]
+            tFileName = tFileName.split(".")
+
+            #Folder and Filename complete
+            self.vd_datei = FileFolder
+            self.xml_datei = Global.dataPath + tFileName[0] + ".xml"
+
+            self.__txtSourceFile.set_text(self.vd_datei)
+            self.__txtDestFile.set_text(tFileName[0] + ".xml")
+
+            DlgFileChooser.destroy()
+        else:
+            DlgFileChooser.destroy()
+
+    #close dialog
+    def bCancel(self,widget, data=None):
+        self.response = gtk.RESPONSE_CANCEL
+        if(self.timer <> 0):
+            gobject.source_remove(self.timer)
+            self.timer = 0
+        self.DlgConvert.destroy()
+
+
+    #start convert
+    def bConvert(self,widget, data=None):
+
+        self.response = gtk.RESPONSE_OK
+        self.ProgressBar = ProgressBar(self.__progress,self,self.DlgConvert)
+        self.ProgressBar.start()
+
+        thread.start_new(self.worker_thread, (self.convertToXML(),))
+
+
+    def worker_thread(self, process_convert):
+
+        # hier wird gearbeitet
+        if(process_convert <> None):
+            process_convert()
 
     ## Base Method for *.vd_ File to FB-XML-File Conversion
     #
@@ -59,6 +166,7 @@ class FB_XMLConverter:
         next=""
         OutFileObj = None
         InFileObj = None
+
 
         try:
             if(self.vd_datei != ""):
@@ -74,9 +182,20 @@ class FB_XMLConverter:
 
                 OutFileObj.write("<eib-products>\n")
 
+                #analyse file for visualisation
+                try:
+                    self.LineCount = len(InFileObj.readlines())
+
+                except:
+                    self.LineCount = 20000000
+
+                InFileObj.seek(0)
+
+                #print self.LineCount
                 #read first line and compare of signum
                 line = InFileObj.readline()
                 line = line.split("\n")
+                self.CurLine = 1
 
                 if(line[0] != "EX-IM"):
                     #LOG File
@@ -86,14 +205,16 @@ class FB_XMLConverter:
 
                 line = InFileObj.readline()
                 line = line.split("\n")
+                self.CurLine = self.CurLine + 1
+
 
                 #normal parse-run
                 while(True):
 
-
+                   # print InFileObj.tell()
                     next = InFileObj.readline()
                     next = next.split("\n")
-
+                    self.CurLine = self.CurLine + 1
 
                     if(line[0] == "XXX"):
                         self.parseLine(line[0],OutFileObj)
@@ -110,6 +231,7 @@ class FB_XMLConverter:
 
                         next = InFileObj.readline()
                         next = next.split("\n")
+                        self.CurLine = self.CurLine + 1
 
                         if(next[0] == ""):
                             if(line[0] != ""):
@@ -126,6 +248,10 @@ class FB_XMLConverter:
                 #LOG File
                 self.__LogObj.NewLog(self.vd_datei+" geschlossen",0)
                 self.__LogObj.NewLog(self.xml_datei+" geschlossen",0)
+                self.Finisch = True
+                self.__progress.set_fraction(0.0)
+                self.DlgConvert.destroy()
+
 
         except IOError:
 
@@ -148,9 +274,14 @@ class FB_XMLConverter:
 
             #LOG File
 
-            self.__LogObj.NewLog("Allgemeiner Fehler beim Parsen der vd_ Datei" \
+            if(self.CurLine > 0):
+                self.__LogObj.NewLog("Allgemeiner Fehler beim Parsen der vd_ Datei" \
                                  + " in Zeile: " + str(self.lineCounter)  \
                                  +" " + line[0],2)
+            else:
+                self.__LogObj.NewLog("Allgemeiner Fehler beim Parsen der vd_ Datei" \
+                                 + " in Zeile: " + str(self.lineCounter)  \
+                                 +" " ,2)
 
             if(OutFileObj != None):
                 OutFileObj.close()
@@ -168,7 +299,7 @@ class FB_XMLConverter:
         tmp=""
 
         try:
-            self.lineCounter = self.lineCounter + 1
+            #self.lineCounter = self.lineCounter + 1
 
             #line empty ?
             if(len(_line) > 0):
@@ -315,3 +446,32 @@ class FB_XMLConverter:
 
         except(IOError):
             print "Fehler"
+
+
+
+
+class ProgressBar(threading.Thread):
+
+    def __init__(self,BarObj,Converter,Dlg):
+        threading.Thread.__init__(self)
+        self.BarObj = BarObj
+        self.Converter = Converter
+        self.Dlg = Dlg
+
+
+    def run(self):
+        gtk.gdk.threads_enter()
+        while self.Converter.Finisch == False:
+
+            #self.Dlg.set_cursor(gtk.gdk.Cursor(gtk.gdk.HAND1))
+            if(self.Converter.LineCount > 0):
+                self.visu = "%3.2f" % (float(str(self.Converter.CurLine)) / float(str(self.Converter.LineCount)))
+                #print self.visu
+                if(self.Converter.CurLine > self.Converter.LineCount):
+                    self.visu = 1.0
+                self.BarObj.set_fraction(float(self.visu))
+                while gtk.events_pending():
+                    gtk.main_iteration(False)
+                sleep(0.02)
+        gtk.gdk.threads_leave()
+
