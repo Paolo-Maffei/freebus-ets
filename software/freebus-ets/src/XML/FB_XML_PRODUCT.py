@@ -9,12 +9,21 @@
 #
 #Source File: FB_XML_PRODUCT.py
 #Version: V0.1 , 10.11.2007
+#Version: V0.2 , 23.05.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #===============================================================================
 
 import codecs
 import xml.sax.handler
+from Global import Global
+
+import pygtk
+pygtk.require("2.0")
+import gtk
+import gtk.glade
+import threading
+import thread
 
 from xml.dom import minidom
 
@@ -27,6 +36,7 @@ from XML.FB_XML_HANDLER import FB_Prod2ProgrXMLHandler
 from XML.FB_XML_HANDLER import FB_MaskXMLHandler
 from FB_DATA import FB_Constants
 
+from pysqlite2 import dbapi2 as sqlite2
 
 ##This class contains all Methods to work with the FB-XML Files
 #For each xml-product file you have to create an instance of "FB_XML"
@@ -43,14 +53,133 @@ class FB_XML_PRODUCT:
     __CommObjList = None    #List of instances of read Communication Objects
     __Prod2ProgrList = None #List of instances of read Product to Program
     __MaskList = None       #List of instances of read Mask
+    Finisch = False
 
     ##Constructor
     #for each product file you have to create an instance of FB_XML
     #@param LogObj: Log-File-Object to log all events within this inctance
     #@param file: Path and Filename of the xml-data-file
-    def __init__(self,LogObj,file):
+    def __init__(self,LogObj):
         self.__LogObj = LogObj
-        self.__xml_file = file
+
+        self.DlgImportGlade = gtk.glade.XML(Global.GUIPath  + "freebus.glade","DlgImportFromXML")
+        self.ImportDlg = self.DlgImportGlade.get_widget("DlgImportFromXML")
+
+        #get widgets of textfields
+        self.__txtSourceFile = self.DlgImportGlade.get_widget("txtSourceFile")
+        self.__progress = self.DlgImportGlade.get_widget("ImportProgress")
+
+        self.lblManufacturer = self.DlgImportGlade.get_widget("ManufacturerCount")
+        self.lblProducts = self.DlgImportGlade.get_widget("Product_Count")
+        self.lblApps = self.DlgImportGlade.get_widget("App_Count")
+        self.lblComObj = self.DlgImportGlade.get_widget("Com_Count")
+        self.lblParam = self.DlgImportGlade.get_widget("Param_Count")
+
+        Value = "0 Stück"
+
+        self.lblManufacturer.set_text(unicode(Value,"ISO-8859-1"))
+        self.lblProducts.set_text(unicode(Value,"ISO-8859-1"))
+        self.lblApps.set_text(unicode(Value,"ISO-8859-1"))
+        self.lblComObj.set_text(unicode(Value,"ISO-8859-1"))
+        self.lblParam.set_text(unicode(Value,"ISO-8859-1"))
+
+
+        self.__SelFolder = ""
+        self.__SelFile = ""
+        self.Finisch = False
+
+        dic = {"on_bSelect_clicked": self.FileChooser,
+               "on_bCancel_clicked": self.bCancel,
+               "on_bImport_clicked": self.bImport }
+
+        self.DlgImportGlade.signal_autoconnect(dic)
+
+
+        self.ImportDlg.show()
+
+    #open FileChooser
+    def FileChooser(self, widget, data=None):
+
+        DlgFileChooserGlade = gtk.glade.XML(Global.GUIPath  + "freebus.glade","DlgFileChooser")
+        DlgFileChooser = DlgFileChooserGlade.get_widget("DlgFileChooser")
+
+        #create file-filter
+        filter = gtk.FileFilter()
+        filter.add_pattern("*.xml")
+        filter.set_name("XML Produktdaten")
+        DlgFileChooser.add_filter(filter)
+
+        response = DlgFileChooser.run()
+
+        if(response == gtk.RESPONSE_OK):
+            self.__SelFolder = DlgFileChooser.get_current_folder()
+            FileFolder = DlgFileChooser.get_filename()
+
+            #split SelFile (get_filename return complete path + filename)
+            List = FileFolder.split("\\")
+            tFileName = List[len(List)-1]
+            tFileName = tFileName.split(".")
+
+            #Folder and Filename complete
+            self.__xml_file = FileFolder
+            self.__txtSourceFile.set_text(self.__xml_file)
+
+            DlgFileChooser.destroy()
+        else:
+            DlgFileChooser.destroy()
+
+    #close dialog
+    def bCancel(self,widget, data=None):
+        self.response = gtk.RESPONSE_CANCEL
+        self.ImportDlg.destroy()
+
+
+    #start convert
+    def bImport(self,widget, data=None):
+        self.response = gtk.RESPONSE_OK
+
+        #thread.start_new(self.worker_thread, (self.parseXMLFile(),))
+        XMLHandler = self.parseXMLFile()
+        if(XMLHandler != -1):
+            con = sqlite2.connect(Global.Database)
+            if(con <> None):
+                productList = self.getProducts(XMLHandler)
+                self.WriteToSQL(con, productList, "hw_product")
+                productList = None
+                con.close()
+
+    def worker_thread(self, process_import):
+
+        # hier wird gearbeitet
+        if(process_import <> None):
+            XMLHandler = process_import()
+            if(XMLHandler != -1):
+                print "OK"
+
+    def WriteToSQL(self,Connection,List,Table):
+        #create a cursor
+        cur = Connection.cursor()
+
+        for j in range(len(List)):
+
+            sql = "insert into " + Table + " ("
+            if(Table == "hw_product"):
+                ColumnList = FB_Constants.ProductNode
+
+                #iteration through List
+
+                for i in range(1,List[j].getMaxIndex()+1):
+                    sql = sql + ColumnList[i]
+
+                    if(i < List[0].getMaxIndex()):
+                        sql = sql + ","
+
+
+                sql = sql + ") " + List[j].getSQLValueList() + ");"
+
+
+            cur.execute(sql)
+            Connection.commit()
 
 
     ##return the current DOM-Object
@@ -323,4 +452,30 @@ class FB_XML_PRODUCT:
         except:
             #LOG File
             self.__LogObj.NewLog("Error at creation of Node:" + Element ,2)
+
+
+class ProgressBar(threading.Thread):
+
+    def __init__(self,BarObj,Converter,Dlg):
+        threading.Thread.__init__(self)
+        self.BarObj = BarObj
+        self.Converter = Converter
+        self.Dlg = Dlg
+
+
+    def run(self):
+        gtk.gdk.threads_enter()
+        while self.Converter.Finisch == False:
+
+            #self.Dlg.set_cursor(gtk.gdk.Cursor(gtk.gdk.HAND1))
+            if(self.Converter.LineCount > 0):
+                self.visu = "%3.2f" % (float(str(self.Converter.CurLine)) / float(str(self.Converter.LineCount)))
+                #print self.visu
+                if(self.Converter.CurLine > self.Converter.LineCount):
+                    self.visu = 1.0
+                self.BarObj.set_fraction(float(self.visu))
+                while gtk.events_pending():
+                    gtk.main_iteration(False)
+                sleep(0.02)
+        gtk.gdk.threads_leave()
 

@@ -9,6 +9,7 @@
 #
 #Source File: FB_Product.py
 #Version: V0.1 , 16.11.2007
+#Version: V0.2 , 27.05.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #===============================================================================
@@ -16,25 +17,47 @@
 ##Class for Handling of Freebus-Product-Data which based from FB XML Product-Files
 class FB_Products:
 
-    __Product_ID = ""         #PRODUCT_ID
-    __Manufacturer_ID = ""    #MANUFACTURER_ID
-    __SymbolID = ""           #SYMBOL_ID
-    __Product_Name = ""       #PRODUCT_NAME
-    __Product_Version = ""    #PRODUCT_VERSION_NUMBER
-    __Comp_Type = ""          #COMPONENT_TYPE
-    __Comp_Attr = ""          #COMPONENT_ATTRIBUTES
-    __Bus_Current = ""        #BUS_CURRENT
+    __Product_ID = 0         #PRODUCT_ID
+    __Manufacturer_ID = 0    #MANUFACTURER_ID
+    __SymbolID = 0           #SYMBOL_ID
+    __Product_Name = ""      #PRODUCT_NAME
+    __Product_Version = 0    #PRODUCT_VERSION_NUMBER
+    __Comp_Type = 0          #COMPONENT_TYPE
+    __Comp_Attr = 0          #COMPONENT_ATTRIBUTES
+    __Bus_Current = 0        #BUS_CURRENT
     __Product_Serial = ""     #PRODUCT_SERIAL_NUMBER
-    __CompTypeNo = ""         #COMPONENT_TYPE_NUMBER
-    __ProductPic = ""         #PRODUCT_PICTURE
-    __BCU_Type = ""           #BCU_TYPE_NUMBER
-    __Product_Handling = ""   #PRODUCT_HANDLING
-    __ProductDLL = ""         #PRODUCT_DLL
-    __OrigManID = ""          #ORIGINAL_MANUFACTURER_ID
+    __CompTypeNo = 0         #COMPONENT_TYPE_NUMBER
+    __ProductPic = ""        #PRODUCT_PICTURE
+    __BCU_Type = 0           #BCU_TYPE_NUMBER
+    __Product_Handling = 0   #PRODUCT_HANDLING
+    __ProductDLL = ""        #PRODUCT_DLL
+    __OrigManID = 0          #ORIGINAL_MANUFACTURER_ID
 
 
     def __init__(self):
         pass
+
+    #returns List of all values in a correct sql format
+    def getSQLValueList(self):
+
+        List = "values(" +   str(self.__Product_ID) + "," + \
+                             str(self.__Manufacturer_ID) + "," + \
+                             str(self.__SymbolID) + "," + "'" + \
+                             self.__Product_Name + "'" + "," + \
+                             str(self.__Product_Version) + "," + \
+                             str(self.__Comp_Type) + "," + \
+                             str(self.__Comp_Attr) + "," + \
+                             str(self.__Bus_Current) + "," + "'" +  \
+                             str(self.__Product_Serial) + "'" + "," + \
+                             str(self.__CompTypeNo) + "," + "'" + \
+                             self.__ProductPic + "'" + "," + \
+                             str(self.__BCU_Type) + "," + \
+                             str(self.__Product_Handling) + "," + "'" + \
+                             self.__ProductDLL + "'" + "," + \
+                             str(self.__OrigManID)
+
+
+        return List
 
     #general set and get property with index for each element, coresponds to FB_Constants
     def setProduct(self,Index, Value):
@@ -101,6 +124,8 @@ class FB_Products:
          elif(Index == 15):
             return self.__OrigManID
 
+    def getMaxIndex(self):
+        return 15
 
 #**********************************************************************
     #Handling Product ID

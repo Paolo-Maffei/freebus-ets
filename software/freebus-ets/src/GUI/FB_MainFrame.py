@@ -32,7 +32,9 @@ from GUI import FB_OpenProjectWindow
 from GUI.Tree import FB_ArchitecturalTree
 from FB_PROJECT import FB_ArchitecturalDataModel
 from XML import FB_XMLConverter
+from XML import FB_XML_PRODUCT
 
+import sqlite3
 
 class FB_MainFrame:
 
@@ -127,6 +129,7 @@ class FB_MainFrame:
                 "on_Save_activate" : self.MenuSaveProject,
                 "on_button_drag_data_get" : self.DragDataGet,
                 "on_ConvertDeviceData_activate":self.Converter,
+                "on_ImportXMLDeviceData_activate":self.ImportXML,
 
 
                 #ProjectTree
@@ -164,14 +167,16 @@ class FB_MainFrame:
             self.__LogObj.NewLog("Error at saving Projectdata -> CurProjectObj is Nonetype",1)
 
 
-#start the converter dialog
+    #start the converter dialog
     def Converter(self,widget, data=None):
         XML = FB_XMLConverter.FB_XMLConverter(self.__LogObj)
-        #thread.start_new(self.ConverterThread, (FB_XMLConverter.FB_XMLConverter(self.__LogObj),))
 
     def ConverterThread(self, XMLConverter):
-        #
-        XML = XMLConverter()
+        XMLConverter()
+
+    #start XML Import to SQL Dialog
+    def ImportXML(self,widget, data=None):
+        FBProductData = FB_XML_PRODUCT.FB_XML_PRODUCT(self.__LogObj)
 
     #set current project object
     def SetCurrProject(self, ProjObj):

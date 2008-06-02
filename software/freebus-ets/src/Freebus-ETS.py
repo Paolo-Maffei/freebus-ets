@@ -30,20 +30,7 @@ from GUI import FB_MainFrame
 LogFileName = Global.LogPath + 'MainFrame.log'
 Options = 0
 
-#LOG_XML = Logging.Logging("XML_Converter",LogFileName,Options)
-
-
-
 LOG_MainFrame = Logging.Logging("FB_MainFrame",LogFileName,Options)
-
-#file = "J:/Elektronik/Projekte/EIB/ETS for Freebus/SunXML.xml"
-
-#projectfile = "J:/Elektronik/Projekte/EIB/ETS for Freebus/Test.xml"
-
-
-#XML = FB_XMLConverter.FB_XMLConverter("J:/Elektronik/Projekte/EIB/ETS for Freebus/CSuntracer2.vd_", \
-#                                  file, LOG_XML)
-
 
 FBMain = FB_MainFrame.FB_MainFrame(LOG_MainFrame)
 FBMain.main()

@@ -25,6 +25,8 @@ GUIPath = "..\\GUI\\"
 ImagePath = "..\\Image\\"
 LogPath = "..\\Logging\\"
 dataPath = "..\\data\\"
+Database = "..\\data\\Freebus.db"
+
 
 Prefix = [" ", "Project","Building","Floor", "Room", "Junction"]
 

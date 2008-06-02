@@ -9,6 +9,7 @@
 #
 #Source File: FB_XMLConverter.py
 #Version: V0.1 , 04.11.2007
+#Version: V0.2 , 22.05.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #===============================================================================
@@ -63,7 +64,6 @@ class FB_XMLConverter:
     LineCount = 0        #line count -> visu
     CurLine = 0
     visu = 0.0
-    timer = 0
     ProgressBar = None    #calssobj
 
 
@@ -134,9 +134,6 @@ class FB_XMLConverter:
     #close dialog
     def bCancel(self,widget, data=None):
         self.response = gtk.RESPONSE_CANCEL
-        if(self.timer <> 0):
-            gobject.source_remove(self.timer)
-            self.timer = 0
         self.DlgConvert.destroy()
 
 
