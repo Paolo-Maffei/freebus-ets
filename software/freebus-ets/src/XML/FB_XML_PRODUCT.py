@@ -55,6 +55,14 @@ class FB_XML_PRODUCT:
     __MaskList = None       #List of instances of read Mask
     Finisch = False
 
+    lblManufacturer = None
+    lblProducts = None
+    lblApps = None
+    lblComObj = None
+    lblParam = None
+
+
+
     ##Constructor
     #for each product file you have to create an instance of FB_XML
     #@param LogObj: Log-File-Object to log all events within this inctance
@@ -136,16 +144,53 @@ class FB_XML_PRODUCT:
 
     #start convert
     def bImport(self,widget, data=None):
+
         self.response = gtk.RESPONSE_OK
+
+        productList = []
+        appList = []
+        ManufactList = []
+
+        Value = "0 Stück"
+
+        self.lblManufacturer.set_text(unicode(Value,"ISO-8859-1"))
+        self.lblProducts.set_text(unicode(Value,"ISO-8859-1"))
+        self.lblApps.set_text(unicode(Value,"ISO-8859-1"))
+        self.lblComObj.set_text(unicode(Value,"ISO-8859-1"))
+        self.lblParam.set_text(unicode(Value,"ISO-8859-1"))
+
 
         #thread.start_new(self.worker_thread, (self.parseXMLFile(),))
         XMLHandler = self.parseXMLFile()
+
         if(XMLHandler != -1):
             con = sqlite2.connect(Global.Database)
             if(con <> None):
+                #--------------- Products --------------------------
                 productList = self.getProducts(XMLHandler)
+                Value = str(len(productList)) + " Stück"
+                self.lblProducts.set_text(unicode(Value,"ISO-8859-1"))
                 self.WriteToSQL(con, productList, "hw_product")
-                productList = None
+                #--------------- Applications / Manufacturer -------
+                [appList, ManufactList] = self.getApplications(XMLHandler)
+                Value = str(len(appList)) + " Stück"
+                self.lblApps.set_text(unicode(Value,"ISO-8859-1"))
+                Value = str(len(ManufactList)) + " Stück"
+                self.lblManufacturer.set_text(unicode(Value,"ISO-8859-1"))
+                self.WriteToSQL(con, appList, "application_program")
+                self.WriteToSQL(con, ManufactList, "manufacturer")
+                #--------------- Communication Objects --------------
+                commList  = self.getCommunicationObjects(XMLHandler)
+                Value = str(len(commList)) + " Stück"
+                self.lblComObj.set_text(unicode(Value,"ISO-8859-1"))
+                self.WriteToSQL(con, commList, "communication_object")
+                #-------------------- Mask --------------------------
+                maskList = self.getMask(XMLHandler)
+                self.WriteToSQL(con, maskList, "mask")
+                #-------------------- Product to Program-------------
+                ProdProgList = self.getProd2Progr(XMLHandler)
+                self.WriteToSQL(con, ProdProgList, "product_to_program")
+
                 con.close()
 
     def worker_thread(self, process_import):
@@ -160,13 +205,15 @@ class FB_XML_PRODUCT:
         #create a cursor
         cur = Connection.cursor()
 
+        #iterate throuch List
+
         for j in range(len(List)):
 
-            sql = "insert into " + Table + " ("
+            sql = "INSERT INTO " + Table + " ("
+
+            #Product found...
             if(Table == "hw_product"):
                 ColumnList = FB_Constants.ProductNode
-
-                #iteration through List
 
                 for i in range(1,List[j].getMaxIndex()+1):
                     sql = sql + ColumnList[i]
@@ -174,13 +221,160 @@ class FB_XML_PRODUCT:
                     if(i < List[0].getMaxIndex()):
                         sql = sql + ","
 
+                #complete sql string
+                sql = sql + ") " + List[j].getSQLValueList()
+               # print sql
+                #check if Product is already existing...
+                sqlExist = "SELECT PRODUCT_ID FROM hw_product WHERE PRODUCT_ID = " + str(List[j].getProductID())
 
-                sql = sql + ") " + List[j].getSQLValueList() + ");"
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
 
+                if(len(Cursor.fetchall()) == 0):
+                   #if item doesnt exist.... insert new record
+                   cur.execute(sql)
+                else:
+                    #do something else
+                    pass
 
-            cur.execute(sql)
-            Connection.commit()
+            #Application found
+            if(Table == "application_program"):
+                ColumnList = FB_Constants.AppNode
 
+                for i in range(1,List[j].getMaxIndex()+1):
+                    sql = sql + ColumnList[i]
+
+                    if(i < List[0].getMaxIndex()):
+                        sql = sql + ","
+
+                #complete sql string
+                sql = sql + ") " + List[j].getSQLValueList()
+               # print sql
+                #check if Product is already existing...
+                sqlExist = "SELECT PROGRAM_ID FROM application_program WHERE PROGRAM_ID = " + str(List[j].getProgramID())
+
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
+
+                if(len(Cursor.fetchall()) == 0):
+                   #if item doesnt exist.... insert new record
+                   cur.execute(sql)
+                else:
+
+                    pass
+
+            #Manufacturer found
+            if(Table == "manufacturer"):
+                ColumnList = FB_Constants.ManufacturerNode
+
+                for i in range(1,List[j].getMaxIndex()+1):
+                    sql = sql + ColumnList[i]
+
+                    if(i < List[0].getMaxIndex()):
+                        sql = sql + ","
+
+                #complete sql string
+                sql = sql + ") " + List[j].getSQLValueList()
+                #print sql
+                #check if Product is already existing...
+                sqlExist = "SELECT MANUFACTURER_ID FROM manufacturer WHERE MANUFACTURER_ID = " + str(List[j].getManufactID())
+
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
+
+                if(len(Cursor.fetchall()) == 0):
+                   #if item doesnt exist.... insert new record
+                   cur.execute(sql)
+                else:
+                    #do something else
+
+                    pass
+
+            #Communication Object found
+            if(Table == "communication_object"):
+                ColumnList = FB_Constants.CommObjNode
+
+                for i in range(1,List[j].getMaxIndex()+1):
+                    sql = sql + ColumnList[i]
+
+                    if(i < List[0].getMaxIndex()):
+                        sql = sql + ","
+
+                #complete sql string
+                sql = sql + ") " + List[j].getSQLValueList()
+                #print sql
+
+                #check if Product is already existing...
+                sqlExist = "SELECT OBJECT_ID,OBJECT_UNIQUE_NUMBER FROM communication_object WHERE OBJECT_ID = " + str(List[j].getObjID()) + " AND OBJECT_UNIQUE_NUMBER = " + str(List[j].getObjUniqueNo())
+
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
+
+                if(len(Cursor.fetchall()) == 0):
+                   #if item doesnt exist.... insert new record
+                   cur.execute(sql)
+                else:
+                    #do something else
+                    #print str(List[j].getObjUniqueNo())
+
+                    pass
+
+            #Mask Object found
+            if(Table == "mask"):
+                ColumnList = FB_Constants.MaskNode
+
+                for i in range(1,List[j].getMaxIndex()+1):
+                    sql = sql + ColumnList[i]
+
+                    if(i < List[0].getMaxIndex()):
+                        sql = sql + ","
+
+                #complete sql string
+                sql = sql + ") " + List[j].getSQLValueList()
+                #print sql
+
+                #check if Product is already existing...
+                sqlExist = "SELECT MASK_ID FROM mask WHERE MASK_ID = " + str(List[j].getMaskID())
+
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
+
+                if(len(Cursor.fetchall()) == 0):
+                   #if item doesnt exist.... insert new record
+                   cur.execute(sql)
+                else:
+                    #do something else
+
+                    pass
+
+            #product to program Object found
+            if(Table == "product_to_program"):
+                ColumnList = FB_Constants.Prod2ProgrNode
+
+                for i in range(1,List[j].getMaxIndex()+1):
+                    sql = sql + ColumnList[i]
+
+                    if(i < List[0].getMaxIndex()):
+                        sql = sql + ","
+
+                #complete sql string
+                sql = sql + ") " + List[j].getSQLValueList()
+                #print sql
+
+                #check if Product is already existing...
+                sqlExist = "SELECT PROD2PROG_ID FROM product_to_program WHERE PROD2PROG_ID = " + str(List[j].getProd2ProgID())
+
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
+
+                if(len(Cursor.fetchall()) == 0):
+                   #if item doesnt exist.... insert new record
+                   cur.execute(sql)
+                else:
+                    #do something else
+                    pass
+
+        Connection.commit()
 
     ##return the current DOM-Object
     def getDOMObj(self):
@@ -280,7 +474,6 @@ class FB_XML_PRODUCT:
     #@param return: return-value
     def parseXMLFile(self):
         try:
-            self.__DOMObj = self.getDOMObj()
 
             #saxparser
             self.__handler = FB_XMLHandler.FB_XMLHandler(self.__LogObj)

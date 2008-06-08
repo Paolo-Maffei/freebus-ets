@@ -8,7 +8,8 @@
 #  /_/   /_/ |_/_____/_____/_____/\____//____/
 #
 #Source Datei: FB_Mask.py
-#Version: V0.1 , 06.01.2007
+#Version: V0.1 , 06.01.2008
+#Version: V0.2 , 04.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #===============================================================================
@@ -16,39 +17,79 @@
 ##Class for Handling of Freebus-Mask-Data which based from FB XML Product-Files
 class FB_Mask:
 
-    __MaskID = ""                #MASK_ID
-    __MaskVersion = ""           #MASK_VERSION
-    __UserRamStart = ""          #USER_RAM_START
-    __UserRamEnd = ""            #USER_RAM_END
-    __UserEEpromStart = ""       #USER_EEPROM_START
-    __UserEEpromEnd = ""         #USER_EEPROM_END
-    __RunErrorAddress = ""       #RUN_ERROR_ADDRESS
-    __Address_Tab_Addr = ""      #ADDRESS_TAB_ADDRESS
-    __AssocTab_Addr = ""         #ASSOCTABPTR_ADDRESS
-    __CommsTab_Addr = ""         #COMMSTABPTR_ADDRESS
-    __Manufact_Data_Addr = ""    #MANUFACTURER_DATA_ADDRESS
-    __Manufact_Data_Size = ""    #MANUFACTURER_DATA_SIZE
-    __Manufact_ID_Addr = ""      #MANUFACTURER_ID_ADDRESS
-    __Rout_Addr = ""             #ROUTECNT_ADDRESS
-    __Manufact_ID_Protetect = "" #MANUFACTURER_ID_PROTECTED
+    __MaskID = 0                #MASK_ID
+    __MaskVersion = 0           #MASK_VERSION
+    __UserRamStart = 0          #USER_RAM_START
+    __UserRamEnd = 0            #USER_RAM_END
+    __UserEEpromStart = 0       #USER_EEPROM_START
+    __UserEEpromEnd = 0         #USER_EEPROM_END
+    __RunErrorAddress = 0       #RUN_ERROR_ADDRESS
+    __Address_Tab_Addr = 0      #ADDRESS_TAB_ADDRESS
+    __AssocTab_Addr = 0         #ASSOCTABPTR_ADDRESS
+    __CommsTab_Addr = 0         #COMMSTABPTR_ADDRESS
+    __Manufact_Data_Addr = 0    #MANUFACTURER_DATA_ADDRESS
+    __Manufact_Data_Size = 0    #MANUFACTURER_DATA_SIZE
+    __Manufact_ID_Addr = 0      #MANUFACTURER_ID_ADDRESS
+    __Rout_Addr = 0             #ROUTECNT_ADDRESS
+    __Manufact_ID_Protetect = 0 #MANUFACTURER_ID_PROTECTED
     __Mask_Version_Name = ""     #MASK_VERSION_NAME
     __Mask_EEpromData = ""       #MASK_EEPROM_DATA
-    __Mask_Data_Length = ""      #MASK_DATA_LENGTH
-    __Address_Tab = ""           #ADDRESS_TAB_LCS
-    __Assoc_Tab = ""             #ASSOC_TAB_LCS
-    __App_Program = ""           #APPLICATION_PROGRAM_LCS
-    __PEI_Program = ""           #PEI_PROGRAM_LCS
-    __Load_Control_Addr = ""     #LOAD_CONTROL_ADDRESS
-    __Run_Control_Addr = ""      #RUN_CONTROL_ADDRESS
-    __Port_Addr_Protect = ""     #PORT_ADDRESS_PROTECTED
-    __Medium_TypeNo = ""         #MEDIUM_TYPE_NUMBER
-    __BCU_TypeNo = ""            #BCU_TYPE_NUMBER
+    __Mask_Data_Length = 0      #MASK_DATA_LENGTH
+    __Address_Tab = 0           #ADDRESS_TAB_LCS
+    __Assoc_Tab = 0             #ASSOC_TAB_LCS
+    __App_Program = 0           #APPLICATION_PROGRAM_LCS
+    __PEI_Program = 0           #PEI_PROGRAM_LCS
+    __Load_Control_Addr = 0     #LOAD_CONTROL_ADDRESS
+    __Run_Control_Addr = 0      #RUN_CONTROL_ADDRESS
+    __Port_Addr_Protect = 0     #PORT_ADDRESS_PROTECTED
+    __Medium_TypeNo = 0         #MEDIUM_TYPE_NUMBER
+    __BCU_TypeNo = 0            #BCU_TYPE_NUMBER
 
 
 
     def __init__(self):
         #print "okk"
         pass
+
+    #returns List of all values in a correct sql format
+    def getSQLValueList(self):
+
+        List = "VALUES(" +   str(self.__MaskID)          + "," + \
+                             str(self.__MaskVersion)         + "," + \
+                             str(self.__UserRamStart)     + "," + \
+                             str(self.__UserRamEnd)  + "," + \
+                             str(self.__UserEEpromStart) + "," + \
+                             str(self.__UserEEpromEnd)  + "," + \
+                             str(self.__RunErrorAddress) + "," + \
+                             str(self.__Address_Tab_Addr) + "," + \
+                             str(self.__AssocTab_Addr) + "," + \
+                             str(self.__CommsTab_Addr) + "," + \
+                             str(self.__Manufact_Data_Addr) + "," + \
+                             str(self.__Manufact_Data_Size) + "," + \
+                             str(self.__Manufact_ID_Addr) + "," + \
+                             str(self.__Rout_Addr) + "," + \
+                             str(self.__Manufact_ID_Protetect) + ",'" + \
+                             self.__Mask_Version_Name + "','" + \
+                             self.__Mask_EEpromData + "'," + \
+                             str(self.__Mask_Data_Length) + "," + \
+                             str(self.__Address_Tab) + "," + \
+                             str(self.__Assoc_Tab) + "," + \
+                             str(self.__App_Program) + "," + \
+                             str(self.__PEI_Program) + "," + \
+                             str(self.__Load_Control_Addr) + "," + \
+                             str(self.__Run_Control_Addr) + "," + \
+                             str(self.__Port_Addr_Protect) + "," + \
+                             str(self.__Medium_TypeNo) + "," + \
+                             str(self.__BCU_TypeNo) + ");"
+
+
+
+
+        return List
+
+
+    def getMaxIndex(self):
+        return 27
 
     def setMask(self,Index, Value):
         if(Index == 1):

@@ -40,7 +40,7 @@ class FB_Products:
     #returns List of all values in a correct sql format
     def getSQLValueList(self):
 
-        List = "values(" +   str(self.__Product_ID) + "," + \
+        List = "VALUES(" +   str(self.__Product_ID) + "," + \
                              str(self.__Manufacturer_ID) + "," + \
                              str(self.__SymbolID) + "," + "'" + \
                              self.__Product_Name + "'" + "," + \
@@ -54,7 +54,7 @@ class FB_Products:
                              str(self.__BCU_Type) + "," + \
                              str(self.__Product_Handling) + "," + "'" + \
                              self.__ProductDLL + "'" + "," + \
-                             str(self.__OrigManID)
+                             str(self.__OrigManID) + ");"
 
 
         return List

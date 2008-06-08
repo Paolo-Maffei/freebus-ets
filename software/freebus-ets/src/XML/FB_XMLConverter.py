@@ -10,6 +10,7 @@
 #Source File: FB_XMLConverter.py
 #Version: V0.1 , 04.11.2007
 #Version: V0.2 , 22.05.2008
+#Version: V0.3 , 08.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #===============================================================================
@@ -60,6 +61,8 @@ class FB_XMLConverter:
     __progress = None         #widget
     __SelFolder = ""
     __SelFile = ""
+    __LineParsed = False
+
     response = 0
     LineCount = 0        #line count -> visu
     CurLine = 0
@@ -184,7 +187,7 @@ class FB_XMLConverter:
                     self.LineCount = len(InFileObj.readlines())
 
                 except:
-                    self.LineCount = 20000000
+                    self.LineCount = 25000000
 
                 InFileObj.seek(0)
 
@@ -198,7 +201,6 @@ class FB_XMLConverter:
                     #LOG File
                     self.__LogObj.NewLog("Falsches Format der *vd_ Datei gefunden",1)
                     return
-
 
                 line = InFileObj.readline()
                 line = line.split("\n")
@@ -214,7 +216,7 @@ class FB_XMLConverter:
                     self.CurLine = self.CurLine + 1
 
                     if(line[0] == "XXX"):
-                        self.parseLine(line[0],OutFileObj)
+                        self.parseLine(line[0],OutFileObj,1)
 
                     #cancel first While-Loop , if current line is empty
                         break
@@ -225,17 +227,21 @@ class FB_XMLConverter:
                         #separate "\\"
                         line[0] = line[0] + next[0].strip("\\\\")
 
-
                         next = InFileObj.readline()
                         next = next.split("\n")
+
                         self.CurLine = self.CurLine + 1
 
                         if(next[0] == ""):
                             if(line[0] != ""):
-                                self.parseLine(line[0],OutFileObj)
-
+                                self.parseLine(line[0],OutFileObj,2)
+                                self.__LineParsed = True
                     #parse lines after symbolinformation
-                    self.parseLine(line[0],OutFileObj);
+
+                    if(self.__LineParsed == False):
+                        self.parseLine(line[0],OutFileObj,3)
+
+                    self.__LineParsed = False
                     line=next
 
 
@@ -291,9 +297,11 @@ class FB_XMLConverter:
                 self.__LogObj.NewLog(self.vd_datei+" geschlossen",0)
 
 
-    def parseLine(self,_line,_OutFileObj):
+    def parseLine(self,_line,_OutFileObj,No):
 
         tmp=""
+
+        #saftey: if line will be called twice to parse...
 
         try:
             #self.lineCounter = self.lineCounter + 1
@@ -417,10 +425,13 @@ class FB_XMLConverter:
                 #add new caption-element
                 self.captions.append(self.atmp[5])
 
-
             #Do we read a Value ?
             if(self.read_value == True and self.val_count <= len(self.captions)-1):
 
+              #  if(self.captions[self.val_count] == "EEPROM_DATA" or self.captions[self.val_count] == "DATA_LENGTH"):
+              #      print _line
+              #      print self.CurLine
+              #      print No
 
                 if(_line != ""):
                     _line = _line.replace("<","&lt;")
@@ -428,8 +439,9 @@ class FB_XMLConverter:
                     _line = _line.replace("&", "&amp;")
                     #write Values to file
                     _OutFileObj.write("\t\t<"+self.captions[self.val_count]+">"+_line+"</"+self.captions[self.val_count]+">\n")
+
                     #LOG File
-                    #self.__LogObj.NewLog("\t\t<"+self.captions[self.val_count]+">"+_line+"</"+self.captions[self.val_count]+">\n",0)
+                   #     self.__LogObj.NewLog("\t\t<"+self.captions[self.val_count]+">"+_line+"</"+self.captions[self.val_count]+">\n",0)
 
 
                 else:
@@ -437,6 +449,7 @@ class FB_XMLConverter:
                     self.read_value == False
 
                 self.val_count = self.val_count + 1
+
 
             _line=""
 

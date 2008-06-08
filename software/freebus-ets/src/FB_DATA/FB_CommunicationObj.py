@@ -9,6 +9,7 @@
 #
 #Source Datei: FB_CommunicationObj.py
 #Version: V0.1 , 31.12.2007
+#Version: V0.2 , 04.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #===============================================================================
@@ -16,27 +17,54 @@
 ##Class for Handling of Freebus-Comm-Objects-Data which based from FB XML Product-Files
 class FB_CommObj:
 
-    __ProgID = ""           #PROGRAM_ID
+    __ProgID = 0           #PROGRAM_ID
     __ObjName = ""          #OBJECT_NAME
     __ObjFunction = ""      #OBJECT_FUNCTION
-    __ObjReadEnabled = ""   #OBJECT_READENABLED
-    __ObjWriteEnabled = ""  #OBJECT_WRITEENABLED
-    __ObjCommEnabled = ""   #OBJECT_COMMENABLED
-    __ObjTransEnabled = ""  #OBJECT_TRANSENABLED
-    __ObjDisplayOrder = ""  #OBJECT_DISPLAY_ORDER
-    __ParentParamValue = "" #PARENT_PARAMETER_VALUE
-    __ObjID = ""            #OBJECT_ID
-    __ParamID = ""          #PARAMETER_ID
-    __ObjNumber = ""        #OBJECT_NUMBER
-    __ObjType = ""          #OBJECT_TYPE
-    __ObjPriority = ""      #OBJECT_PRIORITY
-    __ObjUpdateEnabled = "" #OBJECT_UPDATEENABLED
-    __ObjUniqueNumber = ""  #OBJECT_UNIQUE_NUMBER
+    __ObjReadEnabled = 0   #OBJECT_READENABLED
+    __ObjWriteEnabled = 0  #OBJECT_WRITEENABLED
+    __ObjCommEnabled = 0   #OBJECT_COMMENABLED
+    __ObjTransEnabled = 0  #OBJECT_TRANSENABLED
+    __ObjDisplayOrder = 0  #OBJECT_DISPLAY_ORDER
+    __ParentParamValue = 0 #PARENT_PARAMETER_VALUE
+    __ObjID = 0            #OBJECT_ID
+    __ParamID = 0          #PARAMETER_ID
+    __ObjNumber = 0        #OBJECT_NUMBER
+    __ObjType = 0          #OBJECT_TYPE
+    __ObjPriority = 0      #OBJECT_PRIORITY
+    __ObjUpdateEnabled = 0 #OBJECT_UPDATEENABLED
+    __ObjUniqueNumber = 0  #OBJECT_UNIQUE_NUMBER
     __return = None
 
     def __init__(self):
         #print "okk"
         pass
+
+    #returns List of all values in a correct sql format
+    def getSQLValueList(self):
+
+        List = "VALUES(" +   str(self.__ProgID) + "," + "'" + \
+                             self.__ObjName     + "','" + \
+                             self.__ObjFunction + "'" + "," + \
+                             str(self.__ObjReadEnabled) + "," + \
+                             str(self.__ObjWriteEnabled) + "," + \
+                             str(self.__ObjCommEnabled) + "," + \
+                             str(self.__ObjTransEnabled) + "," + \
+                             str(self.__ObjDisplayOrder) + "," + \
+                             str(self.__ParentParamValue) + "," + \
+                             str(self.__ObjID) + "," + \
+                             str(self.__ParamID) + "," + \
+                             str(self.__ObjNumber) + "," + \
+                             str(self.__ObjType) + "," + \
+                             str(self.__ObjPriority) + "," + \
+                             str(self.__ObjUpdateEnabled) + "," + \
+                             str(self.__ObjUniqueNumber) + ");"
+
+
+
+        return List
+
+    def getMaxIndex(self):
+        return 16
 
     def setCommObj(self,Index, Value):
 

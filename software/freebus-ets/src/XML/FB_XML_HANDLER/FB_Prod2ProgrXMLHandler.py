@@ -9,6 +9,7 @@
 #
 #Source File: FB_Prod2ProgrXMLHandler.py
 #Version: V0.1 , 03.01.2008
+#Version: V0.2 , 04.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #
@@ -39,7 +40,7 @@ class FB_Prod2ProgrXMLHandler():
     def __init__(self, LogObj):
         self.__LogObj = LogObj
         self.__prod = FB_Prod2Progr.FB_Prod2Prog()
-
+        self.__prod2Prog = []    #init List
 
     #return List of Instances of type FB_Prod2Progr
     def getProduct2ProgramList(self):

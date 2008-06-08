@@ -9,6 +9,7 @@
 #
 #Source Datei: FB_AppXMLHandler.py
 #Version: V0.1 , 25.12.2007
+#Version: V0.2 , 04.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #
@@ -76,6 +77,8 @@ class FB_AppXMLHandler():
         self.__LogObj = LogObj
         self.__App = FB_Applications.FB_Apps()
         self.__Man = FB_Manufacturer.FB_Manufacturer()
+        self.__Applications = []    #init List
+        self.__Manufacturer = []    #init List
         #self.__LogObj.NewLog("erzeugt: " ,0)
 
     #return List of Instances of type FB_Applications

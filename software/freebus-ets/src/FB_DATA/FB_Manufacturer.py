@@ -17,10 +17,22 @@
 class FB_Manufacturer:
 
     __ManName = ""  #MANUFACTURER_NAME
-    __ManID = ""    #MANUFACTURER_ID
+    __ManID = 0    #MANUFACTURER_ID
 
     def __init__(self):
         pass
+
+    #returns List of all values in a correct sql format
+    def getSQLValueList(self):
+
+        List = "VALUES(" +   str(self.__ManID) + "," + "'" + \
+                             self.__ManName + "');"
+
+
+        return List
+
+    def getMaxIndex(self):
+        return 2
 
     def setManufacturer(self,Index, Value):
         if(Index == 1):

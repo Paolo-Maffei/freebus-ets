@@ -41,6 +41,7 @@ class FB_XMLHandler(xml.sax.ContentHandler):
     def __init__(self, LogObj):
         self.__LogObj = LogObj
         #Product-Handling
+
         self.__prod_XMLHandler = FB_ProductXMLHandler.FB_ProductXMLHandler(self.__LogObj)
         #Application-Handling
         self.__app_XMLHandler = FB_AppXMLHandler.FB_AppXMLHandler(self.__LogObj)

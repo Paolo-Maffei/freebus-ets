@@ -9,6 +9,7 @@
 #
 #Source File: FB_ProductXMLHandler.py
 #Version: V0.1 , 25.12.2007
+#Version: V0.2 , 04.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #
@@ -48,7 +49,7 @@ class FB_ProductXMLHandler():
     def __init__(self, LogObj):
         self.__LogObj = LogObj
         self.__prod = FB_Products.FB_Products()    #FB_ProductXMLHandler
-
+        self.__products = []                #init List
 
 
     #return List of Instances of type FB_Products

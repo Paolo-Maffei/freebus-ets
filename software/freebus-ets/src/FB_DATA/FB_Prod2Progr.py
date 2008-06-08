@@ -9,6 +9,7 @@
 #
 #Source File: FB_Prod2Progr.py
 #Version: V0.1 , 03.02.2008
+#Version: V0.2 , 04.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #===============================================================================
@@ -17,10 +18,10 @@
 class FB_Prod2Prog:
 
 
-    __Prod2Prog_ID = ""           #PROD2PROG_ID
-    __Product_ID = ""             #PRODUCT_ID
-    __Program_ID = ""             #PROGRAM_ID
-    __Prod2Prog_Status_Code = ""  #PROD2PROG_STATUS_CODE
+    __Prod2Prog_ID = 0           #PROD2PROG_ID
+    __Product_ID = 0             #PRODUCT_ID
+    __Program_ID = 0             #PROGRAM_ID
+    __Prod2Prog_Status_Code = 0  #PROD2PROG_STATUS_CODE
     __Reg_Number = ""             #REGISTRATION_NUMBER
     __Reg_Year = ""               #REGISTRATION_YEAR
     __Orig_Reg_Number = ""        #ORIGINAL_REGISTRATION_NUMBER
@@ -31,6 +32,26 @@ class FB_Prod2Prog:
 
     def __init__(self):
         pass
+
+    #returns List of all values in a correct sql format
+    def getSQLValueList(self):
+
+        List = "VALUES(" +   str(self.__Prod2Prog_ID) + "," + \
+                             str(self.__Product_ID)   + "," + \
+                             str(self.__Program_ID)   + "," + \
+                             str(self.__Prod2Prog_Status_Code)  + ",'" + \
+                             self.__Reg_Number + "','" + \
+                             self.__Reg_Year  + "','" + \
+                             self.__Orig_Reg_Number + "','" + \
+                             self.__Orig_Reg_Year + "','" + \
+                             self.__Reg_TS + "');"
+
+
+        return List
+
+
+    def getMaxIndex(self):
+        return 9
 
     def setProd2Prog(self,Index, Value):
         if(Index == 1):

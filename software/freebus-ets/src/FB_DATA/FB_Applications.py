@@ -9,6 +9,7 @@
 #
 #Source Datei: FB_Product.py
 #Version: V0.1 , 17.11.2007
+#Version: V0.2 , 03.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #===============================================================================
@@ -16,43 +17,85 @@
 ##Class for Handling of Freebus-Application-Data which based from FB XML Product-Files
 class FB_Apps:
 
-    __ProgID = ""       #PROGRAM_ID
-    __SymbolID = ""     #SYMBOL_ID
-    __MaskID = ""       #MASK_ID
+    __ProgID = 0       #PROGRAM_ID
+    __SymbolID = 0     #SYMBOL_ID
+    __MaskID = 0       #MASK_ID
     __ProgName = ""     #PROGRAM_NAME
     __ProgVersion = ""  #PROGRAM_VERSION
-    __ProgVersionNo = ""#PROGRAM_VERSION_NUMBER
-    __Linkable = ""     #LINKABLE
-    __DevType = ""      #DEVICE_TYPE
-    __PEIType = ""      #PEI_TYPE
-    __AddTabsize = ""   #ADDRESS_TAB_SIZE
-    __AssTabAddr = ""   #ASSOCTAB_ADDRESS
-    __AssTsize = ""     #ASSOCTAB_SIZE
-    __ComTabAddr = ""   #COMMSTAB_ADDRESS
-    __ComTabsize = ""   #COMMSTAB_SIZE
+    __ProgVersionNo = 0 #PROGRAM_VERSION_NUMBER
+    __Linkable = 0     #LINKABLE
+    __DevType = 0      #DEVICE_TYPE
+    __PEIType = 0      #PEI_TYPE
+    __AddTabsize = 0   #ADDRESS_TAB_SIZE
+    __AssTabAddr = 0   #ASSOCTAB_ADDRESS
+    __AssTsize = 0     #ASSOCTAB_SIZE
+    __ComTabAddr = 0   #COMMSTAB_ADDRESS
+    __ComTabsize = 0   #COMMSTAB_SIZE
     __ProgSN = ""       #PROGRAM_SERIAL_NUMBER
-    __AppManID = ""     #MANUFACTURER_ID
+    __AppManID = 0     #MANUFACTURER_ID
     __EEPROMData = ""   #EEPROM_DATA
-    __DataLength = ""   #DATA_LENGTH
+    __DataLength = 0   #DATA_LENGTH
     __S19File = ""      #S19_FILE
     __MapFile = ""      #MAP_FILE
-    __AssemblerID = ""  #ASSEMBLER_ID
+    __AssemblerID = 0  #ASSEMBLER_ID
     __HelpFileName = "" #HELP_FILE_NAME
-    __ContextID = ""    #CONTEXT_ID
-    __DynamicMng = ""   #DYNAMIC_MANAGEMENT
-    __ProgType = ""     #PROGRAM_TYPE
-    __RAMSize = ""      #RAM_SIZE
-    __OrgManID = ""     #ORIGINAL_MANUFACTURER_ID
-    __APIVersion = ""   #API_VERSION
-    __ProgStyle = ""    #PROGRAM_STYLE
-    __PollMaster = ""   #IS_POLLING_MASTER
-    __NoPollGroups = "" #NUMBER_OF_POLLING_GROUPS
-    __AllowedInETS = "" #AllowedInSimpleEts
-    __MinEtsVersion = ""#MinEtsVersion
+    __ContextID = 0    #CONTEXT_ID
+    __DynamicMng = 0   #DYNAMIC_MANAGEMENT
+    __ProgType = 0     #PROGRAM_TYPE
+    __RAMSize = 0      #RAM_SIZE
+    __OrgManID = 0     #ORIGINAL_MANUFACTURER_ID
+    __APIVersion = 0   #API_VERSION
+    __ProgStyle = 0    #PROGRAM_STYLE
+    __PollMaster = 0   #IS_POLLING_MASTER
+    __NoPollGroups = 0 #NUMBER_OF_POLLING_GROUPS
+    __AllowedInETS = 0 #AllowedInSimpleEts
+    __MinEtsVersion = 0#MinEtsVersion
 
     def __init__(self):
         #print "okk"
         pass
+
+    #returns List of all values in a correct sql format
+    def getSQLValueList(self):
+
+        List = "VALUES(" +   str(self.__ProgID) + "," + \
+                             str(self.__SymbolID) + "," + \
+                             str(self.__MaskID) + "," + "'" + \
+                             self.__ProgName + "'" + ",'" + \
+                             self.__ProgVersion + "'" + "," + \
+                             str(self.__ProgVersionNo) + "," + \
+                             str(self.__Linkable)   + "," + \
+                             str(self.__DevType)    + "," + \
+                             str(self.__PEIType)    + "," + \
+                             str(self.__AddTabsize) + "," + \
+                             str(self.__AssTabAddr) + "," + \
+                             str(self.__AssTsize)   + "," + \
+                             str(self.__ComTabAddr) + "," + \
+                             str(self.__ComTabsize) + "," + "'" + \
+                             self.__ProgSN          + "'" + "," + \
+                             str(self.__AppManID)   + "," + "'" + \
+                             self.__EEPROMData      + "'" + "," + \
+                             str(self.__DataLength) + "," + "'" + \
+                             self.__S19File         + "'" + ",'" + \
+                             self.__MapFile         + "'" + "," + \
+                             str(self.__AssemblerID) + "," + "'" + \
+                             self.__HelpFileName     + "'" + "," + \
+                             str(self.__ContextID) + "," + \
+                             str(self.__DynamicMng) + "," + \
+                             str(self.__ProgType) + "," + \
+                             str(self.__RAMSize) + "," + \
+                             str(self.__OrgManID) + "," + \
+                             str(self.__APIVersion) + "," + \
+                             str(self.__ProgStyle) + "," + \
+                             str(self.__PollMaster) + "," + \
+                             str(self.__NoPollGroups) + "," + \
+                             str(self.__AllowedInETS) + "," + \
+                             str(self.__MinEtsVersion) + ");"
+
+        return List
+
+    def getMaxIndex(self):
+        return 33
 
     def setApp(self,Index, Value):
         if(Index == 1):

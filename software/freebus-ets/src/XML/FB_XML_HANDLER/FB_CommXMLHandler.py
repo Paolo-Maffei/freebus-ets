@@ -9,6 +9,7 @@
 #
 #Source Datei: FB_CommXMLHandler.py
 #Version: V0.1 , 31.12.2007
+#Version: V0.2 , 04.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #
@@ -47,7 +48,7 @@ class FB_CommXMLHandler():
     def __init__(self, LogObj):
         self.__LogObj = LogObj
         self.__CommObj = FB_CommunicationObj.FB_CommObj()
-
+        self.__CommunicationObjects = []    #init List
 
     #return List of Instances of type FB_CommunicationsObj
     def getCommObjList(self):

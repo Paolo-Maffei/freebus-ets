@@ -9,6 +9,7 @@
 #
 #Source Datei: FB_MaskXMLHandler.py
 #Version: V0.1 , 25.12.2007
+#Version: V0.2 , 04.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #
@@ -59,6 +60,7 @@ class FB_MaskXMLHandler():
     def __init__(self, LogObj):
         self.__LogObj = LogObj
         self.__Mask = FB_Mask.FB_Mask()
+        self.__MaskList = []    #init List
 
     #return List of Instances of type FB_Mask
     def getMaskList(self):
