@@ -48,7 +48,7 @@ class FB_Products:
                              str(self.__Comp_Type) + "," + \
                              str(self.__Comp_Attr) + "," + \
                              str(self.__Bus_Current) + "," + "'" +  \
-                             str(self.__Product_Serial) + "'" + "," + \
+                             self.__Product_Serial  + "'" + "," + \
                              str(self.__CompTypeNo) + "," + "'" + \
                              self.__ProductPic + "'" + "," + \
                              str(self.__BCU_Type) + "," + \

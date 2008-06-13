@@ -34,6 +34,7 @@ from XML.FB_XML_HANDLER import FB_AppXMLHandler
 from XML.FB_XML_HANDLER import FB_CommXMLHandler
 from XML.FB_XML_HANDLER import FB_Prod2ProgrXMLHandler
 from XML.FB_XML_HANDLER import FB_MaskXMLHandler
+from XML.FB_XML_HANDLER import FB_ParameterXMLHandler
 from FB_DATA import FB_Constants
 
 from pysqlite2 import dbapi2 as sqlite2
@@ -47,12 +48,15 @@ class FB_XML_PRODUCT:
     __DOMObj = None
     __xml_file = ""
     __handler = -1     #instance of XML-handler
-    __ProductList = None    #List of instances of read Products
-    __AppList = None        #List of instances of read Applications
-    __ManufactList = None   #List of instances of read Manufacturers
-    __CommObjList = None    #List of instances of read Communication Objects
-    __Prod2ProgrList = None #List of instances of read Product to Program
-    __MaskList = None       #List of instances of read Mask
+    __ProductList = []    #List of instances of read Products
+    __AppList = []        #List of instances of read Applications
+    __ManufactList = []   #List of instances of read Manufacturers
+    __CommObjList = []    #List of instances of read Communication Objects
+    __Prod2ProgrList = [] #List of instances of read Product to Program
+    __MaskList = []       #List of instances of read Mask
+    __ParamList = []      #List of instances of read Paramter
+    __ParamTypeList = []  #List of instances of read ParamterType
+    __ParamListVList = [] #List of instances of read ParamterList of Values
     Finisch = False
 
     lblManufacturer = None
@@ -150,6 +154,7 @@ class FB_XML_PRODUCT:
         productList = []
         appList = []
         ManufactList = []
+        paramList = []
 
         Value = "0 Stück"
 
@@ -166,6 +171,7 @@ class FB_XML_PRODUCT:
         if(XMLHandler != -1):
             con = sqlite2.connect(Global.Database)
             if(con <> None):
+
                 #--------------- Products --------------------------
                 productList = self.getProducts(XMLHandler)
                 Value = str(len(productList)) + " Stück"
@@ -190,6 +196,18 @@ class FB_XML_PRODUCT:
                 #-------------------- Product to Program-------------
                 ProdProgList = self.getProd2Progr(XMLHandler)
                 self.WriteToSQL(con, ProdProgList, "product_to_program")
+                #-------------------- Parameter ---------------------
+                paramList = self.getParameter(XMLHandler)
+                Value = str(len(paramList)) + " Stück"
+                self.lblparam.set_text(unicode(Value,"ISO-8859-1"))
+                self.WriteToSQL(con, paramList, "parameter")
+                #-------------------- ParameterType ---------------------
+                paramTypeList  = self.getParameterType(XMLHandler)
+                self.WriteToSQL(con, paramTypeList, "parameter_type")
+                #-------------------- Parameter List of Values ----------
+                paramListV  = self.getParameterListV(XMLHandler)
+                self.WriteToSQL(con, paramListV, "parameter_list_of_values")
+
 
                 con.close()
 
@@ -210,6 +228,9 @@ class FB_XML_PRODUCT:
         for j in range(len(List)):
 
             sql = "INSERT INTO " + Table + " ("
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
 
             #Product found...
             if(Table == "hw_product"):
@@ -237,6 +258,9 @@ class FB_XML_PRODUCT:
                     #do something else
                     pass
 
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+
             #Application found
             if(Table == "application_program"):
                 ColumnList = FB_Constants.AppNode
@@ -262,6 +286,9 @@ class FB_XML_PRODUCT:
                 else:
 
                     pass
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
 
             #Manufacturer found
             if(Table == "manufacturer"):
@@ -289,6 +316,9 @@ class FB_XML_PRODUCT:
                     #do something else
 
                     pass
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
 
             #Communication Object found
             if(Table == "communication_object"):
@@ -319,6 +349,9 @@ class FB_XML_PRODUCT:
 
                     pass
 
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+
             #Mask Object found
             if(Table == "mask"):
                 ColumnList = FB_Constants.MaskNode
@@ -347,6 +380,9 @@ class FB_XML_PRODUCT:
 
                     pass
 
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+
             #product to program Object found
             if(Table == "product_to_program"):
                 ColumnList = FB_Constants.Prod2ProgrNode
@@ -373,6 +409,95 @@ class FB_XML_PRODUCT:
                 else:
                     #do something else
                     pass
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+
+            #parameter
+            if(Table == "parameter"):
+                ColumnList = FB_Constants.ParaNode
+
+                for i in range(1,List[j].getMaxIndex()+1):
+                    sql = sql + ColumnList[i]
+
+                    if(i < List[0].getMaxIndex()):
+                        sql = sql + ","
+
+                #complete sql string
+                sql = sql + ") " + List[j].getSQLValueList()
+                #print sql
+
+                #check if Product is already existing...
+                sqlExist = "SELECT PARAMETER_ID FROM parameter WHERE PARAMETER_ID = " + str(List[j].getParameterID())
+
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
+
+                if(len(Cursor.fetchall()) == 0):
+                   #if item doesnt exist.... insert new record
+                   cur.execute(sql)
+                else:
+                    #do something else
+                    pass
+
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+
+            #parameterType
+            if(Table == "parameter_type"):
+                ColumnList = FB_Constants.ParaTypeNode
+
+                for i in range(1,List[j].getMaxIndex()+1):
+                    sql = sql + ColumnList[i]
+
+                    if(i < List[0].getMaxIndex()):
+                        sql = sql + ","
+
+                #complete sql string
+                sql = sql + ") " + List[j].getSQLValueList()
+                #print sql
+
+                #check if Product is already existing...
+                sqlExist = "SELECT PARAMETER_TYPE_ID FROM parameter_type WHERE PARAMETER_TYPE_ID = " + str(List[j].getParameterTypeID2())
+
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
+
+                if(len(Cursor.fetchall()) == 0):
+                   #if item doesnt exist.... insert new record
+                   cur.execute(sql)
+                else:
+                    #do something else
+                    pass
+#------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+            #parameter List of Values
+            if(Table == "parameter_list_of_values"):
+                ColumnList = FB_Constants.ParaListVNode
+
+                for i in range(1,List[j].getMaxIndex()+1):
+                    sql = sql + ColumnList[i]
+
+                    if(i < List[0].getMaxIndex()):
+                        sql = sql + ","
+
+                #complete sql string
+                sql = sql + ") " + List[j].getSQLValueList()
+                #print sql
+
+                #check if Product is already existing...
+                sqlExist = "SELECT PARAMETER_TYPE_ID FROM parameter_list_of_values WHERE PARAMETER_TYPE_ID = " + str(List[j].getParameterTypeID3())
+
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
+
+                if(len(Cursor.fetchall()) == 0):
+                   #if item doesnt exist.... insert new record
+                   cur.execute(sql)
+                else:
+                    #do something else
+                    pass
+
 
         Connection.commit()
 
@@ -411,6 +536,19 @@ class FB_XML_PRODUCT:
             #Mask
             if(self.SaveElements(FB_Constants.MaskNode, self.__MaskList) == False):
                 self.__LogObj.NewLog("error at saving mask data -> no data object available",1)
+            #***************************************************************************************
+            #Parameter
+            if(self.SaveElements(FB_Constants.ParaNode , self.__ParamList) == False):
+                self.__LogObj.NewLog("error at saving Parameter data -> no data object available",1)
+            #***************************************************************************************
+            #ParameterType
+            if(self.SaveElements(FB_Constants.ParaTypeNode , self.__ParamTypeList) == False):
+                self.__LogObj.NewLog("error at saving ParameterType data -> no data object available",1)
+            #***************************************************************************************
+            #ParameterListOfValues
+            if(self.SaveElements(FB_Constants.ParaListVNode , self.__ParamListVList) == False):
+                self.__LogObj.NewLog("error at saving ParameterListOfValues data -> no data object available",1)
+
 
             String = self.__DOMObj.toxml(encoding = "ISO-8859-1")
             OutFileObj.write(String)
@@ -448,6 +586,12 @@ class FB_XML_PRODUCT:
                             Value =  ElementList[i].getCommObj(j)
                         elif(NodeList[0] == "product_to_program"):
                             Value = ElementList[i].getProd2Prog(j)
+                        elif(NodeList[0] == "parameter"):
+                            Value = ElementList[i].getParameter(j)
+                        elif(NodeList[0] == "parameter_type"):
+                            Value = ElementList[i].getParameterType(j)
+                        elif(NodeList[0] == "parameter_list_of_values"):
+                            Value = ElementList[i].getParameterListValues(j)
 
                         #iterate List of Nodes within MainNode (ex. hw_product)
                         #find all Elements in hw_product
@@ -474,7 +618,7 @@ class FB_XML_PRODUCT:
     #@param return: return-value
     def parseXMLFile(self):
         try:
-
+           
             #saxparser
             self.__handler = FB_XMLHandler.FB_XMLHandler(self.__LogObj)
             saxparser = xml.sax.make_parser()
@@ -557,6 +701,50 @@ class FB_XML_PRODUCT:
             self.__LogObj.NewLog("Error at 'getMaskList'" ,2)
             return -1
 
+
+    ##detect all parameter objects within the given Product-Data-File
+    #@param xml-File: Path and Filename of sourcefile
+    #@return: List of FB_Parameter Instances
+    def getParameter(self,xml_handler):
+
+        try:
+            self.__ParamList = xml_handler.getParameter()
+
+            return self.__ParamList
+
+        except:
+            self.__LogObj.NewLog("Error at 'getParameter'" ,2)
+            return -1
+
+    ##detect all parameterType objects within the given Product-Data-File
+    #@param xml-File: Path and Filename of sourcefile
+    #@return: List of FB_ParameterType Instances
+    def getParameterType(self,xml_handler):
+
+        try:
+            self.__ParamTypeList = xml_handler.getParameterType()
+
+            return self.__ParamTypeList
+
+        except:
+            self.__LogObj.NewLog("Error at 'getParameterType'" ,2)
+            return -1
+
+    ##detect all parameterList of Values objects within the given Product-Data-File
+    #@param xml-File: Path and Filename of sourcefile
+    #@return: List of FB_ParameterListV Instances
+    def getParameterListV(self,xml_handler):
+
+        try:
+            self.__ParamListVList = xml_handler.getParameterList()
+
+            return self.__ParamListVList
+
+        except:
+            self.__LogObj.NewLog("Error at 'getParameterListV'" ,2)
+            return -1
+
+
 #*********************************************************************************
     ##craete new xml-product-data file and add root node
     #@param xml-Filename+Path:
@@ -598,18 +786,28 @@ class FB_XML_PRODUCT:
             #mask
             self.CreateNode(newDocument,FB_Constants.MaskNode)
 #----------------------------------------------------------------------------------
-           #application_program
+            #application_program
             self.CreateNode(newDocument,FB_Constants.AppNode)
 #----------------------------------------------------------------------------------
-          #virtual_device
+            #virtual_device
             self.CreateNode(newDocument,FB_Constants.VirDeviceNode)
 #----------------------------------------------------------------------------------
-          #product to program...
+            #product to program...
             self.CreateNode(newDocument,FB_Constants.Prod2ProgrNode)
 #----------------------------------------------------------------------------------
-          #communication objects
+            #communication objects
             self.CreateNode(newDocument,FB_Constants.CommObjNode)
 #----------------------------------------------------------------------------------
+            #Parameter
+            self.CreateNode(newDocument,FB_Constants.ParaNode)
+#----------------------------------------------------------------------------------
+            #ParameterType
+            self.CreateNode(newDocument,FB_Constants.ParaTypeNode)
+#----------------------------------------------------------------------------------
+            #Parameter List of Values
+            self.CreateNode(newDocument,FB_Constants.ParaListVNode)
+#----------------------------------------------------------------------------------
+
 
 #.....ab hier der Rest
 

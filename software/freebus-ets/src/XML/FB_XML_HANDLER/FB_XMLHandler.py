@@ -9,6 +9,7 @@
 #
 #Source File: FB_XMLHandler.py
 #Version: V0.1 , 25.12.2007
+#Version: V0.2 , 13.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #
@@ -23,6 +24,7 @@ from XML.FB_XML_HANDLER import FB_AppXMLHandler
 from XML.FB_XML_HANDLER import FB_CommXMLHandler
 from XML.FB_XML_HANDLER import FB_Prod2ProgrXMLHandler
 from XML.FB_XML_HANDLER import FB_MaskXMLHandler
+from XML.FB_XML_HANDLER import FB_ParameterXMLHandler
 
 ##Class for Extracting Products from FB-XML Productfiles
 class FB_XMLHandler(xml.sax.ContentHandler):
@@ -34,7 +36,8 @@ class FB_XMLHandler(xml.sax.ContentHandler):
     __app_XMLHandler = None          #private object of FB_AppXMLHandler
     __comm_XMLHandler = None         #private object of FB_CommXMLHandler
     __prod2progr_XMLHandler = None   #privtae object of FB_Prod2ProgrXMLHandler
-    __mask_XMLHandler = None         #private object of FB_Mask
+    __mask_XMLHandler = None         #private object of FB_MaskXMLHandler
+    __param_XMLHandler = None        #private object of FB_ParameterXMLHandler
     __locator = None
 
     #Constructor for FB_XMLHandler.
@@ -51,6 +54,8 @@ class FB_XMLHandler(xml.sax.ContentHandler):
         self.__prod2progr_XMLHandler = FB_Prod2ProgrXMLHandler.FB_Prod2ProgrXMLHandler(self.__LogObj)
         #Mask object Handling
         self.__mask_XMLHandler = FB_MaskXMLHandler.FB_MaskXMLHandler(self.__LogObj)
+        #Parameter object Handling
+        self.__param_XMLHandler = FB_ParameterXMLHandler.FB_ParameterXMLHandler(self.__LogObj)
 
     #return List of Instances of type FB_Products
     def getProductList(self):
@@ -75,6 +80,19 @@ class FB_XMLHandler(xml.sax.ContentHandler):
     #return List of Instances of type FB_Mask
     def getMaskList(self):
         return self.__mask_XMLHandler.getMaskList()
+
+    #return List of Instances of type FB_Parameter
+    def getParameterList(self):
+        return self.__param_XMLHandler.getParameter()
+
+    #return List of Instances of type FB_ParameterType
+    def getParameterList(self):
+        return self.__param_XMLHandler.getParameterType()
+
+    #return List of Instances of type FB_Parameter List of Values
+    def getParameterList(self):
+        return self.__param_XMLHandler.getParameterList()
+
 
     #return Locator-Data (position of parser)
     def getLocator(self):
@@ -112,6 +130,7 @@ class FB_XMLHandler(xml.sax.ContentHandler):
             self.__comm_XMLHandler.startElement(eName, attrs)
             self.__prod2progr_XMLHandler.startElement(eName, attrs)
             self.__mask_XMLHandler.startElement(eName, attrs)
+            self.__param_XMLHandler.startElement(eName, attrs)
 
         except SAXException:
             print "Error again"
@@ -123,6 +142,7 @@ class FB_XMLHandler(xml.sax.ContentHandler):
             self.__comm_XMLHandler.endElement(eName)
             self.__prod2progr_XMLHandler.endElement(eName)
             self.__mask_XMLHandler.endElement(eName)
+            self.__param_XMLHandler.endElement(eName)
 
         except SAXException:
             print "Error again"
@@ -135,6 +155,7 @@ class FB_XMLHandler(xml.sax.ContentHandler):
             self.__comm_XMLHandler.characters(char)
             self.__prod2progr_XMLHandler.characters(char)
             self.__mask_XMLHandler.characters(char)
+            self.__param_XMLHandler.characters(char)
 
         except SAXException:
              print "Error again"

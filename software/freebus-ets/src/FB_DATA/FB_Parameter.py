@@ -16,21 +16,23 @@
 ##Class for Handling of Freebus-Product-Data which based from FB XML Product-Files
 class FB_Parameter:
 
-    __Product_ID = 0         #PRODUCT_ID
-    __Manufacturer_ID = 0    #MANUFACTURER_ID
-    __SymbolID = 0           #SYMBOL_ID
-    __Product_Name = ""      #PRODUCT_NAME
-    __Product_Version = 0    #PRODUCT_VERSION_NUMBER
-    __Comp_Type = 0          #COMPONENT_TYPE
-    __Comp_Attr = 0          #COMPONENT_ATTRIBUTES
-    __Bus_Current = 0        #BUS_CURRENT
-    __Product_Serial = ""     #PRODUCT_SERIAL_NUMBER
-    __CompTypeNo = 0         #COMPONENT_TYPE_NUMBER
-    __ProductPic = ""        #PRODUCT_PICTURE
-    __BCU_Type = 0           #BCU_TYPE_NUMBER
-    __Product_Handling = 0   #PRODUCT_HANDLING
-    __ProductDLL = ""        #PRODUCT_DLL
-    __OrigManID = 0          #ORIGINAL_MANUFACTURER_ID
+    #local variables of Parameter block
+    __ProgramID = 0            #PROGRAM_ID
+    __ParameterTypeID = 0      #PARAMETER_TYPE_ID
+    __ParameterNumber = 0      #PARAMETER_NUMBER
+    __ParameterName = ""       #PARAMETER_NAME
+    __ParameterLowAccess = 0   #PARAMETER_LOW_ACCESS
+    __ParameterHighAccess = 0  #PARAMETER_HIGH_ACCESS
+    __ParameterSize = 0        #PARAMETER_SIZE
+    __ParameterDisplayOrder = 0 #PARAMETER_DISPLAY_ORDER
+    __ParameterAddress = 0     #PARAMETER_ADDRESS
+    __ParameterBitOffset = 0   #PARAMETER_BITOFFSET
+    __ParameterDescription = ""#PARAMETER_DESCRIPTION
+    __ParameterID = 0          #PARAMETER_ID
+    __ParParameterID = 0       #PAR_PARAMETER_ID
+    __ParameterDefault = 0     #PARAMETER_DEFAULT_LONG
+    __PatchAlways = 0          #PATCH_ALWAYS
+    __AddressSpace = 0         #ADDRESS_SPACE
 
 
     def __init__(self):
@@ -39,211 +41,227 @@ class FB_Parameter:
     #returns List of all values in a correct sql format
     def getSQLValueList(self):
 
-        List = "VALUES(" +   str(self.__Product_ID) + "," + \
-                             str(self.__Manufacturer_ID) + "," + \
-                             str(self.__SymbolID) + "," + "'" + \
-                             self.__Product_Name + "'" + "," + \
-                             str(self.__Product_Version) + "," + \
-                             str(self.__Comp_Type) + "," + \
-                             str(self.__Comp_Attr) + "," + \
-                             str(self.__Bus_Current) + "," + "'" +  \
-                             str(self.__Product_Serial) + "'" + "," + \
-                             str(self.__CompTypeNo) + "," + "'" + \
-                             self.__ProductPic + "'" + "," + \
-                             str(self.__BCU_Type) + "," + \
-                             str(self.__Product_Handling) + "," + "'" + \
-                             self.__ProductDLL + "'" + "," + \
-                             str(self.__OrigManID) + ");"
+        List = "VALUES(" +  str(self.__ProgramID)       + "," + \
+                             str(self.__ParameterTypeID) + "," + \
+                             str(self.__ParameterNumber) + "," + "'" + \
+                             self.__ParameterName        + "'" + "," + \
+                             str(self.__ParameterLowAccess)  + "," + \
+                             str(self.__ParameterHighAccess) + "," + \
+                             str(self.__ParameterSize)       + "," + \
+                             str(self.__ParameterDisplayOrder)  + "," + \
+                             str(self.__ParameterAddress)       + "'" + \
+                             str(self.__ParameterBitOffset)     + "," + "'" + \
+                             self.__ParameterDescription  + "'" + "," + \
+                             str(self.__ParameterID)      + "," + \
+                             str(self.__ParParameterID)   + "," + \
+                             str(self.__ParameterDefault) + "," + \
+                             str(self.__PatchAlways)      + "," + \
+                             str(self.__AddressSpace)     + ");"
 
 
         return List
+#---------------------------------------------------------------------------------
+#----------------------- Parameter Handling --------------------------------------
+#---------------------------------------------------------------------------------
 
     #general set and get property with index for each element, coresponds to FB_Constants
-    def setProduct(self,Index, Value):
+    def setParameter(self,Index, Value):
         if(Index == 1):
-            self.__Product_ID = Value
+            self.__ProgramID = Value
         elif(Index == 2):
-            self.__Manufacturer_ID = Value
+            self.__ParameterTypeID = Value
         elif(Index == 3):
-            self.__SymbolID = Value
+            self.__ParameterNumber = Value
         elif(Index == 4):
-            self.__Product_Name = Value
+            self.__ParameterName = Value
         elif(Index == 5):
-            self.__Product_Version = Value
+            self.__ParameterLowAccess = Value
         elif(Index == 6):
-            self.__Comp_Type = Value
+            self.__ParameterHighAccess = Value
         elif(Index == 7):
-            self.__Comp_Attr = Value
+            self.__ParameterSize = Value
         elif(Index == 8):
-            self.__Bus_Current = Value
+            self.__ParameterDisplayOrder = Value
         elif(Index == 9):
-            self.__Product_Serial = Value
+            self.__ParameterAddress = Value
         elif(Index == 10):
-            self.__CompTypeNo = Value
+            self.__ParameterBitOffset = Value
         elif(Index == 11):
-            self.__ProductPic = Value
+            self.__ParameterDescription = Value
         elif(Index == 12):
-            self.__BCU_Type = Value
+            self.__ParameterID = Value
         elif(Index == 13):
-            self.__Product_Handling = Value
+            self.__ParParameterID = Value
         elif(Index == 14):
-            self.__ProductDLL = Value
+            self.__ParameterDefault = Value
         elif(Index == 15):
-            self.__OrigManID = Value
+            self.__PatchAlways = Value
+        elif(Index == 16):
+            self.__AddressSpace = Value
 
-    def getProduct(self,Index):
+    def getParameter(self,Index):
          if(Index == 1):
-            return self.__Product_ID
+            return self.__ProgramID
          elif(Index == 2):
-            return self.__Manufacturer_ID
+            return self.__ParameterTypeID
          elif(Index == 3):
-            return self.__SymbolID
+            return self.__ParameterNumber
          elif(Index == 4):
-            return self.__Product_Name
+            return self.__ParameterName
          elif(Index == 5):
-            return self.__Product_Version
+            return self.__ParameterLowAccess
          elif(Index == 6):
-            return self.__Comp_Type
+            return self.__ParameterHighAccess
          elif(Index == 7):
-            return self.__Comp_Attr
+            return self.__ParameterSize
          elif(Index == 8):
-            return self.__Bus_Current
+            return self.__ParameterDisplayOrder
          elif(Index == 9):
-            return self.__Product_Serial
+            return self.__ParameterAddress
          elif(Index == 10):
-            return self.__CompTypeNo
+            return self.__ParameterBitOffset
          elif(Index == 11):
-            return self.__ProductPic
+            return self.__ParameterDescription
          elif(Index == 12):
-            return self.__BCU_Type
+            return self.__ParameterID
          elif(Index == 13):
-            return self.__Product_Handling
+            return self.__ParParameterID
          elif(Index == 14):
-            return self.__ProductDLL
+            return self.__ParameterDefault
          elif(Index == 15):
-            return self.__OrigManID
+            return self.__PatchAlways
+         elif(Index == 16):
+            return self.__AddressSpace
 
+
+    #returns the maximum index of all three parts
     def getMaxIndex(self):
-        return 15
+        return 16
 
 #**********************************************************************
-    #Handling Product ID
-    def setProductID(self,P_ID):
-        self.__Product_ID = P_ID
+    #Handling PROGRAM_ID
+    def setProgramID(self,P_ID):
+        self.__ProgramID = P_ID
 
-    def getProductID(self):
-        return self.__Product_ID
+    def getProgramID(self):
+        return self.__ProgramID
 #**********************************************************************
-    #Handling Manufacturer_ID
-    def setManufactuerID(self,M_ID):
-        self.__Manufacturer_ID = M_ID
+    #Handling PARAMETER_TYPE_ID
+    def setParameterTypeID(self,ParamT_ID):
+        self.__ParameterTypeID = ParamT_ID
 
-    def getManufactuerID(self):
-        return self.__Manufacturer_ID
-
-#**********************************************************************
-    #Handling Symbol ID
-    def setSymbolID(self,S_ID):
-        self.__SymbolID = S_ID
-
-    def getSymbolID(self):
-        return self.__SymbolID
+    def getParameterTypeID(self):
+        return self.__ParameterTypeID
 
 #**********************************************************************
-    #Handling Product_Name
-    def setProductName(self,P_Name):
-        self.__Product_Name = P_Name
+    #Handling PARAMETER_NUMBER
+    def setParameterNumber(self,P_Number):
+        self.__ParameterNumber = P_Number
 
-    def getProductName(self):
-        return self.__Product_Name
-
-#**********************************************************************
-
-    #Handling Product_Version
-    def setProductVersion(self,P_Version):
-        self.__Product_Version = P_Version
-
-    def getProductVersion(self):
-        return self.__Product_Version
+    def getParameterNumber(self):
+        return self.__ParameterNumber
 
 #**********************************************************************
+    #Handling PARAMETER_NAME
+    def setParameterName(self,P_Name):
+        self.__ParameterName = P_Name
 
-    #Handling Component Type
-    def setCompType(self,C_Type):
-        self.__Comp_Type = C_Type
-
-    def getCompType(self):
-        return self.__Comp_Type
-
-#**********************************************************************
-    #Handling Component Attributes
-    def setCompAttr(self,C_Attr):
-        self.__Comp_Attr = C_Attr
-
-    def getCompAttr(self):
-        return self.__Comp_Attr
+    def getParameterName(self):
+        return self.__ParameterName
 
 #**********************************************************************
-    #Handling Bus Current
-    def setBusCurrent(self,BusCurrent):
-        self.__Bus_Current = BusCurrent
+    #Handling PARAMETER_LOW_ACCESS
+    def setParameterLow(self,P_Low):
+        self.__ParameterLowAccess = P_Low
 
-    def getBusCurrent(self):
-        return self.__Bus_Current
-
-#**********************************************************************
-    #Handling Product Serial Number
-    def setProductSN(self,P_SN):
-        self.__Product_Serial = P_SN
-
-    def getProductSN(self):
-        return self.__Product_Serial
+    def getParameterLow(self):
+        return self.__ParameterLowAccess
 
 #**********************************************************************
-   #Handling Component Type Number
-    def setCompTypeNo(self,CompTypeNo):
-        self.__CompTypeNo  = CompTypeNo
+    #Handling PARAMETER_HIGH_ACCESS
+    def setParameterHigh(self,P_High):
+        self.__ParameterHighAccess = P_High
 
-    def getCompTypeNo(self):
-        return self.__CompTypeNo
-
-#**********************************************************************
-   #Handling Product Picture
-    def setProductPic(self,P_Pic):
-        self.__ProductPic = P_Pic
-
-    def getProductPic(self):
-        return self.__ProductPic
+    def getParameterHigh(self):
+        return self.__ParameterHighAccess
 
 #**********************************************************************
-    #BCU Type
-    def setBCUType(self,BCUType):
-        self.__BCU_Type = BCUType
+    #Handling PARAMETER_SIZE
+    def setParameterSize(self,P_Size):
+        self.__ParameterSize = P_Size
 
-    def getBCUType(self):
-        return self.__BCU_Type
-
-#**********************************************************************
-    #Product Handling
-    def setProductHandling(self,P_Handling):
-        self.__Product_Handling = P_Handling
-
-    def getProductHandling(self):
-        return self.__Product_Handling
+    def getParameterSize(self):
+        return self.__ParameterSize
 
 #**********************************************************************
-    #Product DLL
-    def setProductDLL(self,P_DLL):
-        self.__ProductDLL = P_DLL
+    #Handling PARAMETER_DISPLAY_ORDER
+    def setParameterDisplayOrder(self,P_DisplayO):
+        self.__ParameterDisplayOrder = P_DisplayO
 
-    def getProductDLL(self):
-        return self.__ProductDLL
+    def getParameterDisplayOrder(self):
+        return self.__ParameterDisplayOrder
 
 #**********************************************************************
-    #Original Manufacturer ID
-    def setOrigManID(self,O_ManID):
-        self.__OrigManID = O_ManID
+    #Handling PARAMETER_ADDRESS
+    def setParameterAddress(self,P_Address):
+        self.__ParameterAddress = P_Address
 
-    def getOrigManID(self):
-        return self.__OrigManID
+    def getParameterAddress(self):
+        return self.__ParameterAddress
+
+#**********************************************************************
+   #Handling PARAMETER_BITOFFSET
+    def setParameterBitOffset(self,P_Offset):
+        self.__ParameterBitOffset  = P_Offset
+
+    def getParameterBitOffset(self):
+        return self.__ParameterBitOffset
+
+#**********************************************************************
+   #Handling PARAMETER_DESCRIPTION
+    def setParameterDescription(self,P_Descr):
+        self.__ParameterDescription = P_Descr
+
+    def getParameterDescription(self):
+        return self.__ParameterDescription
+
+#**********************************************************************
+    #PARAMETER_ID
+    def setParameterID(self,Param_ID):
+        self.__ParameterID = Param_ID
+
+    def getParameterID(self):
+        return self.__ParameterID
+
+#**********************************************************************
+    #PAR_PARAMETER_ID
+    def setParParameterID(self,PP_ID):
+        self.__ParParameterID = PP_ID
+
+    def getParParameterID(self):
+        return self.__ParParameterID
+
+#**********************************************************************
+    #PARAMETER_DEFAULT_LONG
+    def setParameterDefault(self,P_Default):
+        self.__ParameterDefault = P_Default
+
+    def getParameterDefault(self):
+        return self.__ParameterDefault
+
+#**********************************************************************
+    #PATCH_ALWAYS
+    def setPatchAlways(self,Patch):
+        self.__PatchAlways = Patch
+
+    def getPatchAlways(self):
+        return self.__PatchAlways
+#**********************************************************************
+    #ADDRESS_SPACE
+    def setAddressSpace(self,A_Space):
+        self.__AddressSpace = A_Space
+
+    def getAddressSpace(self):
+        return self.__AddressSpace
  #**********************************************************************
+
