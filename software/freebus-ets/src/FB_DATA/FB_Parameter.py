@@ -49,7 +49,7 @@ class FB_Parameter:
                              str(self.__ParameterHighAccess) + "," + \
                              str(self.__ParameterSize)       + "," + \
                              str(self.__ParameterDisplayOrder)  + "," + \
-                             str(self.__ParameterAddress)       + "'" + \
+                             str(self.__ParameterAddress)       + "," + \
                              str(self.__ParameterBitOffset)     + "," + "'" + \
                              self.__ParameterDescription  + "'" + "," + \
                              str(self.__ParameterID)      + "," + \

@@ -164,7 +164,6 @@ class FB_XML_PRODUCT:
         self.lblComObj.set_text(unicode(Value,"ISO-8859-1"))
         self.lblParam.set_text(unicode(Value,"ISO-8859-1"))
 
-
         #thread.start_new(self.worker_thread, (self.parseXMLFile(),))
         XMLHandler = self.parseXMLFile()
 
@@ -199,7 +198,7 @@ class FB_XML_PRODUCT:
                 #-------------------- Parameter ---------------------
                 paramList = self.getParameter(XMLHandler)
                 Value = str(len(paramList)) + " Stück"
-                self.lblparam.set_text(unicode(Value,"ISO-8859-1"))
+                self.lblParam.set_text(unicode(Value,"ISO-8859-1"))
                 self.WriteToSQL(con, paramList, "parameter")
                 #-------------------- ParameterType ---------------------
                 paramTypeList  = self.getParameterType(XMLHandler)
@@ -253,16 +252,21 @@ class FB_XML_PRODUCT:
 
                 if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                   cur.execute(sql)
+                    try:
+                        cur.execute(sql)
+                    except:
+                        print sql
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
                 else:
                     #do something else
-                    pass
+                    print sql
+                    self.__LogObj.NewLog("Doppeltes Produkt: " + sql,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
             #Application found
-            if(Table == "application_program"):
+            elif(Table == "application_program"):
                 ColumnList = FB_Constants.AppNode
 
                 for i in range(1,List[j].getMaxIndex()+1):
@@ -282,16 +286,21 @@ class FB_XML_PRODUCT:
 
                 if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                   cur.execute(sql)
+                    try:
+                        cur.execute(sql)
+                    except:
+                        print sql
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
                 else:
 
-                    pass
+                    print sql
+                    self.__LogObj.NewLog("Doppelte Applikation: " + sql,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
             #Manufacturer found
-            if(Table == "manufacturer"):
+            elif(Table == "manufacturer"):
                 ColumnList = FB_Constants.ManufacturerNode
 
                 for i in range(1,List[j].getMaxIndex()+1):
@@ -311,17 +320,20 @@ class FB_XML_PRODUCT:
 
                 if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                   cur.execute(sql)
+                    try:
+                        cur.execute(sql)
+                    except:
+                        print sql
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
                 else:
-                    #do something else
-
-                    pass
+                    print sql
+                    self.__LogObj.NewLog("Doppelter Hersteller: " + sql,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
             #Communication Object found
-            if(Table == "communication_object"):
+            elif(Table == "communication_object"):
                 ColumnList = FB_Constants.CommObjNode
 
                 for i in range(1,List[j].getMaxIndex()+1):
@@ -342,18 +354,23 @@ class FB_XML_PRODUCT:
 
                 if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                   cur.execute(sql)
+                    try:
+                        cur.execute(sql)
+                    except:
+                        print sql
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
                 else:
                     #do something else
                     #print str(List[j].getObjUniqueNo())
 
-                    pass
+                    print sql
+                    self.__LogObj.NewLog("Doppeltes Kommunikations-Object: " + sql,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
             #Mask Object found
-            if(Table == "mask"):
+            elif(Table == "mask"):
                 ColumnList = FB_Constants.MaskNode
 
                 for i in range(1,List[j].getMaxIndex()+1):
@@ -374,17 +391,19 @@ class FB_XML_PRODUCT:
 
                 if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                   cur.execute(sql)
+                    try:
+                        cur.execute(sql)
+                    except:
+                        print sql
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
                 else:
-                    #do something else
-
-                    pass
-
+                    print sql
+                    self.__LogObj.NewLog("Doppelte Maske: " + sql,0)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
             #product to program Object found
-            if(Table == "product_to_program"):
+            elif(Table == "product_to_program"):
                 ColumnList = FB_Constants.Prod2ProgrNode
 
                 for i in range(1,List[j].getMaxIndex()+1):
@@ -405,16 +424,20 @@ class FB_XML_PRODUCT:
 
                 if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                   cur.execute(sql)
+                    try:
+                        cur.execute(sql)
+                    except:
+                        print sql
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
                 else:
-                    #do something else
-                    pass
+                    print sql
+                    self.__LogObj.NewLog("Doppeltes ProductToProgram: " + sql,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
             #parameter
-            if(Table == "parameter"):
+            elif(Table == "parameter"):
                 ColumnList = FB_Constants.ParaNode
 
                 for i in range(1,List[j].getMaxIndex()+1):
@@ -428,23 +451,28 @@ class FB_XML_PRODUCT:
                 #print sql
 
                 #check if Product is already existing...
-                sqlExist = "SELECT PARAMETER_ID FROM parameter WHERE PARAMETER_ID = " + str(List[j].getParameterID())
+                sqlExist = "SELECT PARAMETER_ID,PARAMETER_NUMBER FROM parameter WHERE PARAMETER_ID = " + \
+                            str(List[j].getParameterID()) + " AND PARAMETER_NUMBER = " + str(List[j].getParameterNumber())
 
                 Cursor = Connection.cursor()
                 Cursor.execute(sqlExist)
 
                 if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                   cur.execute(sql)
+                    try:
+                        cur.execute(sql)
+                    except:
+                        print sql
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
                 else:
-                    #do something else
-                    pass
+                    print sql
+                    self.__LogObj.NewLog("Doppelter Parameter: " + sql,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
             #parameterType
-            if(Table == "parameter_type"):
+            elif(Table == "parameter_type"):
                 ColumnList = FB_Constants.ParaTypeNode
 
                 for i in range(1,List[j].getMaxIndex()+1):
@@ -465,14 +493,18 @@ class FB_XML_PRODUCT:
 
                 if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                   cur.execute(sql)
+                    try:
+                        cur.execute(sql)
+                    except:
+                        print sql
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
                 else:
-                    #do something else
-                    pass
+                    print sql
+                    self.__LogObj.NewLog("Doppeltes Parameter_Type: " + sql,0)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
             #parameter List of Values
-            if(Table == "parameter_list_of_values"):
+            elif(Table == "parameter_list_of_values"):
                 ColumnList = FB_Constants.ParaListVNode
 
                 for i in range(1,List[j].getMaxIndex()+1):
@@ -486,17 +518,21 @@ class FB_XML_PRODUCT:
                 #print sql
 
                 #check if Product is already existing...
-                sqlExist = "SELECT PARAMETER_TYPE_ID FROM parameter_list_of_values WHERE PARAMETER_TYPE_ID = " + str(List[j].getParameterTypeID3())
-
+                sqlExist = "SELECT PARAMETER_TYPE_ID,PARAMETER_VALUE_ID FROM parameter_list_of_values WHERE PARAMETER_TYPE_ID = " + \
+                           str(List[j].getParameterTypeID3()) + " AND PARAMETER_VALUE_ID = " + str(List[j].getParameterValueID())
                 Cursor = Connection.cursor()
                 Cursor.execute(sqlExist)
 
                 if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                   cur.execute(sql)
+                    try:
+                        cur.execute(sql)
+                    except:
+                        print sql
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
                 else:
-                    #do something else
-                    pass
+                    print sql
+                    self.__LogObj.NewLog("Doppeltes Parameter List of Values: " + sql,0)
 
 
         Connection.commit()
@@ -618,9 +654,10 @@ class FB_XML_PRODUCT:
     #@param return: return-value
     def parseXMLFile(self):
         try:
-           
+
             #saxparser
             self.__handler = FB_XMLHandler.FB_XMLHandler(self.__LogObj)
+            #self.__handler.ignorableWhitespace(['\n', '\r', '\t'])
             saxparser = xml.sax.make_parser()
             saxparser.setContentHandler(self.__handler)
             saxparser.parse(self.__xml_file)
@@ -709,7 +746,6 @@ class FB_XML_PRODUCT:
 
         try:
             self.__ParamList = xml_handler.getParameter()
-
             return self.__ParamList
 
         except:

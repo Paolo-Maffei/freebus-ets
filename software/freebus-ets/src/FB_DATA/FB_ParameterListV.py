@@ -19,7 +19,7 @@ class FB_ParameterListV:
     #local variables ParameterList of values
     __ParameterTypeID3 = 0        #PARAMETER_TYPE_ID
     __RealValue = 0               #REAL_VALUE
-    __DisplayValue = 0            #DISPLAYED_VALUE
+    __DisplayValue = ""            #DISPLAYED_VALUE
     __DisplayOrder = 0            #DISPLAY_ORDER
     __ParameterValueID = 0        #PARAMETER_VALUE_ID
     __BinaryValueLength = 0       #BINARY_VALUE_LENGTH
@@ -31,9 +31,9 @@ class FB_ParameterListV:
     #returns List of all values in a correct sql format
     def getSQLValueList(self):
 
-        List = "VALUES(" +  str(self.__ParameterTypeID3)  + "," + \
-                             str(self.__RealValue)         + "," + \
-                             str(self.__DisplayValue)      + "," + \
+        List = "VALUES(" +  str(self.__ParameterTypeID3)   + "," + \
+                             str(self.__RealValue)         + "," + "'" + \
+                             self.__DisplayValue           + "'" + "," + \
                              str(self.__DisplayOrder)      + "," + \
                              str(self.__ParameterValueID)  + "," + \
                              str(self.__BinaryValueLength) + ");"

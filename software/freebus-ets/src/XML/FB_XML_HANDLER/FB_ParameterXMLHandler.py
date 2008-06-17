@@ -9,12 +9,13 @@
 #
 #Source File: FB_ParameterXMLHandler.py
 #Version: V0.1 , 09.06.2008
+#Version: V0.2 , 15.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #
 #===============================================================================
 
-
+from re import *
 from FB_DATA import FB_Parameter
 from FB_DATA import FB_ParameterType
 from FB_DATA import FB_ParameterListV
@@ -122,13 +123,16 @@ class FB_ParameterXMLHandler():
           #      print eName
 
             if(eName == "parameter"):
+                #print "start parameter"
                 self.__isParameter = True
 
             if(eName == "parameter_type"):
+                #print "start parameter type"
                 self.__isParaType = True
 
 
             if(eName == "parameter_list_of_values"):
+                #print "start list of value"
                 self.__isParaList = True
 
             #------------------- Parmater -----------------------
@@ -245,24 +249,25 @@ class FB_ParameterXMLHandler():
         try:
             if(eName == "parameter"):
                 self.__isParameter = False
-          #      print "start parame"
+                #print "end parameter"
+
                 self.__parameter.append(self.__para)
-                self.__para = None
+                del self.__para
                 self.__para = FB_Parameter.FB_Parameter()
 
             if(eName == "parameter_type"):
 
                 self.__isParaType = False
-
+                #print "end parameter type"
                 self.__paratype.append(self.__paraTy)
-                self.__paraTy = None
+                del self.__paraTy
                 self.__paraTy = FB_ParameterType.FB_ParameterType()
 
             if(eName == "parameter_list_of_values"):
                 self.__isParaList = False
-
+                #print "end list of value"
                 self.__paraList.append(self.__paraLi)
-                self.__paraLi = None
+                del self.__paraLi
                 self.__paraLi = FB_ParameterListV.FB_ParameterListV()
 
             #------------------- Parmater -----------------------
@@ -365,104 +370,125 @@ class FB_ParameterXMLHandler():
 
     def characters(self ,char):
 
+       # re = compile('\s')
+       # test = re.sub(" ",char.encode( "iso-8859-1" ))
+        strValue = char.encode( "iso-8859-1" )
+
         #------------------- Parameter -----------------------
         if(self.__isPrgramID1 == True):
             #self.__Index = 1
-            self.__para.setProgramID(char.encode( "iso-8859-1" ))
-        if(self.__isParameterTypeID1 == True):
+            self.__para.setProgramID(self.IsNumber(strValue))
+        elif(self.__isParameterTypeID1 == True):
             #self.__Index = 2
-            self.__para.setParameterTypeID(char.encode( "iso-8859-1" ))
-        if(self.__isParameterNumber  == True):
+            self.__para.setParameterTypeID(self.IsNumber(strValue))
+        elif(self.__isParameterNumber  == True):
             #self.__Index = 3
-            self.__para.setParameterNumber(char.encode( "iso-8859-1" ))
-        if(self.__isParameterName == True):
+            self.__para.setParameterNumber(self.IsNumber(strValue))
+        elif(self.__isParameterName == True):
             #self.__Index = 4
-            self.__para.setParameterName(char.encode( "iso-8859-1" ))
-        if(self.__isParameterLowAccess == True):
+            self.__para.setParameterName(self.IsString(strValue))
+        elif(self.__isParameterLowAccess == True):
             #self.__Index = 5
-            self.__para.setParameterLow(char.encode( "iso-8859-1" ))
-        if(self.__isParameterHighAccess == True):
+            self.__para.setParameterLow(self.IsNumber(strValue))
+        elif(self.__isParameterHighAccess == True):
             #self.__Index = 6
-            self.__para.setParameterHigh(char.encode( "iso-8859-1" ))
-        if(self.__isParameterSize == True):
+            self.__para.setParameterHigh(self.IsNumber(strValue))
+        elif(self.__isParameterSize == True):
             #self.__Index = 7
-            self.__para.setParameterSize(char.encode( "iso-8859-1" ))
-        if(self.__isParameterDisplayOrder == True):
+            self.__para.setParameterSize(self.IsNumber(strValue))
+        elif(self.__isParameterDisplayOrder == True):
             #self.__Index = 8
-            self.__para.setParameterDisplayOrder(char.encode( "iso-8859-1" ))
-        if(self.__isParameterAddress == True):
+            self.__para.setParameterDisplayOrder(self.IsNumber(strValue))
+        elif(self.__isParameterAddress == True):
             #self.__Index = 9
-            self.__para.setParameterAddress(char.encode( "iso-8859-1" ))
-        if(self.__isParameterBitOffset == True):
+            self.__para.setParameterAddress(self.IsNumber(strValue))
+        elif(self.__isParameterBitOffset == True):
             #self.__Index = 10
-            self.__para.setParameterBitOffset(char.encode( "iso-8859-1" ))
-        if(self.__isParameterDescription == True):
+            self.__para.setParameterBitOffset(self.IsNumber(strValue))
+        elif(self.__isParameterDescription == True):
             #self.__Index = 11
-            self.__para.setParameterDescription(char.encode( "iso-8859-1" ))
-        if(self.__isParameterID == True):
+            self.__para.setParameterDescription(self.IsString(strValue))
+        elif(self.__isParameterID == True):
             #self.__Index = 12
-            self.__para.setParameterID(char.encode( "iso-8859-1" ))
-        if(self.__isParParameterID == True):
+            self.__para.setParameterID(self.IsNumber(strValue))
+        elif(self.__isParParameterID == True):
             #self.__Index = 13
-            self.__para.setParParameterID(char.encode( "iso-8859-1" ))
-        if(self.__isParameterDefault == True):
+            self.__para.setParParameterID(self.IsNumber(strValue))
+        elif(self.__isParameterDefault == True):
             #self.__Index = 14
-            self.__para.setParameterDefault(char.encode( "iso-8859-1" ))
-        if(self.__isPatchAlways == True):
+            self.__para.setParameterDefault(self.IsNumber(strValue))
+        elif(self.__isPatchAlways == True):
             #self.__Index = 15
-            self.__para.setPatchAlways(char.encode( "iso-8859-1" ))
-        if(self.__isAddressSpace == True):
+            self.__para.setPatchAlways(self.IsNumber(strValue))
+        elif(self.__isAddressSpace == True):
             #self.__Index = 16
-            self.__para.setAddressSpace(char.encode( "iso-8859-1" ))
+            self.__para.setAddressSpace(self.IsNumber(strValue))
 
         #------------------- ParameterType -----------------------
         if(self.__isParameterTypeID2 == True):
             #self.__Index = 1
-            self.__paraTy.setParameterTypeID2(char.encode( "iso-8859-1" ))
+            self.__paraTy.setParameterTypeID2(self.IsNumber(strValue))
 
-        if(self.__isAtomicTypeNumber == True):
+        elif(self.__isAtomicTypeNumber == True):
             #self.__Index = 2
             ##print char
-            self.__paraTy.setAtomicTypeNumber(char.encode( "iso-8859-1" ))
-        if(self.__isPrgramID2  == True):
+            self.__paraTy.setAtomicTypeNumber(self.IsNumber(strValue))
+        elif(self.__isPrgramID2  == True):
             #self.__Index = 3
             #print char
-            self.__paraTy.setProgramID2(char.encode( "iso-8859-1" ))
-        if(self.__isParameterTypeName == True):
+            self.__paraTy.setProgramID2(self.IsNumber(strValue))
+        elif(self.__isParameterTypeName == True):
             #self.__Index = 4
             #print char
-            self.__paraTy.setParameterTypeName(char.encode( "iso-8859-1" ))
-        if(self.__isParameterTypeLowAccess == True):
+            self.__paraTy.setParameterTypeName(self.IsString(strValue))
+        elif(self.__isParameterTypeLowAccess == True):
             #self.__Index = 5
             #print char
-            self.__paraTy.setParameterTypeLow(char.encode( "iso-8859-1" ))
-        if(self.__isParameterTypeHighAccess == True):
+            self.__paraTy.setParameterTypeLow(self.IsNumber(strValue))
+        elif(self.__isParameterTypeHighAccess == True):
             #self.__Index = 6
             #print char
-            self.__paraTy.setParameterTypeHigh(char.encode( "iso-8859-1" ))
-        if(self.__isParameterTypeSize == True):
+            self.__paraTy.setParameterTypeHigh(self.IsNumber(strValue))
+        elif(self.__isParameterTypeSize == True):
             #self.__Index = 7
-            self.__paraTy.setParameterTypeSize(char.encode( "iso-8859-1" ))
+            self.__paraTy.setParameterTypeSize(self.IsNumber(strValue))
 
 
 
         #------------------- ParameterList of values --------------------
         if(self.__isParameterTypeID3 == True):
             #self.__Index = 1
-            self.__paraLi.setParameterTypeID3(char.encode( "iso-8859-1" ))
-        if(self.__isRealValue == True):
+            self.__paraLi.setParameterTypeID3(self.IsNumber(strValue))
+        elif(self.__isRealValue == True):
             #self.__Index = 2
-            self.__paraLi.setRealValue(char.encode( "iso-8859-1" ))
-        if(self.__isDisplayValue  == True):
+            self.__paraLi.setRealValue(self.IsNumber(strValue))
+        elif(self.__isDisplayValue  == True):
             #self.__Index = 3
-            self.__paraLi.setDisplayValue(char.encode( "iso-8859-1" ))
-        if(self.__isDisplayOrder == True):
+            self.__paraLi.setDisplayValue(self.IsString(strValue))
+        elif(self.__isDisplayOrder == True):
             #self.__Index = 4
-            self.__paraLi.setDisplayOrder(char.encode( "iso-8859-1" ))
-        if(self.__isParameterValueID == True):
+            self.__paraLi.setDisplayOrder(self.IsNumber(strValue))
+        elif(self.__isParameterValueID == True):
             #self.__Index = 5
-            self.__paraLi.setParameterValueID(char.encode( "iso-8859-1" ))
-        if(self.__isBinaryValueLength == True):
+            self.__paraLi.setParameterValueID(self.IsNumber(strValue))
+        elif(self.__isBinaryValueLength == True):
             #self.__Index = 6
-            self.__paraLi.setBinaryValueLength(char.encode( "iso-8859-1" ))
+            self.__paraLi.setBinaryValueLength(self.IsNumber(strValue))
 
+
+    #check for Number in parsed value
+    def IsNumber(self,strValue):
+        #print strValue
+        if(strValue.isdigit() == True):
+            return strValue
+        else:
+            return "0"
+
+    #check for String in parsed value
+    def IsString(self,strValue):
+
+        Value = strValue.replace('\\r\\n',' ')
+        Value = Value.replace('\\rn', ' ')
+        Value = Value.replace("'", ' ')
+        Value = Value.replace("'", ' ')
+        return Value

@@ -10,6 +10,7 @@
 #Source File: FB_Prod2ProgrXMLHandler.py
 #Version: V0.1 , 03.01.2008
 #Version: V0.2 , 04.06.2008
+#Version: V0.3 , 15.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #
@@ -112,7 +113,7 @@ class FB_Prod2ProgrXMLHandler():
             self.__isProd2Prog = False
 
             self.__prod2Prog.append(self.__prod)
-            self.__prod = None
+            del self.__prod
             self.__prod = FB_Prod2Progr.FB_Prod2Prog()
 
         elif(eName == "PROD2PROG_ID"):
@@ -154,30 +155,49 @@ class FB_Prod2ProgrXMLHandler():
 
     def characters(self ,char):
 
+        strValue = char.encode( "iso-8859-1" )
+
         #print char.encode( "iso-8859-1" )
         if(self.__isProd2Prog_ID == True):
-            self.__prod.setProd2ProgID(char.encode( "iso-8859-1" ))
+            self.__prod.setProd2ProgID(self.IsNumber(strValue))
 
-        if(self.__isProduct_ID == True):
-            self.__prod.setProductID(char.encode( "iso-8859-1" ))
+        elif(self.__isProduct_ID == True):
+            self.__prod.setProductID(self.IsNumber(strValue))
 
-        if(self.__isProgram_ID == True):
-            self.__prod.setProgramID(char.encode( "iso-8859-1" ))
+        elif(self.__isProgram_ID == True):
+            self.__prod.setProgramID(self.IsNumber(strValue))
 
-        if(self.__isProd2Prog_Status_Code == True):
-            self.__prod.setProd2ProgStatusCode(char.encode( "iso-8859-1" ))
+        elif(self.__isProd2Prog_Status_Code == True):
+            self.__prod.setProd2ProgStatusCode(self.IsNumber(strValue))
 
-        if(self.__isReg_Number == True):
-            self.__prod.setRegNumber(char.encode( "iso-8859-1" ))
+        elif(self.__isReg_Number == True):
+            self.__prod.setRegNumber(self.IsString(strValue))
 
-        if(self.__isReg_Year == True):
-            self.__prod.setRegYear(char.encode( "iso-8859-1" ))
+        elif(self.__isReg_Year == True):
+            self.__prod.setRegYear(self.IsString(strValue))
 
-        if(self.__isOrig_Reg_Number == True):
-            self.__prod.setOrigRegNumber(char.encode( "iso-8859-1" ))
+        elif(self.__isOrig_Reg_Number == True):
+            self.__prod.setOrigRegNumber(self.IsString(strValue))
 
-        if(self.__isOrig_Reg_Year == True):
-            self.__prod.setOrigRegYear(char.encode( "iso-8859-1" ))
+        elif(self.__isOrig_Reg_Year == True):
+            self.__prod.setOrigRegYear(self.IsString(strValue))
 
-        if(self.__isReg_TS == True):
-            self.__prod.setRegTS(char.encode( "iso-8859-1" ))
+        elif(self.__isReg_TS == True):
+            self.__prod.setRegTS(self.IsString(strValue))
+
+
+   #check for Number in parsed value
+    def IsNumber(self,strValue):
+        #print strValue
+        if(strValue.isdigit() == True):
+            return strValue
+        else:
+            return "0"
+
+    #check for String in parsed value
+    def IsString(self,strValue):
+
+        Value = strValue.replace('\\r\\n',' ')
+        Value = Value.replace('\\rn', ' ')
+        Value = Value.replace("'", ' ')
+        return Value

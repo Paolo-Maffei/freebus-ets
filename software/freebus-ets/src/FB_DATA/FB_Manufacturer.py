@@ -62,3 +62,4 @@ class FB_Manufacturer:
     def getManufactID(self):
         return self.__ManID
 
+ 

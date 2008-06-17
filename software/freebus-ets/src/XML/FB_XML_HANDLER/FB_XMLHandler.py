@@ -82,11 +82,11 @@ class FB_XMLHandler(xml.sax.ContentHandler):
         return self.__mask_XMLHandler.getMaskList()
 
     #return List of Instances of type FB_Parameter
-    def getParameterList(self):
+    def getParameter(self):
         return self.__param_XMLHandler.getParameter()
 
     #return List of Instances of type FB_ParameterType
-    def getParameterList(self):
+    def getParameterType(self):
         return self.__param_XMLHandler.getParameterType()
 
     #return List of Instances of type FB_Parameter List of Values

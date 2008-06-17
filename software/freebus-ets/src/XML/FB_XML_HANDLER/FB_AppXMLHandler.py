@@ -10,6 +10,7 @@
 #Source Datei: FB_AppXMLHandler.py
 #Version: V0.1 , 25.12.2007
 #Version: V0.2 , 04.06.2008
+#Version: V0.3 , 15.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #
@@ -270,7 +271,7 @@ class FB_AppXMLHandler():
                 self.__isMan=False
                 #add Instanz to the list
                 self.__Manufacturer.append(self.__Man)
-                self.__Man = None
+                del self.__Man
                 self.__Man = FB_Manufacturer.FB_Manufacturer()
                 #print "Manufact Ende"
 
@@ -279,7 +280,7 @@ class FB_AppXMLHandler():
 
                 #add Instanz to the list
                 self.__Applications.append(self.__App)
-                self.__App = None
+                del self.__App
                 self.__App = FB_Applications.FB_Apps()
 
             #Look at SubNodes of manufacturer
@@ -430,109 +431,126 @@ class FB_AppXMLHandler():
     def characters(self ,char):
         #print char
  #       self.__LogObj.NewLog("char: " + char.encode( "iso-8859-1" ) ,0)
+        strValue = char.encode( "iso-8859-1" )
 
         if(self.__isManName == True):
-            self.__Man.setManufactName(char.encode( "iso-8859-1" ))
+            self.__Man.setManufactName(self.IsString(strValue))
 
-        if(self.__isManID == True):
-            self.__Man.setManufactID(char.encode( "iso-8859-1" ))
+        elif(self.__isManID == True):
+            self.__Man.setManufactID(self.IsNumber(strValue))
 
         if(self.__isProgID == True):
-            self.__App.setProgramID(char.encode( "iso-8859-1" ))
+            self.__App.setProgramID(self.IsNumber(strValue))
 
-        if(self.__isSymbolID == True):
-            self.__App.setSymbolID(char.encode( "iso-8859-1" ))
+        elif(self.__isSymbolID == True):
+            self.__App.setSymbolID(self.IsNumber(strValue))
 
-        if(self.__isMaskID == True):
-            self.__App.setMaskID(char.encode( "iso-8859-1" ))
+        elif(self.__isMaskID == True):
+            self.__App.setMaskID(self.IsNumber(strValue))
 
-        if(self.__isProgName == True):
-            self.__App.setProgramName(char.encode( "iso-8859-1" ))
+        elif(self.__isProgName == True):
+            self.__App.setProgramName(self.IsString(strValue))
 
-        if(self.__isProgVersion == True):
-            self.__App.setProgramV(char.encode( "iso-8859-1" ))
+        elif(self.__isProgVersion == True):
+            self.__App.setProgramV(self.IsString(strValue))
 
-        if(self.__isProgVersionNo == True):
-            self.__App.setProgramVNo(char.encode( "iso-8859-1" ))
+        elif(self.__isProgVersionNo == True):
+            self.__App.setProgramVNo(self.IsNumber(strValue))
 
-        if(self.__isLinkable == True):
-            self.__App.setLinkable(char.encode( "iso-8859-1" ))
+        elif(self.__isLinkable == True):
+            self.__App.setLinkable(self.IsNumber(strValue))
 
-        if(self.__isDevType == True):
-            self.__App.setDeviceType(char.encode( "iso-8859-1" ))
+        elif(self.__isDevType == True):
+            self.__App.setDeviceType(self.IsNumber(strValue))
 
-        if(self.__isPEIType == True):
-            self.__App.setPEIType(char.encode( "iso-8859-1" ))
+        elif(self.__isPEIType == True):
+            self.__App.setPEIType(self.IsNumber(strValue))
 
-        if(self.__isAddTabsize == True):
-            self.__App.setAddrTabSize(char.encode( "iso-8859-1" ))
+        elif(self.__isAddTabsize == True):
+            self.__App.setAddrTabSize(self.IsNumber(strValue))
 
-        if(self.__isAssTabAddr == True):
-            self.__App.setAssTabAddr(char.encode( "iso-8859-1" ))
+        elif(self.__isAssTabAddr == True):
+            self.__App.setAssTabAddr(self.IsNumber(strValue))
 
-        if(self.__isAssTsize == True):
-            self.__App.setAssTabSize(char.encode( "iso-8859-1" ))
+        elif(self.__isAssTsize == True):
+            self.__App.setAssTabSize(self.IsNumber(strValue))
 
-        if(self.__isComTabAddr == True):
-            self.__App.setComTabAddr(char.encode( "iso-8859-1" ))
+        elif(self.__isComTabAddr == True):
+            self.__App.setComTabAddr(self.IsNumber(strValue))
 
-        if(self.__isComTabsize == True):
-            self.__App.setComTabSize(char.encode( "iso-8859-1" ))
+        elif(self.__isComTabsize == True):
+            self.__App.setComTabSize(self.IsNumber(strValue))
 
-        if(self.__isProgSN == True):
-            self.__App.setProgramSN(char.encode( "iso-8859-1" ))
+        elif(self.__isProgSN == True):
+            self.__App.setProgramSN(self.IsString(strValue))
 
-        if(self.__isAppManID == True):
-            self.__App.setAppManufacID(char.encode( "iso-8859-1" ))
+        elif(self.__isAppManID == True):
+            self.__App.setAppManufacID(self.IsNumber(strValue))
 
-        if(self.__isEEPROMData == True):
-            self.__App.setEEPRPOMData(char.encode( "iso-8859-1" ))
+        elif(self.__isEEPROMData == True):
+            self.__App.setEEPRPOMData(self.IsString(strValue))
 
-        if(self.__isDataLength == True):
-            self.__App.setDataLength(char.encode( "iso-8859-1" ))
+        elif(self.__isDataLength == True):
+            self.__App.setDataLength(self.IsNumber(strValue))
 
-        if(self.__isS19File == True):
-            self.__App.setS19File(char.encode( "iso-8859-1" ))
+        elif(self.__isS19File == True):
+            self.__App.setS19File(self.IsString(strValue))
 
-        if(self.__isMapFile == True):
-            self.__App.setMapFile(char.encode( "iso-8859-1" ))
+        elif(self.__isMapFile == True):
+            self.__App.setMapFile(self.IsString(strValue))
 
-        if(self.__isAssemblerID == True):
-            self.__App.setAssID(char.encode( "iso-8859-1" ))
+        elif(self.__isAssemblerID == True):
+            self.__App.setAssID(self.IsNumber(strValue))
 
-        if(self.__isHelpFileName == True):
-            self.__App.setHelpFileName(char.encode( "iso-8859-1" ))
+        elif(self.__isHelpFileName == True):
+            self.__App.setHelpFileName(self.IsString(strValue))
 
-        if(self.__isContextID == True):
-            self.__App.setContextID(char.encode( "iso-8859-1" ))
+        elif(self.__isContextID == True):
+            self.__App.setContextID(self.IsNumber(strValue))
 
-        if(self.__isDynamicMng == True):
-            self.__App.setDynMng(char.encode( "iso-8859-1" ))
+        elif(self.__isDynamicMng == True):
+            self.__App.setDynMng(self.IsNumber(strValue))
 
-        if(self.__isProgType == True):
-            self.__App.setProgramType(char.encode( "iso-8859-1" ))
+        elif(self.__isProgType == True):
+            self.__App.setProgramType(self.IsNumber(strValue))
 
-        if(self.__isRAMSize == True):
-            self.__App.setRamSize(char.encode( "iso-8859-1" ))
+        elif(self.__isRAMSize == True):
+            self.__App.setRamSize(self.IsNumber(strValue))
 
-        if(self.__isOrgManID == True):
-            self.__App.setOrigManID(char.encode( "iso-8859-1" ))
+        elif(self.__isOrgManID == True):
+            self.__App.setOrigManID(self.IsNumber(strValue))
 
-        if(self.__isAPIVersion == True):
-            self.__App.setAPIVersion(char.encode( "iso-8859-1" ))
+        elif(self.__isAPIVersion == True):
+            self.__App.setAPIVersion(self.IsNumber(strValue))
 
-        if(self.__isProgStyle == True):
-            self.__App.setProgramStyle(char.encode( "iso-8859-1" ))
+        elif(self.__isProgStyle == True):
+            self.__App.setProgramStyle(self.IsNumber(strValue))
 
-        if(self.__isPollMaster == True):
-            self.__App.setPollingMaster(char.encode( "iso-8859-1" ))
+        elif(self.__isPollMaster == True):
+            self.__App.setPollingMaster(self.IsNumber(strValue))
 
-        if(self.__isNoPollGroups == True):
-            self.__App.setPollingGroups(char.encode( "iso-8859-1" ))
+        elif(self.__isNoPollGroups == True):
+            self.__App.setPollingGroups(self.IsNumber(strValue))
 
-        if(self.__isAllowedInETS == True):
-            self.__App.setAllowETS(char.encode( "iso-8859-1" ))
+        elif(self.__isAllowedInETS == True):
+            self.__App.setAllowETS(self.IsNumber(strValue))
 
-        if(self.__isMinEtsVersion == True):
-            self.__App.setMinETS(char.encode( "iso-8859-1" ))
+        elif(self.__isMinEtsVersion == True):
+            self.__App.setMinETS(self.IsNumber(strValue))
+
+    #check for Number in parsed value
+    def IsNumber(self,strValue):
+        #print strValue
+        if(strValue.isdigit() == True):
+            return strValue
+        else:
+            return "0"
+
+    #check for String in parsed value
+    def IsString(self,strValue):
+
+        Value = strValue.replace('\\r\\n',' ')
+        Value = Value.replace('\\rn', ' ')
+        Value = Value.replace("'", ' ')
+        return Value
 

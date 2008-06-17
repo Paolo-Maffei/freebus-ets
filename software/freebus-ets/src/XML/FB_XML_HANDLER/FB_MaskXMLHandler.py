@@ -10,6 +10,7 @@
 #Source Datei: FB_MaskXMLHandler.py
 #Version: V0.1 , 25.12.2007
 #Version: V0.2 , 04.06.2008
+#Version: V0.3 , 15.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #
@@ -210,7 +211,7 @@ class FB_MaskXMLHandler():
                 self.__isMask=False
                 #add Instanz to the list
                 self.__MaskList.append(self.__Mask)
-                self.__Mask = None
+                del self.__Mask
                 self.__Mask = FB_Mask.FB_Mask()
 
               #Look at SubNodes of Mask
@@ -330,85 +331,102 @@ class FB_MaskXMLHandler():
     def characters(self ,char):
         #print char
  #       self.__LogObj.NewLog("char: " + char.encode( "iso-8859-1" ) ,0)
+        strValue = char.encode( "iso-8859-1" )
 
         if(self.__isMaskID == True):
-            self.__Mask.setMaskID(char.encode( "iso-8859-1" ))
+            self.__Mask.setMaskID(self.IsNumber(strValue))
 
-        if(self.__isMaskVersion == True):
-            self.__Mask.setMaskVersion(char.encode( "iso-8859-1" ))
+        elif(self.__isMaskVersion == True):
+            self.__Mask.setMaskVersion(self.IsNumber(strValue))
 
-        if(self.__isUserRamStart == True):
-            self.__Mask.setUserRamStart(char.encode( "iso-8859-1" ))
+        elif(self.__isUserRamStart == True):
+            self.__Mask.setUserRamStart(self.IsNumber(strValue))
 
-        if(self.__isUserRamEnd == True):
-            self.__Mask.setUserRamEnd(char.encode( "iso-8859-1" ))
+        elif(self.__isUserRamEnd == True):
+            self.__Mask.setUserRamEnd(self.IsNumber(strValue))
 
-        if(self.__isUserEEpromStart == True):
-            self.__Mask.setUserEEpromStart(char.encode( "iso-8859-1" ))
+        elif(self.__isUserEEpromStart == True):
+            self.__Mask.setUserEEpromStart(self.IsNumber(strValue))
 
-        if(self.__isUserEEpromEnd == True):
-            self.__Mask.setUserEEpromEnd(char.encode( "iso-8859-1" ))
+        elif(self.__isUserEEpromEnd == True):
+            self.__Mask.setUserEEpromEnd(self.IsNumber(strValue))
 
-        if(self.__isRunErrorAddress == True):
-            self.__Mask.setRunErrorAddr(char.encode( "iso-8859-1" ))
+        elif(self.__isRunErrorAddress == True):
+            self.__Mask.setRunErrorAddr(self.IsNumber(strValue))
 
-        if(self.__isAddress_Tab_Addr == True):
-            self.__Mask.setAddrTabAddr(char.encode( "iso-8859-1" ))
+        elif(self.__isAddress_Tab_Addr == True):
+            self.__Mask.setAddrTabAddr(self.IsNumber(strValue))
 
-        if(self.__isAssocTab_Addr == True):
-            self.__Mask.setAssocTabAddr(char.encode( "iso-8859-1" ))
+        elif(self.__isAssocTab_Addr == True):
+            self.__Mask.setAssocTabAddr(self.IsNumber(strValue))
 
-        if(self.__isCommsTab_Addr == True):
-            self.__Mask.setCommsTabAddr(char.encode( "iso-8859-1" ))
+        elif(self.__isCommsTab_Addr == True):
+            self.__Mask.setCommsTabAddr(self.IsNumber(strValue))
 
-        if(self.__isManufact_Data_Addr == True):
-            self.__Mask.setManufactDataAddr(char.encode( "iso-8859-1" ))
+        elif(self.__isManufact_Data_Addr == True):
+            self.__Mask.setManufactDataAddr(self.IsNumber(strValue))
 
-        if(self.__isManufact_Data_Size == True):
-            self.__Mask.setManufactDataSize(char.encode( "iso-8859-1" ))
+        elif(self.__isManufact_Data_Size == True):
+            self.__Mask.setManufactDataSize(self.IsNumber(strValue))
 
-        if(self.__isManufact_ID_Addr == True):
-            self.__Mask.setManufactIDAddr(char.encode( "iso-8859-1" ))
+        elif(self.__isManufact_ID_Addr == True):
+            self.__Mask.setManufactIDAddr(self.IsNumber(strValue))
 
-        if(self.__isRout_Addr == True):
-            self.__Mask.setRoutAddr(char.encode( "iso-8859-1" ))
+        elif(self.__isRout_Addr == True):
+            self.__Mask.setRoutAddr(self.IsNumber(strValue))
 
-        if(self.__isManufact_ID_Protetect == True):
-            self.__Mask.setManufactIDProtect(char.encode( "iso-8859-1" ))
+        elif(self.__isManufact_ID_Protetect == True):
+            self.__Mask.setManufactIDProtect(self.IsNumber(strValue))
 
-        if(self.__isMask_Version_Name == True):
-            self.__Mask.setMaskVersionName(char.encode( "iso-8859-1" ))
+        elif(self.__isMask_Version_Name == True):
+            self.__Mask.setMaskVersionName(self.IsString(strValue))
 
-        if(self.__isMaskEEpromData == True):
-            self.__Mask.setMaskEEpromData(char.encode( "iso-8859-1" ))
+        elif(self.__isMaskEEpromData == True):
+            self.__Mask.setMaskEEpromData(self.IsString(strValue))
 
-        if(self.__isMask_Data_Length == True):
-            self.__Mask.setMaskDataLength(char.encode( "iso-8859-1" ))
+        elif(self.__isMask_Data_Length == True):
+            self.__Mask.setMaskDataLength(self.IsNumber(strValue))
 
-        if(self.__isAddress_Tab == True):
-            self.__Mask.setAddressTab(char.encode( "iso-8859-1" ))
+        elif(self.__isAddress_Tab == True):
+            self.__Mask.setAddressTab(self.IsNumber(strValue))
 
-        if(self.__isAssoc_Tab == True):
-            self.__Mask.setAssocTab(char.encode( "iso-8859-1" ))
+        elif(self.__isAssoc_Tab == True):
+            self.__Mask.setAssocTab(self.IsNumber(strValue))
 
-        if(self.__isApp_Program == True):
-            self.__Mask.setAppProgram(char.encode( "iso-8859-1" ))
+        elif(self.__isApp_Program == True):
+            self.__Mask.setAppProgram(self.IsNumber(strValue))
 
-        if(self.__isPEI_Program == True):
-            self.__Mask.setPEIProgram(char.encode( "iso-8859-1" ))
+        elif(self.__isPEI_Program == True):
+            self.__Mask.setPEIProgram(self.IsNumber(strValue))
 
-        if(self.__isLoad_Control_Addr == True):
-            self.__Mask.setLoadControlAddr(char.encode( "iso-8859-1" ))
+        elif(self.__isLoad_Control_Addr == True):
+            self.__Mask.setLoadControlAddr(self.IsNumber(strValue))
 
-        if(self.__isRun_Control_Addr == True):
-            self.__Mask.setRunControlAddr(char.encode( "iso-8859-1" ))
+        elif(self.__isRun_Control_Addr == True):
+            self.__Mask.setRunControlAddr(self.IsNumber(strValue))
 
-        if(self.__isPort_Addr_Protect == True):
-            self.__Mask.setPortAddrProtected(char.encode( "iso-8859-1" ))
+        elif(self.__isPort_Addr_Protect == True):
+            self.__Mask.setPortAddrProtected(self.IsNumber(strValue))
 
-        if(self.__isMedium_TypeNo == True):
-            self.__Mask.setMediumTypeNo(char.encode( "iso-8859-1" ))
+        elif(self.__isMedium_TypeNo == True):
+            self.__Mask.setMediumTypeNo(self.IsNumber(strValue))
 
-        if(self.__isBCU_TypeNo == True):
-            self.__Mask.setBCUTypeNo(char.encode( "iso-8859-1" ))
+        elif(self.__isBCU_TypeNo == True):
+            self.__Mask.setBCUTypeNo(self.IsNumber(strValue))
+
+   #check for Number in parsed value
+    def IsNumber(self,strValue):
+        #print strValue
+        if(strValue.isdigit() == True):
+            return strValue
+        else:
+            return "0"
+
+    #check for String in parsed value
+    def IsString(self,strValue):
+
+        Value = strValue.replace('\\r\\n',' ')
+        Value = Value.replace('\\rn', ' ')
+        Value = Value.replace("'", ' ')
+        return Value
 

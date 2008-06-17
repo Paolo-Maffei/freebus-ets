@@ -53,6 +53,8 @@ class FB_Project:
             #create empty installation file
             InstDocument = impl.createDocument(None, "installation-components", None)
             self.__instamodell = FB_InstallationDataModel.FB_InstallationDataModel(self.__LogObj,InstDocument,projectname,True)
+            #create a database file
+            
 
 #*****************************************************************************
     #returns the project associated architectural model

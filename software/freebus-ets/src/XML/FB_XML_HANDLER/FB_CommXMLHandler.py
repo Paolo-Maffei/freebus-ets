@@ -10,6 +10,7 @@
 #Source Datei: FB_CommXMLHandler.py
 #Version: V0.1 , 31.12.2007
 #Version: V0.2 , 04.06.2008
+#Version: V0.3 , 15.06.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #
@@ -154,7 +155,7 @@ class FB_CommXMLHandler():
                 self.__isCommObj=False
                 #add Instanz to the list
                 self.__CommunicationObjects.append(self.__CommObj)
-                self.__CommObj = None
+                del self.__CommObj
                 self.__CommObj = FB_CommunicationObj.FB_CommObj()
 
             elif(eName == "PROGRAM_ID"):
@@ -227,50 +228,69 @@ class FB_CommXMLHandler():
     def characters(self ,char):
         #print char
  #       self.__LogObj.NewLog("char: " + char.encode( "iso-8859-1" ) ,0)
+        strValue = char.encode( "iso-8859-1" )
+
         if(self.__ProgID == True):
-            self.__CommObj.setProgramID(char.encode( "iso-8859-1" ))
+            self.__CommObj.setProgramID(self.IsNumber(strValue))
 
-        if(self.__ObjName == True):
-            self.__CommObj.setObjName(char.encode( "iso-8859-1" ))
+        elif(self.__ObjName == True):
+            self.__CommObj.setObjName(self.IsString(strValue))
 
-        if(self.__ObjFunction == True):
-            self.__CommObj.setObjFunction(char.encode( "iso-8859-1" ))
+        elif(self.__ObjFunction == True):
+            self.__CommObj.setObjFunction(self.IsString(strValue))
 
-        if(self.__ObjReadEnabled == True):
-            self.__CommObj.setObjReadEN(char.encode( "iso-8859-1" ))
+        elif(self.__ObjReadEnabled == True):
+            self.__CommObj.setObjReadEN(self.IsNumber(strValue))
 
-        if(self.__ObjWriteEnabled == True):
-            self.__CommObj.setObjWriteEN(char.encode( "iso-8859-1" ))
+        elif(self.__ObjWriteEnabled == True):
+            self.__CommObj.setObjWriteEN(self.IsNumber(strValue))
 
-        if(self.__ObjCommEnabled == True):
-            self.__CommObj.setObjCommEN(char.encode( "iso-8859-1" ))
+        elif(self.__ObjCommEnabled == True):
+            self.__CommObj.setObjCommEN(self.IsNumber(strValue))
 
-        if(self.__ObjTransEnabled == True):
-            self.__CommObj.setObjTransEN(char.encode( "iso-8859-1" ))
+        elif(self.__ObjTransEnabled == True):
+            self.__CommObj.setObjTransEN(self.IsNumber(strValue))
 
-        if(self.__ObjDisplayOrder == True):
-            self.__CommObj.setObjDisplOrder(char.encode( "iso-8859-1" ))
+        elif(self.__ObjDisplayOrder == True):
+            self.__CommObj.setObjDisplOrder(self.IsNumber(strValue))
 
-        if(self.__ParentParamValue == True):
-            self.__CommObj.setParentParaValue(char.encode( "iso-8859-1" ))
+        elif(self.__ParentParamValue == True):
+            self.__CommObj.setParentParaValue(self.IsNumber(strValue))
 
-        if(self.__ObjID == True):
-            self.__CommObj.setObjID(char.encode( "iso-8859-1" ))
+        elif(self.__ObjID == True):
+            self.__CommObj.setObjID(self.IsNumber(strValue))
 
-        if(self.__ParamID == True):
-            self.__CommObj.setParaID(char.encode( "iso-8859-1" ))
+        elif(self.__ParamID == True):
+            self.__CommObj.setParaID(self.IsNumber(strValue))
 
-        if(self.__ObjNumber == True):
-            self.__CommObj.setObjNumber(char.encode( "iso-8859-1" ))
+        elif(self.__ObjNumber == True):
+            self.__CommObj.setObjNumber(self.IsNumber(strValue))
 
-        if(self.__ObjType == True):
-            self.__CommObj.setObjType(char.encode( "iso-8859-1" ))
+        elif(self.__ObjType == True):
+            self.__CommObj.setObjType(self.IsNumber(strValue))
 
-        if(self.__ObjPriority == True):
-            self.__CommObj.setObjPriority(char.encode( "iso-8859-1" ))
+        elif(self.__ObjPriority == True):
+            self.__CommObj.setObjPriority(self.IsNumber(strValue))
 
-        if(self.__ObjUpdateEnabled == True):
-            self.__CommObj.setObjUpdateEN(char.encode( "iso-8859-1" ))
+        elif(self.__ObjUpdateEnabled == True):
+            self.__CommObj.setObjUpdateEN(self.IsNumber(strValue))
 
-        if(self.__ObjUniqueNumber == True):
-            self.__CommObj.setObjUniqueNo(char.encode( "iso-8859-1" ))
+        elif(self.__ObjUniqueNumber == True):
+            self.__CommObj.setObjUniqueNo(self.IsNumber(strValue))
+
+
+   #check for Number in parsed value
+    def IsNumber(self,strValue):
+        #print strValue
+        if(strValue.isdigit() == True):
+            return strValue
+        else:
+            return "0"
+
+    #check for String in parsed value
+    def IsString(self,strValue):
+
+        Value = strValue.replace('\\r\\n',' ')
+        Value = Value.replace('\\rn', ' ')
+        Value = Value.replace("'", ' ')
+        return Value
