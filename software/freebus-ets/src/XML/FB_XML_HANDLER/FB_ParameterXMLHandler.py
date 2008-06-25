@@ -487,8 +487,8 @@ class FB_ParameterXMLHandler():
     #check for String in parsed value
     def IsString(self,strValue):
 
-        Value = strValue.replace('\\r\\n',' ')
-        Value = Value.replace('\\rn', ' ')
-        Value = Value.replace("'", ' ')
-        Value = Value.replace("'", ' ')
-        return Value
+        #Value = strValue.replace('\\r\\n',' ')
+        #Value = Value.replace('\\rn', ' ')
+        #Value = Value.replace("'", ' ')
+        #Value = Value.replace("'", ' ')
+        return strValue

@@ -31,13 +31,8 @@ class FB_ParameterListV:
     #returns List of all values in a correct sql format
     def getSQLValueList(self):
 
-        List = "VALUES(" +  str(self.__ParameterTypeID3)   + "," + \
-                             str(self.__RealValue)         + "," + "'" + \
-                             self.__DisplayValue           + "'" + "," + \
-                             str(self.__DisplayOrder)      + "," + \
-                             str(self.__ParameterValueID)  + "," + \
-                             str(self.__BinaryValueLength) + ");"
-
+        List = (self.__ParameterTypeID3,self.__RealValue,self.__DisplayValue,self.__DisplayOrder,
+               self.__ParameterValueID,self.__BinaryValueLength)
 
 
 
@@ -73,9 +68,6 @@ class FB_ParameterListV:
             return self.__BinaryValueLength
 
 
-    #returns the maximum index of all three parts
-    def getMaxIndex(self):
-        return 6
 
 #---------------------------------------------------------------------------------
 #----------------------- ParameterList of values Handling ------------------------

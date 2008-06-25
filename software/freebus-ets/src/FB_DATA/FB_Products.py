@@ -40,22 +40,10 @@ class FB_Products:
     #returns List of all values in a correct sql format
     def getSQLValueList(self):
 
-        List = "VALUES(" +   str(self.__Product_ID) + "," + \
-                             str(self.__Manufacturer_ID) + "," + \
-                             str(self.__SymbolID) + "," + "'" + \
-                             self.__Product_Name + "'" + "," + \
-                             str(self.__Product_Version) + "," + \
-                             str(self.__Comp_Type) + "," + \
-                             str(self.__Comp_Attr) + "," + \
-                             str(self.__Bus_Current) + "," + "'" +  \
-                             self.__Product_Serial  + "'" + "," + \
-                             str(self.__CompTypeNo) + "," + "'" + \
-                             self.__ProductPic + "'" + "," + \
-                             str(self.__BCU_Type) + "," + \
-                             str(self.__Product_Handling) + "," + "'" + \
-                             self.__ProductDLL + "'" + "," + \
-                             str(self.__OrigManID) + ");"
-
+        List = (self.__Product_ID, self.__Manufacturer_ID, self.__SymbolID, self.__Product_Name,
+                self.__Product_Version,self.__Comp_Type, self.__Comp_Attr, self.__Bus_Current,
+                self.__Product_Serial, self.__CompTypeNo, self.__ProductPic, self.__BCU_Type,
+                self.__Product_Handling, self.__ProductDLL, self.__OrigManID)
 
         return List
 
@@ -124,8 +112,6 @@ class FB_Products:
          elif(Index == 15):
             return self.__OrigManID
 
-    def getMaxIndex(self):
-        return 15
 
 #**********************************************************************
     #Handling Product ID

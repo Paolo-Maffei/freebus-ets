@@ -28,7 +28,10 @@ dataPath = "..\\data\\"
 Database = "..\\data\\Freebus.db"
 
 
+
+
 Prefix = [" ", "Project","Building","Floor", "Room", "Junction"]
+DatabaseConnection = None        #general Databaseobjects
 
 #DragNDrop Idendifier
 DND_PROJECT = 1

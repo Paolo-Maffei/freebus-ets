@@ -42,29 +42,13 @@ class FB_CommObj:
     #returns List of all values in a correct sql format
     def getSQLValueList(self):
 
-        List = "VALUES(" +   str(self.__ProgID) + "," + "'" + \
-                             self.__ObjName     + "','" + \
-                             self.__ObjFunction + "'" + "," + \
-                             str(self.__ObjReadEnabled) + "," + \
-                             str(self.__ObjWriteEnabled) + "," + \
-                             str(self.__ObjCommEnabled) + "," + \
-                             str(self.__ObjTransEnabled) + "," + \
-                             str(self.__ObjDisplayOrder) + "," + \
-                             str(self.__ParentParamValue) + "," + \
-                             str(self.__ObjID) + "," + \
-                             str(self.__ParamID) + "," + \
-                             str(self.__ObjNumber) + "," + \
-                             str(self.__ObjType) + "," + \
-                             str(self.__ObjPriority) + "," + \
-                             str(self.__ObjUpdateEnabled) + "," + \
-                             str(self.__ObjUniqueNumber) + ");"
-
-
+        List = (self.__ProgID, self.__ObjName, self.__ObjFunction, self.__ObjReadEnabled, self.__ObjWriteEnabled,
+                self.__ObjCommEnabled, self.__ObjTransEnabled, self.__ObjDisplayOrder, self.__ParentParamValue,
+                self.__ObjID, self.__ParamID, self.__ObjNumber, self.__ObjType, self.__ObjPriority, self.__ObjUpdateEnabled,
+                self.__ObjUniqueNumber)
 
         return List
 
-    def getMaxIndex(self):
-        return 16
 
     def setCommObj(self,Index, Value):
 

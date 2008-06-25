@@ -41,22 +41,10 @@ class FB_Parameter:
     #returns List of all values in a correct sql format
     def getSQLValueList(self):
 
-        List = "VALUES(" +  str(self.__ProgramID)       + "," + \
-                             str(self.__ParameterTypeID) + "," + \
-                             str(self.__ParameterNumber) + "," + "'" + \
-                             self.__ParameterName        + "'" + "," + \
-                             str(self.__ParameterLowAccess)  + "," + \
-                             str(self.__ParameterHighAccess) + "," + \
-                             str(self.__ParameterSize)       + "," + \
-                             str(self.__ParameterDisplayOrder)  + "," + \
-                             str(self.__ParameterAddress)       + "," + \
-                             str(self.__ParameterBitOffset)     + "," + "'" + \
-                             self.__ParameterDescription  + "'" + "," + \
-                             str(self.__ParameterID)      + "," + \
-                             str(self.__ParParameterID)   + "," + \
-                             str(self.__ParameterDefault) + "," + \
-                             str(self.__PatchAlways)      + "," + \
-                             str(self.__AddressSpace)     + ");"
+        List = (self.__ProgramID,self.__ParameterTypeID,self.__ParameterNumber,self.__ParameterName,
+                self.__ParameterLowAccess,self.__ParameterHighAccess,self.__ParameterSize,self.__ParameterDisplayOrder,
+                self.__ParameterAddress,self.__ParameterBitOffset,self.__ParameterDescription,self.__ParameterID,
+                self.__ParParameterID,self.__ParameterDefault,self.__PatchAlways,self.__AddressSpace)
 
 
         return List
@@ -133,10 +121,6 @@ class FB_Parameter:
          elif(Index == 16):
             return self.__AddressSpace
 
-
-    #returns the maximum index of all three parts
-    def getMaxIndex(self):
-        return 16
 
 #**********************************************************************
     #Handling PROGRAM_ID

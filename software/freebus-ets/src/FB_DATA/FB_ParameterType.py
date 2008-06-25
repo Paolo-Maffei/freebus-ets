@@ -33,14 +33,8 @@ class FB_ParameterType:
     def getSQLValueList(self):
 
 
-        List = "VALUES(" +  str(self.__ParameterTypeID2) + "," + \
-                             str(self.__AtomicTypeNumber) + "," + \
-                             str(self.__ProgramID2)       + "," + "'" + \
-                             self.__ParameterTypeName     + "'" + "," + \
-                             str(self.__ParameterTypeLowAccess)  + "," + \
-                             str(self.__ParameterTypeHighAccess) + "," + \
-                             str(self.__ParameterTypeSize)       + ");"
-
+        List = (self.__ParameterTypeID2,self.__AtomicTypeNumber,self.__ProgramID2,self.__ParameterTypeName,
+                self.__ParameterTypeLowAccess,self.__ParameterTypeHighAccess,self.__ParameterTypeSize)
 
         return List
 #---------------------------------------------------------------------------------
@@ -82,9 +76,6 @@ class FB_ParameterType:
         elif(Index == 7):
             return self.__ParameterTypeSize
 
-    #returns the maximum index of all three parts
-    def getMaxIndex(self):
-        return 7
 
 #---------------------------------------------------------------------------------
 #----------------------- Parameter Type Handling --------------------------------------

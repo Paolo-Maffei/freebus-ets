@@ -29,6 +29,7 @@ import gtk
 import gtk.glade
 from GUI import FB_NewProjectWindow
 from GUI import FB_OpenProjectWindow
+from GUI import FB_DlgDeviceData
 from GUI.Tree import FB_ArchitecturalTree
 from FB_PROJECT import FB_ArchitecturalDataModel
 from XML import FB_XMLConverter
@@ -67,7 +68,7 @@ class FB_MainFrame:
         self.__GladeObj = gtk.glade.XML(Global.GUIPath  + "freebus.glade","MainFrame")
         #get widget of window
         self.window = self.__GladeObj.get_widget("MainFrame")
-
+        #self.window.width = self.__WindowWidth
 
         if(self.__GladeObj == None):
            self.__LogObj.NewLog("Error at intializing GUI-Interface (Glade-Object-MainFrame)",1)
@@ -130,6 +131,7 @@ class FB_MainFrame:
                 "on_button_drag_data_get" : self.DragDataGet,
                 "on_ConvertDeviceData_activate":self.Converter,
                 "on_ImportXMLDeviceData_activate":self.ImportXML,
+                "on_ShowDeviceData_activate":self.ShowDeviceData,
 
 
                 #ProjectTree
@@ -166,7 +168,9 @@ class FB_MainFrame:
             #print "Fehler save "
             self.__LogObj.NewLog("Error at saving Projectdata -> CurProjectObj is Nonetype",1)
 
-
+    #show dlg device data
+    def ShowDeviceData(self,widget, data=None):
+        FB_DlgDeviceData.FB_DlgDeviceData(self.__LogObj)
     #start the converter dialog
     def Converter(self,widget, data=None):
         XML = FB_XMLConverter.FB_XMLConverter(self.__LogObj)
@@ -330,6 +334,9 @@ class FB_MainFrame:
 
     #quitt Application
     def QuittApp(self,widget, data=None):
+
+        Global.DatabaseConnection.close()
+
         if(self.__CurProjectObj <> None):
             if(self.__CurProjectObj.isChanged == True):
                 msgbox = gtk.MessageDialog(parent = self.window, buttons = gtk.BUTTONS_YES_NO,

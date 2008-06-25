@@ -54,42 +54,15 @@ class FB_Mask:
     #returns List of all values in a correct sql format
     def getSQLValueList(self):
 
-        List = "VALUES(" +   str(self.__MaskID)          + "," + \
-                             str(self.__MaskVersion)         + "," + \
-                             str(self.__UserRamStart)     + "," + \
-                             str(self.__UserRamEnd)  + "," + \
-                             str(self.__UserEEpromStart) + "," + \
-                             str(self.__UserEEpromEnd)  + "," + \
-                             str(self.__RunErrorAddress) + "," + \
-                             str(self.__Address_Tab_Addr) + "," + \
-                             str(self.__AssocTab_Addr) + "," + \
-                             str(self.__CommsTab_Addr) + "," + \
-                             str(self.__Manufact_Data_Addr) + "," + \
-                             str(self.__Manufact_Data_Size) + "," + \
-                             str(self.__Manufact_ID_Addr) + "," + \
-                             str(self.__Rout_Addr) + "," + \
-                             str(self.__Manufact_ID_Protetect) + ",'" + \
-                             self.__Mask_Version_Name + "','" + \
-                             self.__Mask_EEpromData + "'," + \
-                             str(self.__Mask_Data_Length) + "," + \
-                             str(self.__Address_Tab) + "," + \
-                             str(self.__Assoc_Tab) + "," + \
-                             str(self.__App_Program) + "," + \
-                             str(self.__PEI_Program) + "," + \
-                             str(self.__Load_Control_Addr) + "," + \
-                             str(self.__Run_Control_Addr) + "," + \
-                             str(self.__Port_Addr_Protect) + "," + \
-                             str(self.__Medium_TypeNo) + "," + \
-                             str(self.__BCU_TypeNo) + ");"
-
-
-
+        List = (self.__MaskID,self.__MaskVersion,self.__UserRamStart,self.__UserRamEnd,self.__UserEEpromStart,
+                self.__UserEEpromEnd,self.__RunErrorAddress,self.__Address_Tab_Addr,self.__AssocTab_Addr,
+                self.__CommsTab_Addr,self.__Manufact_Data_Addr,self.__Manufact_Data_Size,self.__Manufact_ID_Addr,
+                self.__Rout_Addr,self.__Manufact_ID_Protetect,self.__Mask_Version_Name,self.__Mask_EEpromData,
+                self.__Mask_Data_Length,self.__Address_Tab,self.__Assoc_Tab,self.__App_Program,self.__PEI_Program,
+                self.__Load_Control_Addr,self.__Run_Control_Addr,self.__Port_Addr_Protect,self.__Medium_TypeNo,
+                self.__BCU_TypeNo)
 
         return List
-
-
-    def getMaxIndex(self):
-        return 27
 
     def setMask(self,Index, Value):
         if(Index == 1):

@@ -36,22 +36,13 @@ class FB_Prod2Prog:
     #returns List of all values in a correct sql format
     def getSQLValueList(self):
 
-        List = "VALUES(" +   str(self.__Prod2Prog_ID) + "," + \
-                             str(self.__Product_ID)   + "," + \
-                             str(self.__Program_ID)   + "," + \
-                             str(self.__Prod2Prog_Status_Code)  + ",'" + \
-                             self.__Reg_Number + "','" + \
-                             self.__Reg_Year  + "','" + \
-                             self.__Orig_Reg_Number + "','" + \
-                             self.__Orig_Reg_Year + "','" + \
-                             self.__Reg_TS + "');"
+        List = (self.__Prod2Prog_ID,self.__Product_ID,self.__Program_ID,self.__Prod2Prog_Status_Code,
+                self.__Reg_Number,self.__Reg_Year,self.__Orig_Reg_Number,self.__Orig_Reg_Year,self.__Reg_TS)
 
 
         return List
 
 
-    def getMaxIndex(self):
-        return 9
 
     def setProd2Prog(self,Index, Value):
         if(Index == 1):

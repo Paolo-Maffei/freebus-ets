@@ -25,14 +25,9 @@ class FB_Manufacturer:
     #returns List of all values in a correct sql format
     def getSQLValueList(self):
 
-        List = "VALUES(" +   str(self.__ManID) + "," + "'" + \
-                             self.__ManName + "');"
-
+        List = (self.__ManID,self.__ManName)
 
         return List
-
-    def getMaxIndex(self):
-        return 2
 
     def setManufacturer(self,Index, Value):
         if(Index == 1):
@@ -62,4 +57,4 @@ class FB_Manufacturer:
     def getManufactID(self):
         return self.__ManID
 
- 
+

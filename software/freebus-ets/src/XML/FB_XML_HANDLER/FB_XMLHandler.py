@@ -25,6 +25,7 @@ from XML.FB_XML_HANDLER import FB_CommXMLHandler
 from XML.FB_XML_HANDLER import FB_Prod2ProgrXMLHandler
 from XML.FB_XML_HANDLER import FB_MaskXMLHandler
 from XML.FB_XML_HANDLER import FB_ParameterXMLHandler
+from XML.FB_XML_HANDLER import FB_CatalogXMLHandler
 
 ##Class for Extracting Products from FB-XML Productfiles
 class FB_XMLHandler(xml.sax.ContentHandler):
@@ -38,6 +39,8 @@ class FB_XMLHandler(xml.sax.ContentHandler):
     __prod2progr_XMLHandler = None   #privtae object of FB_Prod2ProgrXMLHandler
     __mask_XMLHandler = None         #private object of FB_MaskXMLHandler
     __param_XMLHandler = None        #private object of FB_ParameterXMLHandler
+    __catalog_XMLHandler = None      #private object of FB_CatalogXMLHandler
+
     __locator = None
 
     #Constructor for FB_XMLHandler.
@@ -56,6 +59,8 @@ class FB_XMLHandler(xml.sax.ContentHandler):
         self.__mask_XMLHandler = FB_MaskXMLHandler.FB_MaskXMLHandler(self.__LogObj)
         #Parameter object Handling
         self.__param_XMLHandler = FB_ParameterXMLHandler.FB_ParameterXMLHandler(self.__LogObj)
+        #CatalogEntry object Handling
+        self.__catalog_XMLHandler = FB_CatalogXMLHandler.FB_CatalogXMLHandler(self.__LogObj)
 
     #return List of Instances of type FB_Products
     def getProductList(self):
@@ -93,6 +98,9 @@ class FB_XMLHandler(xml.sax.ContentHandler):
     def getParameterList(self):
         return self.__param_XMLHandler.getParameterList()
 
+    #return List of Instances of type FB_CatalogEntry
+    def getCatalogEntry(self):
+        return self.__catalog_XMLHandler.getCatalogList()
 
     #return Locator-Data (position of parser)
     def getLocator(self):
@@ -131,6 +139,7 @@ class FB_XMLHandler(xml.sax.ContentHandler):
             self.__prod2progr_XMLHandler.startElement(eName, attrs)
             self.__mask_XMLHandler.startElement(eName, attrs)
             self.__param_XMLHandler.startElement(eName, attrs)
+            self.__catalog_XMLHandler.startElement(eName, attrs)
 
         except SAXException:
             print "Error again"
@@ -143,6 +152,7 @@ class FB_XMLHandler(xml.sax.ContentHandler):
             self.__prod2progr_XMLHandler.endElement(eName)
             self.__mask_XMLHandler.endElement(eName)
             self.__param_XMLHandler.endElement(eName)
+            self.__catalog_XMLHandler.endElement(eName)
 
         except SAXException:
             print "Error again"
@@ -156,6 +166,7 @@ class FB_XMLHandler(xml.sax.ContentHandler):
             self.__prod2progr_XMLHandler.characters(char)
             self.__mask_XMLHandler.characters(char)
             self.__param_XMLHandler.characters(char)
+            self.__catalog_XMLHandler.characters(char)
 
         except SAXException:
              print "Error again"

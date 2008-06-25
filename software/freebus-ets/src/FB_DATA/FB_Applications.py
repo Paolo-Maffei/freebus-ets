@@ -58,44 +58,16 @@ class FB_Apps:
     #returns List of all values in a correct sql format
     def getSQLValueList(self):
 
-        List = "VALUES(" +   str(self.__ProgID) + "," + \
-                             str(self.__SymbolID) + "," + \
-                             str(self.__MaskID) + "," + "'" + \
-                             self.__ProgName + "'" + ",'" + \
-                             self.__ProgVersion + "'" + "," + \
-                             str(self.__ProgVersionNo) + "," + \
-                             str(self.__Linkable)   + "," + \
-                             str(self.__DevType)    + "," + \
-                             str(self.__PEIType)    + "," + \
-                             str(self.__AddTabsize) + "," + \
-                             str(self.__AssTabAddr) + "," + \
-                             str(self.__AssTsize)   + "," + \
-                             str(self.__ComTabAddr) + "," + \
-                             str(self.__ComTabsize) + "," + "'" + \
-                             self.__ProgSN          + "'" + "," + \
-                             str(self.__AppManID)   + "," + "'" + \
-                             self.__EEPROMData      + "'" + "," + \
-                             str(self.__DataLength) + "," + "'" + \
-                             self.__S19File         + "'" + ",'" + \
-                             self.__MapFile         + "'" + "," + \
-                             str(self.__AssemblerID) + "," + "'" + \
-                             self.__HelpFileName     + "'" + "," + \
-                             str(self.__ContextID) + "," + \
-                             str(self.__DynamicMng) + "," + \
-                             str(self.__ProgType) + "," + \
-                             str(self.__RAMSize) + "," + \
-                             str(self.__OrgManID) + "," + \
-                             str(self.__APIVersion) + "," + \
-                             str(self.__ProgStyle) + "," + \
-                             str(self.__PollMaster) + "," + \
-                             str(self.__NoPollGroups) + "," + \
-                             str(self.__AllowedInETS) + "," + \
-                             str(self.__MinEtsVersion) + ");"
+        List = (self.__ProgID, self.__SymbolID, self.__MaskID, self.__ProgName, self.__ProgVersion,
+                self.__ProgVersionNo, self.__Linkable, self.__DevType, self.__PEIType, self.__AddTabsize,
+                self.__AssTabAddr, self.__AssTsize, self.__ComTabAddr, self.__ComTabsize, self.__ProgSN,
+                self.__AppManID, self.__EEPROMData, self.__DataLength, self.__S19File, self.__MapFile,
+                self.__AssemblerID, self.__HelpFileName, self.__ContextID, self.__DynamicMng, self.__ProgType,
+                self.__RAMSize, self.__OrgManID,self.__APIVersion, self.__ProgStyle,self.__PollMaster,
+                self.__NoPollGroups, self.__AllowedInETS,self.__MinEtsVersion)
 
         return List
 
-    def getMaxIndex(self):
-        return 33
 
     def setApp(self,Index, Value):
         if(Index == 1):
