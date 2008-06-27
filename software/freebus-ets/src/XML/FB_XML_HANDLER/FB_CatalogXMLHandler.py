@@ -240,7 +240,7 @@ class FB_CatalogXMLHandler():
     #check for String in parsed value
     def IsString(self,strValue):
 
-        #Value = strValue.replace('\\r\\n',' ')
-        #Value = Value.replace('\\rn', ' ')
-        #Value = Value.replace("'", ' ')
-        return strValue
+        Value = strValue.replace('\\r\\n',' ')
+        Value = Value.replace('\\rn', ' ')
+        Value = Value.replace("'", ' ')
+        return Value

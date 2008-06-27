@@ -24,7 +24,7 @@ opts = {"py2exe": {
                         }} 
 
 
-setup(windows=[{"script" : 'src/Freebus-ETS.py'}],
+setup(windows=[{"script" : '../src/Freebus-ETS.py'}],
 			options=opts,
 			data_files=data_files,
 			#packages=packages,
