@@ -10,6 +10,7 @@
 #Source Datei: FB_CommunicationObj.py
 #Version: V0.1 , 31.12.2007
 #Version: V0.2 , 04.06.2008
+#Version: V0.3 , 20.07.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #===============================================================================
@@ -29,11 +30,17 @@ class FB_CommObj:
     __ObjID = 0            #OBJECT_ID
     __ParamID = 0          #PARAMETER_ID
     __ObjNumber = 0        #OBJECT_NUMBER
+    __ObjDescription = ""  #OBJECT_DESCRIPTION    NEU
     __ObjType = 0          #OBJECT_TYPE
     __ObjPriority = 0      #OBJECT_PRIORITY
     __ObjUpdateEnabled = 0 #OBJECT_UPDATEENABLED
     __ObjUniqueNumber = 0  #OBJECT_UNIQUE_NUMBER
+    __EIBDataTypeCode = 0  #EIB_DATA_TYPE_CODE        NEU
+    __EIBDataSubTypeCode = 0 #EIB_DATA_SUBTYPE_CODE   NEU
+    __ObjReadOnInitEN = 0  #OBJECT_READONINITENABLED  NEU
+
     __return = None
+
 
     def __init__(self):
         #print "okk"
@@ -44,8 +51,8 @@ class FB_CommObj:
 
         List = (self.__ProgID, self.__ObjName, self.__ObjFunction, self.__ObjReadEnabled, self.__ObjWriteEnabled,
                 self.__ObjCommEnabled, self.__ObjTransEnabled, self.__ObjDisplayOrder, self.__ParentParamValue,
-                self.__ObjID, self.__ParamID, self.__ObjNumber, self.__ObjType, self.__ObjPriority, self.__ObjUpdateEnabled,
-                self.__ObjUniqueNumber)
+                self.__ObjID, self.__ParamID, self.__ObjNumber,self.__ObjDescription ,self.__ObjType, self.__ObjPriority, self.__ObjUpdateEnabled,
+                self.__ObjUniqueNumber,self.__EIBDataTypeCode,self.__EIBDataSubTypeCode, self.__ObjReadOnInitEN)
 
         return List
 
@@ -77,13 +84,22 @@ class FB_CommObj:
         elif(Index == 12):
             self.__ObjNumber = Value
         elif(Index == 13):
-            self.__ObjType = Value
+            self.__ObjDescription = Value
         elif(Index == 14):
-            self.__ObjPriority = Value
+            self.__ObjType = Value
         elif(Index == 15):
-            self.__ObjUpdateEnabled = Value
+            self.__ObjPriority = Value
         elif(Index == 16):
+            self.__ObjUpdateEnabled = Value
+        elif(Index == 17):
             self.__ObjUniqueNumber = Value
+        elif(Index == 18):
+            self.__EIBDataTypeCode = Value
+        elif(Index == 19):
+            self.__EIBDataSubTypeCode = Value
+        elif(Index == 20):
+            self.__ObjReadOnInitEN = Value
+
 
     def getCommObj(self,Index):
         if(Index == 1):
@@ -111,13 +127,21 @@ class FB_CommObj:
         elif(Index == 12):
             return self.__ObjNumber
         elif(Index == 13):
-            return self.__ObjType
+            return self.__ObjDescription
         elif(Index == 14):
-            return self.__ObjPriority
+            return self.__ObjType
         elif(Index == 15):
-            return self.__ObjUpdateEnabled
+            return self.__ObjPriority
         elif(Index == 16):
+            return self.__ObjUpdateEnabled
+        elif(Index == 17):
             return self.__ObjUniqueNumber
+        elif(Index == 18):
+            return self.__EIBDataTypeCode
+        elif(Index == 19):
+            return self.__EIBDataSubTypeCode
+        elif(Index == 20):
+            return self.__ObjReadOnInitEN
 
 #**********************************************************************
     #Handling PROGRAM_ID
@@ -130,7 +154,6 @@ class FB_CommObj:
     #Handling OBJECT_NAME
     def setObjName(self,O_Name):
         self.__ObjName = O_Name
-
 
     def getObjName(self):
         return self.__ObjName
@@ -216,6 +239,14 @@ class FB_CommObj:
         return self.__ObjNumber
 
 #**********************************************************************
+    #OBJECT_DESCRIPTION
+    def setObjDescription(self,O_Des):
+        self.__ObjDescription = O_Des
+
+    def getObjDescription(self):
+        return self.__ObjDescription
+
+#**********************************************************************
     #OBJECT_TYPE
     def setObjType(self,O_Type):
         self.__ObjType = O_Type
@@ -246,6 +277,30 @@ class FB_CommObj:
 
     def getObjUniqueNo(self):
         return self.__ObjUniqueNumber
+
+#**********************************************************************
+    #EIB_DATA_TYPE_CODE
+    def setEIBDataTypeCode(self,EIBTypeCode):
+        self.__EIBDataTypeCode = EIBTypeCode
+
+    def getEIBDataTypeCode(self):
+        return self.__EIBDataTypeCode
+
+#**********************************************************************
+   #EIB_DATA_SUBTYPE_CODE
+    def setEIBDataSubTypeCode(self,EIBSubTypeCode):
+        self.__EIBDataSubTypeCode = EIBSubTypeCode
+
+    def getEIBDataSubTypeCode(self):
+        return self.__EIBDataSubTypeCode
+
+#**********************************************************************
+  #OBJECT_READONINITENABLED
+    def setObjReadOnInitEN(self,O_ReadEN):
+        self.__ObjReadOnInitEN = O_ReadEN
+
+    def getObjReadOnInitEN(self):
+        return self.__ObjReadOnInitEN
 
 #**********************************************************************
 

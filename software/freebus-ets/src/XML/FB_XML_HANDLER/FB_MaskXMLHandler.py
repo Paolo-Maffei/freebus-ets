@@ -11,6 +11,7 @@
 #Version: V0.1 , 25.12.2007
 #Version: V0.2 , 04.06.2008
 #Version: V0.3 , 15.06.2008
+#Version: V0.4 , 20.07.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #
@@ -52,9 +53,16 @@ class FB_MaskXMLHandler():
     __isPEI_Program = False           #PEI_PROGRAM_LCS
     __isLoad_Control_Addr = False     #LOAD_CONTROL_ADDRESS
     __isRun_Control_Addr = False      #RUN_CONTROL_ADDRESS
+    __isExtMemoryStart = False        #EXTERNAL_MEMORY_START    NEU
+    __isExtMemoryEnd = False          #EXTERNAL_MEMORY_END      NEU
+    __isAppProgramRCS = False         #APPLICATION_PROGRAM_RCS  NEU
+    __isPEIProgramRCS = False         #PEI_PROGRAM_RCS          NEU
+    __isPortADDR = False              #PORT_A_DDR               NEU
     __isPort_Addr_Protect = False     #PORT_ADDRESS_PROTECTED
     __isMedium_TypeNo = False         #MEDIUM_TYPE_NUMBER
+    __isMedium_TypeNo2 = False        #MEDIUM_TYPE_NUMBER2      NEU
     __isBCU_TypeNo = False            #BCU_TYPE_NUMBER
+
 
 
     #Constructor for FB_MaskXMLHandler.
@@ -187,6 +195,26 @@ class FB_MaskXMLHandler():
                 if(self.__isMask == True):
                     self.__isRun_Control_Addr = True
 
+            elif(eName == "EXTERNAL_MEMORY_START"):
+                if(self.__isMask == True):
+                    self.__isExtMemoryStart = True
+
+            elif(eName == "EXTERNAL_MEMORY_END"):
+                if(self.__isMask == True):
+                    self.__isExtMemoryEnd = True
+
+            elif(eName == "APPLICATION_PROGRAM_RCS"):
+                if(self.__isMask == True):
+                    self.__isAppProgramRCS = True
+
+            elif(eName == "PEI_PROGRAM_RCS"):
+                if(self.__isMask == True):
+                    self.__isPEIProgramRCS = True
+
+            elif(eName == "PORT_A_DDR"):
+                if(self.__isMask == True):
+                    self.__isPortADDR = True
+
             elif(eName == "PORT_ADDRESS_PROTECTED"):
                 if(self.__isMask == True):
                     self.__isPort_Addr_Protect = True
@@ -194,6 +222,10 @@ class FB_MaskXMLHandler():
             elif(eName == "MEDIUM_TYPE_NUMBER"):
                 if(self.__isMask == True):
                     self.__isMedium_TypeNo = True
+
+            elif(eName == "MEDIUM_TYPE_NUMBER2"):
+                if(self.__isMask == True):
+                    self.__isMedium_TypeNo2 = True
 
             elif(eName == "BCU_TYPE_NUMBER"):
                 if(self.__isMask == True):
@@ -311,6 +343,27 @@ class FB_MaskXMLHandler():
                 if(self.__isMask == True):
                     self.__isRun_Control_Addr = False
 
+            elif(eName == "EXTERNAL_MEMORY_START"):
+                if(self.__isMask == True):
+                    self.__isExtMemoryStart = False
+
+            elif(eName == "EXTERNAL_MEMORY_END"):
+                if(self.__isMask == True):
+                    self.__isExtMemoryEnd = False
+
+            elif(eName == "APPLICATION_PROGRAM_RCS"):
+                if(self.__isMask == True):
+                    self.__isAppProgramRCS = False
+
+            elif(eName == "PEI_PROGRAM_RCS"):
+                if(self.__isMask == True):
+                    self.__isPEIProgramRCS = False
+
+            elif(eName == "PORT_A_DDR"):
+                if(self.__isMask == True):
+                    self.__isPortADDR = False
+
+
             elif(eName == "PORT_ADDRESS_PROTECTED"):
                 if(self.__isMask == True):
                     self.__isPort_Addr_Protect = False
@@ -318,6 +371,10 @@ class FB_MaskXMLHandler():
             elif(eName == "MEDIUM_TYPE_NUMBER"):
                 if(self.__isMask == True):
                     self.__isMedium_TypeNo = False
+
+            elif(eName == "MEDIUM_TYPE_NUMBER2"):
+                if(self.__isMask == True):
+                    self.__isMedium_TypeNo2 = False
 
             elif(eName == "BCU_TYPE_NUMBER"):
                 if(self.__isMask == True):
@@ -404,6 +461,21 @@ class FB_MaskXMLHandler():
 
         elif(self.__isRun_Control_Addr == True):
             self.__Mask.setRunControlAddr(self.IsNumber(strValue))
+
+        elif(self.__isExtMemoryStart == True):
+            self.__Mask.setExtMemoryStart(self.IsNumber(strValue))
+
+        elif(self.__isExtMemoryEnd == True):
+            self.__Mask.setExtMemoryEnd(self.IsNumber(strValue))
+
+        elif(self.__isAppProgramRCS == True):
+            self.__Mask.setAppProgramRCS(self.IsNumber(strValue))
+
+        elif(self.__isPEIProgramRCS == True):
+            self.__Mask.setPEIProgramRCS(self.IsNumber(strValue))
+
+        elif(self.__isPortADDR == True):
+            self.__Mask.setPortA_Addr(self.IsNumber(strValue))
 
         elif(self.__isPort_Addr_Protect == True):
             self.__Mask.setPortAddrProtected(self.IsNumber(strValue))

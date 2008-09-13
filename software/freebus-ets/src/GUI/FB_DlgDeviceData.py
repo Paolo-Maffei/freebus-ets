@@ -27,6 +27,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 import gtk.glade
+from FB_DATA import FB_ParameterHandling
 
 class FB_DlgDeviceData:
 
@@ -45,7 +46,8 @@ class FB_DlgDeviceData:
     __productFrameLabel = None       #widget of FrameLabel of product List
     __productListStore = None        #ListModel interface
     __productListSelection = None    #Selection of List
-    __SelectedProduct = 0            #current selected Product
+    __SelectedProduct = 0            #item number current selected Product
+    __ProductNameList = None         #Product of Database Content
 
     #object for Application handling
     __appList = None             #widget of Application List
@@ -58,6 +60,9 @@ class FB_DlgDeviceData:
     __SelectedApplication = 0    #current selected Application (ListRow)
     __ApplicationNameList = []   #Application of Database Content
 
+
+    #instance of parameter Handling
+    __ParamHandling = None
 
     def __init__(self, LogObj):
     # create a new window
@@ -220,11 +225,15 @@ class FB_DlgDeviceData:
         except:
             pass
 
-        ProdList = Cursor.fetchall()
-        #print ProdList
-        if(len(ProdList) > 0):
-            for i in range(len(ProdList)):
-                ListIterator = self.__productListStore.append([image,unicode(ProdList[i][4],"iso-8859-1"),ProdList[i][1]])
+        if(self.__ProductNameList <> None):
+            del self.__ProductNameList
+
+        self.__ProductNameList = Cursor.fetchall()
+
+        print self.__ProductNameList
+        if(len(self.__ProductNameList) > 0):
+            for i in range(len(self.__ProductNameList)):
+                ListIterator = self.__productListStore.append([image,unicode(self.__ProductNameList[i][5],"iso-8859-1"),self.__ProductNameList[i][1]])
 
         #no items found...
         else:
@@ -251,6 +260,9 @@ class FB_DlgDeviceData:
             ProdProgrList = Cursor.fetchall()
         except:
             pass
+
+        #delete entire List
+        del self.__ApplicationNameList[0:len(self.__ApplicationNameList)]
 
         #second: create Application List
         for i in range(len(ProdProgrList)):
@@ -284,8 +296,6 @@ class FB_DlgDeviceData:
             AppList = Cursor.fetchall()
         except:
             pass
-
-        #
 
         AppName = "<b>Applikationen von: " + AppList[0][4] + "</b>"
         self.__lblApps.set_markup(unicode(AppName ,"ISO-8859-1"))
@@ -325,10 +335,12 @@ class FB_DlgDeviceData:
          #get current selection
         self.__productListSelection =  self.__productList.get_selection()
         (model, iter) = self.__productListSelection.get_selected()
-        #get Product-ID (column = 2)
-        self.__SelectedProduct = self.__productListStore.get_value(iter, 2)
+        #get path to find out which item has been selected
+        path = self.__productListStore.get_path(iter)
+        #write item number into private variable
+        self.__SelectedProduct = path[0]
         #return Product ID
-        self.UpdateAppList(self.__SelectedProduct)
+        self.UpdateAppList(self.__productListStore.get_value(iter, 2))
 
     #selection of Application has been changed
     def ListAppsChange(self, widget, data=None):
@@ -339,6 +351,52 @@ class FB_DlgDeviceData:
         #return item-number in listcontrol
         self.__SelectedApplication = path[0]
         self.UpdateAppInformation(self.__SelectedApplication)
+
+
+        #create new Instance of Parameter-Handling class, check if instance of type Application is alreday existing
+        if(self.__ParamHandling <> None):
+            del self.__ParamHandling
+        self.__ParamHandling = FB_ParameterHandling.FB_ParameterHandling(self.__ProductNameList[self.__SelectedProduct],self.__ApplicationNameList[self.__SelectedApplication][0])
+
+
+        #Test to find out the correct number of communication object according to default parameter set
+        #1. program id of current application
+        ProgramID = self.__ApplicationNameList[self.__SelectedApplication][0][0]
+        #2. get paremeter_id of choosen application
+        sql = "select * from parameter_type where program_id = " + str(ProgramID) + " and atomic_type_number = 0"
+        Cursor = Global.DatabaseConnection.cursor()
+        try:
+            Cursor.execute(sql)
+            ParaTypeIDList = Cursor.fetchall()
+            ParameterList = []
+            sql = "select * from parameter where ("
+            for i in range(len(ParaTypeIDList)):
+                #get set of parameter with given parameter_type_id
+                sql = sql + "parameter_type_id = " + str(ParaTypeIDList[i][0])
+                if i < len(ParaTypeIDList) - 1:
+                    sql = sql + " or "
+
+            sql = sql + ") and par_parameter_id = 0 order by parameter_display_order"
+
+            #get sql-data
+            try:
+                Cursor.execute(sql)
+                ParameterList.append(Cursor.fetchall())
+
+            except:
+                pass
+
+            #iterate outer List
+
+            for j in range(len(ParameterList)):
+                for k in range(len(ParameterList[j])):
+                    #show parameter Main List (left side of original ETS)
+                    #print ParameterList[j][k][10]
+                    pass
+
+        except:
+            pass
+
 
 
     def Apply(self,widget, data=None):

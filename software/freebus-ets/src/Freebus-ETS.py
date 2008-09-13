@@ -31,6 +31,7 @@ LogFileName = Global.LogPath + 'MainFrame.log'
 Options = 0
 
 #Databaseconnection
+
 Global.DatabaseConnection = sqlite3.connect(Global.Database)
 Global.DatabaseConnection.text_factory = str
 

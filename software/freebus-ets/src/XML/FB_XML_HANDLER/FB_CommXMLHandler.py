@@ -11,6 +11,7 @@
 #Version: V0.1 , 31.12.2007
 #Version: V0.2 , 04.06.2008
 #Version: V0.3 , 15.06.2008
+#Version: V0.4 , 20.07.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #
@@ -27,22 +28,27 @@ class FB_CommXMLHandler():
     __CommObj = None             #object of type FB_CommunicationObj
     __CommunicationObjects = []  #List of Instances with communication-objects
 
-    __ProgID = False           #PROGRAM_ID
-    __ObjName = False          #OBJECT_NAME
-    __ObjFunction = False      #OBJECT_FUNCTION
-    __ObjReadEnabled = False   #OBJECT_READENABLED
-    __ObjWriteEnabled = False  #OBJECT_WRITEENABLED
-    __ObjCommEnabled = False   #OBJECT_COMMENABLED
-    __ObjTransEnabled = False  #OBJECT_TRANSENABLED
-    __ObjDisplayOrder = False  #OBJECT_DISPLAY_ORDER
-    __ParentParamValue = False #PARENT_PARAMETER_VALUE
-    __ObjID = False            #OBJECT_ID
-    __ParamID = False          #PARAMETER_ID
-    __ObjNumber = False        #OBJECT_NUMBER
-    __ObjType = False          #OBJECT_TYPE
-    __ObjPriority = False      #OBJECT_PRIORITY
-    __ObjUpdateEnabled = False #OBJECT_UPDATEENABLED
-    __ObjUniqueNumber = False  #OBJECT_UNIQUE_NUMBER
+    __ProgID = False               #PROGRAM_ID
+    __ObjName = False              #OBJECT_NAME
+    __ObjFunction = False          #OBJECT_FUNCTION
+    __ObjReadEnabled = False       #OBJECT_READENABLED
+    __ObjWriteEnabled = False      #OBJECT_WRITEENABLED
+    __ObjCommEnabled = False       #OBJECT_COMMENABLED
+    __ObjTransEnabled = False      #OBJECT_TRANSENABLED
+    __ObjDisplayOrder = False      #OBJECT_DISPLAY_ORDER
+    __ParentParamValue = False     #PARENT_PARAMETER_VALUE
+    __ObjID = False                #OBJECT_ID
+    __ParamID = False              #PARAMETER_ID
+    __ObjNumber = False            #OBJECT_NUMBER
+    __ObjDescription = False       #OBJECT_DESCRIPTION    NEU
+    __ObjType = False              #OBJECT_TYPE
+    __ObjPriority = False          #OBJECT_PRIORITY
+    __ObjUpdateEnabled = False     #OBJECT_UPDATEENABLED
+    __ObjUniqueNumber = False      #OBJECT_UNIQUE_NUMBER
+    __EIBDataTypeCode = False      #EIB_DATA_TYPE_CODE        NEU
+    __EIBDataSubTypeCode = False   #EIB_DATA_SUBTYPE_CODE   NEU
+    __ObjReadOnInitEN = False      #OBJECT_READONINITENABLED  NEU
+
 
 
     #Constructor for FB_CommXMLHandler.
@@ -127,6 +133,10 @@ class FB_CommXMLHandler():
                 if(self.__isCommObj == True):
                     self.__ObjNumber = True
 
+            elif(eName == "OBJECT_DESCRIPTION"):
+                if(self.__isCommObj == True):
+                    self.__ObjDescription = True
+
             elif(eName == "OBJECT_TYPE"):
                 if(self.__isCommObj == True):
                     self.__ObjType = True
@@ -142,6 +152,19 @@ class FB_CommXMLHandler():
             elif(eName == "OBJECT_UNIQUE_NUMBER"):
                 if(self.__isCommObj == True):
                     self.__ObjUniqueNumber = True
+
+            elif(eName == "EIB_DATA_TYPE_CODE"):
+                if(self.__isCommObj == True):
+                    self.__EIBDataTypeCode = True
+
+            elif(eName == "EIB_DATA_SUBTYPE_CODE"):
+                if(self.__isCommObj == True):
+                    self.__EIBDataSubTypeCode = True
+
+            elif(eName == "OBJECT_READONINITENABLED"):
+                if(self.__isCommObj == True):
+                    self.__ObjReadOnInitEN = True
+
 
 
         except SAXException:
@@ -206,6 +229,10 @@ class FB_CommXMLHandler():
                 if(self.__isCommObj == True):
                     self.__ObjNumber = False
 
+            elif(eName == "OBJECT_DESCRIPTION"):
+                if(self.__isCommObj == True):
+                    self.__ObjDescription = False
+
             elif(eName == "OBJECT_TYPE"):
                 if(self.__isCommObj == True):
                     self.__ObjType = False
@@ -221,6 +248,19 @@ class FB_CommXMLHandler():
             elif(eName == "OBJECT_UNIQUE_NUMBER"):
                 if(self.__isCommObj == True):
                     self.__ObjUniqueNumber = False
+
+            elif(eName == "EIB_DATA_TYPE_CODE"):
+                if(self.__isCommObj == True):
+                    self.__EIBDataTypeCode = False
+
+            elif(eName == "EIB_DATA_SUBTYPE_CODE"):
+                if(self.__isCommObj == True):
+                    self.__EIBDataSubTypeCode = False
+
+            elif(eName == "OBJECT_READONINITENABLED"):
+                if(self.__isCommObj == True):
+                    self.__ObjReadOnInitEN = False
+
 
         except SAXException:
             print "Error again"
@@ -266,6 +306,9 @@ class FB_CommXMLHandler():
         elif(self.__ObjNumber == True):
             self.__CommObj.setObjNumber(self.IsNumber(strValue))
 
+        elif(self.__ObjDescription == True):
+            self.__CommObj.setObjDescription(self.IsString(strValue))
+
         elif(self.__ObjType == True):
             self.__CommObj.setObjType(self.IsNumber(strValue))
 
@@ -277,6 +320,15 @@ class FB_CommXMLHandler():
 
         elif(self.__ObjUniqueNumber == True):
             self.__CommObj.setObjUniqueNo(self.IsNumber(strValue))
+
+        elif(self.__EIBDataTypeCode == True):
+            self.__CommObj.setEIBDataTypeCode(self.IsNumber(strValue))
+
+        elif(self.__EIBDataSubTypeCode == True):
+            self.__CommObj.setEIBDataSubTypeCode(self.IsNumber(strValue))
+
+        elif(self.__ObjReadOnInitEN == True):
+            self.__CommObj.setObjReadOnInitEN(self.IsNumber(strValue))
 
 
    #check for Number in parsed value

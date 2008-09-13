@@ -175,40 +175,40 @@ class FB_XML_PRODUCT:
                 productList = self.getProducts(XMLHandler)
                 Value = str(len(productList)) + " Stück"
                 self.lblProducts.set_text(unicode(Value,"ISO-8859-1"))
-                self.WriteToSQL(Global.DatabaseConnection, productList, "hw_product")
+                self.WriteToSQL(Global.DatabaseConnection, productList, "HW_PRODUCT")
                 #--------------- Applications / Manufacturer -------
                 [appList, ManufactList] = self.getApplications(XMLHandler)
                 Value = str(len(appList)) + " Stück"
                 self.lblApps.set_text(unicode(Value,"ISO-8859-1"))
                 Value = str(len(ManufactList)) + " Stück"
                 self.lblManufacturer.set_text(unicode(Value,"ISO-8859-1"))
-                self.WriteToSQL(Global.DatabaseConnection, appList, "application_program")
-                self.WriteToSQL(Global.DatabaseConnection, ManufactList, "manufacturer")
+                self.WriteToSQL(Global.DatabaseConnection, appList, "APPLICATION_PROGRAM")
+                self.WriteToSQL(Global.DatabaseConnection, ManufactList, "MANUFACTURER")
                 #--------------- Communication Objects --------------
                 commList  = self.getCommunicationObjects(XMLHandler)
                 Value = str(len(commList)) + " Stück"
                 self.lblComObj.set_text(unicode(Value,"ISO-8859-1"))
-                self.WriteToSQL(Global.DatabaseConnection, commList, "communication_object")
+                self.WriteToSQL(Global.DatabaseConnection, commList, "COMMUNICATION_OBJECT")
                 #-------------------- Mask --------------------------
                 maskList = self.getMask(XMLHandler)
-                self.WriteToSQL(Global.DatabaseConnection, maskList, "mask")
+                self.WriteToSQL(Global.DatabaseConnection, maskList, "MASK")
                 #-------------------- Product to Program-------------
                 ProdProgList = self.getProd2Progr(XMLHandler)
-                self.WriteToSQL(Global.DatabaseConnection, ProdProgList, "product_to_program")
+                self.WriteToSQL(Global.DatabaseConnection, ProdProgList, "PRODUCT_TO_PROGRAM")
                 #-------------------- Parameter ---------------------
                 paramList = self.getParameter(XMLHandler)
                 Value = str(len(paramList)) + " Stück"
                 self.lblParam.set_text(unicode(Value,"ISO-8859-1"))
-                self.WriteToSQL(Global.DatabaseConnection, paramList, "parameter")
+                self.WriteToSQL(Global.DatabaseConnection, paramList, "PARAMETER")
                 #-------------------- ParameterType ---------------------
                 paramTypeList  = self.getParameterType(XMLHandler)
-                self.WriteToSQL(Global.DatabaseConnection, paramTypeList, "parameter_type")
+                self.WriteToSQL(Global.DatabaseConnection, paramTypeList, "PARAMETER_TYPE")
                 #-------------------- Parameter List of Values ----------
                 paramListV  = self.getParameterListV(XMLHandler)
-                self.WriteToSQL(Global.DatabaseConnection, paramListV, "parameter_list_of_values")
+                self.WriteToSQL(Global.DatabaseConnection, paramListV, "PARAMETER_LIST_OF_VALUES")
                 #-------------------- Catalog Entry ---------------------
                 CatalogEntryList  = self.getCatalogEntry(XMLHandler)
-                self.WriteToSQL(Global.DatabaseConnection, CatalogEntryList, "catalog_entry")
+                self.WriteToSQL(Global.DatabaseConnection, CatalogEntryList, "CATALOG_ENTRY")
 
 
 
@@ -233,245 +233,242 @@ class FB_XML_PRODUCT:
 #------------------------------------------------------------------------------------------------------
 
             #Product found...
-            if(Table == "hw_product"):
+            if(Table == "HW_PRODUCT"):
                 sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                # print sql
                 #check if Product is already existing...
-                sqlExist = "SELECT PRODUCT_ID FROM hw_product WHERE PRODUCT_ID = " + str(List[j].getProductID())
+                #sqlExist = "SELECT PRODUCT_ID FROM hw_product WHERE PRODUCT_ID = " + str(List[j].getProductID())
 
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
+                #Cursor = Connection.cursor()
+                #Cursor.execute(sqlExist)
 
-                if(len(Cursor.fetchall()) == 0):
+                #if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                    try:
-                        cur.execute(sql,List[j].getSQLValueList())
-                    except:
+                try:
+                    cur.execute(sql,List[j].getSQLValueList())
+                except:
                         #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
+                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                #else:
                     #do something else
                     #print sql
-                    self.__LogObj.NewLog("Doppeltes Produkt: " + sql,0)
+               #     self.__LogObj.NewLog("Doppeltes Produkt: " + sql,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
             #Application found
-            elif(Table == "application_program"):
+            elif(Table == "APPLICATION_PROGRAM"):
                 sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                # print sql
                 #check if Product is already existing...
-                sqlExist = "SELECT PROGRAM_ID FROM application_program WHERE PROGRAM_ID = " + str(List[j].getProgramID())
+                #sqlExist = "SELECT PROGRAM_ID FROM application_program WHERE PROGRAM_ID = " + str(List[j].getProgramID())
 
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
+                #Cursor = Connection.cursor()
+                #Cursor.execute(sqlExist)
 
-                if(len(Cursor.fetchall()) == 0):
+                #if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                    try:
-                        cur.execute(sql,List[j].getSQLValueList())
-                    except:
+                try:
+                    cur.execute(sql,List[j].getSQLValueList())
+                except:
                         #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
+                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                #else:
 
                     #print sql
-                    self.__LogObj.NewLog("Doppelte Applikation: " + sql ,0)
+                 #   self.__LogObj.NewLog("Doppelte Applikation: " + sql ,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
             #Manufacturer found
-            elif(Table == "manufacturer"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?)"
+            elif(Table == "MANUFACTURER"):
+                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?)"
 
                 #check if Product is already existing...
-                sqlExist = "SELECT MANUFACTURER_ID FROM manufacturer WHERE MANUFACTURER_ID = " + str(List[j].getManufactID())
+                #sqlExist = "SELECT MANUFACTURER_ID FROM manufacturer WHERE MANUFACTURER_ID = " + str(List[j].getManufactID())
 
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
+                #Cursor = Connection.cursor()
+                #Cursor.execute(sqlExist)
 
-                if(len(Cursor.fetchall()) == 0):
+                #if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                    try:
-                        cur.execute(sql,List[j].getSQLValueList())
-                    except:
+                try:
+                    cur.execute(sql,List[j].getSQLValueList())
+                except:
                         #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
+                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                #else:
                     #print sql
-                    self.__LogObj.NewLog("Doppelter Hersteller: " + sql ,0)
+                 #   self.__LogObj.NewLog("Doppelter Hersteller: " + sql ,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
             #Communication Object found
-            elif(Table == "communication_object"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            elif(Table == "COMMUNICATION_OBJECT"):
+                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
                 #check if Product is already existing...
-                sqlExist = "SELECT OBJECT_ID,OBJECT_UNIQUE_NUMBER FROM communication_object WHERE OBJECT_ID = " + str(List[j].getObjID()) + " AND OBJECT_UNIQUE_NUMBER = " + str(List[j].getObjUniqueNo())
+               # sqlExist = "SELECT OBJECT_ID FROM communication_object WHERE OBJECT_ID = " + str(List[j].getObjID())
 
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
+                #Cursor = Connection.cursor()
+                #Cursor.execute(sqlExist)
 
-                if(len(Cursor.fetchall()) == 0):
+                #if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                    try:
-                        cur.execute(sql,List[j].getSQLValueList())
-                    except:
+                try:
+                    cur.execute(sql,List[j].getSQLValueList())
+                except:
                         #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
+                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                #else:
                     #do something else
                     #print str(List[j].getObjUniqueNo())
 
                     #print sql
-                    self.__LogObj.NewLog("Doppeltes Kommunikations-Object: " + sql ,0)
+                 #   self.__LogObj.NewLog("Doppeltes Kommunikations-Object: " + sql ,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
             #Mask Object found
-            elif(Table == "mask"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            elif(Table == "MASK"):
+                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
                 #check if Product is already existing...
-                sqlExist = "SELECT MASK_ID FROM mask WHERE MASK_ID = " + str(List[j].getMaskID())
+                #sqlExist = "SELECT MASK_ID FROM mask WHERE MASK_ID = " + str(List[j].getMaskID())
 
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
+                #Cursor = Connection.cursor()
+                #Cursor.execute(sqlExist)
 
-                if(len(Cursor.fetchall()) == 0):
+                #if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                    try:
-                        cur.execute(sql,List[j].getSQLValueList())
-                    except:
+                try:
+                    cur.execute(sql,List[j].getSQLValueList())
+                except:
                         #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
+                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                #else:
                     #print sql
-                    self.__LogObj.NewLog("Doppelte Maske: " + sql ,0)
+                #self.__LogObj.NewLog("Doppelte Maske: " + sql ,0)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
             #product to program Object found
-            elif(Table == "product_to_program"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            elif(Table == "PRODUCT_TO_PROGRAM"):
+                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
                 #check if Product is already existing...
-                sqlExist = "SELECT PROD2PROG_ID FROM product_to_program WHERE PROD2PROG_ID = " + str(List[j].getProd2ProgID())
+                #sqlExist = "SELECT PROD2PROG_ID FROM product_to_program WHERE PROD2PROG_ID = " + str(List[j].getProd2ProgID())
 
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
+                #Cursor = Connection.cursor()
+                #Cursor.execute(sqlExist)
 
-                if(len(Cursor.fetchall()) == 0):
+                #if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                    try:
-                        cur.execute(sql,List[j].getSQLValueList())
-                    except:
+                try:
+                    cur.execute(sql,List[j].getSQLValueList())
+                except:
                         #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
+                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                #else:
                     #print sql
-                    self.__LogObj.NewLog("Doppeltes ProductToProgram: " + sql ,0)
+                 #   self.__LogObj.NewLog("Doppeltes ProductToProgram: " + sql ,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
             #parameter
-            elif(Table == "parameter"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            elif(Table == "PARAMETER"):
+                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
                 #check if Product is already existing...
-                sqlExist = "SELECT PARAMETER_TYPE_ID, PARAMETER_ID,PARAMETER_NUMBER FROM parameter" + \
-                           " WHERE PARAMETER_ID = " + str(List[j].getParameterID()) + \
-                           " AND PARAMETER_NUMBER = " + str(List[j].getParameterNumber()) + \
-                           " AND PARAMETER_TYPE_ID = "  + str(List[j].getParameterTypeID())
+                #sqlExist = "SELECT PARAMETER_ID FROM parameter WHERE PARAMETER_ID = " + str(List[j].getParameterID())
 
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
+                #Cursor = Connection.cursor()
+                #Cursor.execute(sqlExist)
 
-                if(len(Cursor.fetchall()) == 0):
+                #if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                    try:
-                        cur.execute(sql,List[j].getSQLValueList())
-                    except:
+                try:
+                    cur.execute(sql,List[j].getSQLValueList())
+                except:
                         #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
+                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                #else:
                     #print sql
-                    self.__LogObj.NewLog("Doppelter Parameter: " + sql ,0)
+                 #   self.__LogObj.NewLog("Doppelter Parameter: " + sql ,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
             #parameterType
-            elif(Table == "parameter_type"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?)"
+            elif(Table == "PARAMETER_TYPE"):
+                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
                 #check if Product is already existing...
-                sqlExist = "SELECT PARAMETER_TYPE_ID FROM parameter_type WHERE PARAMETER_TYPE_ID = " + str(List[j].getParameterTypeID2())
+                #sqlExist = "SELECT PARAMETER_TYPE_ID FROM parameter_type WHERE PARAMETER_TYPE_ID = " + str(List[j].getParameterTypeID2())
 
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
+                #Cursor = Connection.cursor()
+                #Cursor.execute(sqlExist)
 
-                if(len(Cursor.fetchall()) == 0):
+                #if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                    try:
-                        cur.execute(sql,List[j].getSQLValueList())
-                    except:
+                try:
+                    cur.execute(sql,List[j].getSQLValueList())
+                except:
                         #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
+                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                #else:
                     #print sql
-                    self.__LogObj.NewLog("Doppeltes Parameter_Type: " + sql ,0)
+                 #   self.__LogObj.NewLog("Doppeltes Parameter_Type: " + sql ,0)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
             #parameter List of Values
-            elif(Table == "parameter_list_of_values"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?)"
+            elif(Table == "PARAMETER_LIST_OF_VALUES"):
+                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ? , ?)"
 
                 #check if Product is already existing...
-                sqlExist = "SELECT PARAMETER_VALUE_ID,PARAMETER_TYPE_ID FROM parameter_list_of_values WHERE PARAMETER_VALUE_ID = " + \
-                            str(List[j].getParameterValueID()) + " AND PARAMETER_TYPE_ID = " + str(List[j].getParameterTypeID3())
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
+                #sqlExist = "SELECT PARAMETER_VALUE_ID FROM parameter_list_of_values WHERE PARAMETER_VALUE_ID = " + \
+                 #           str(List[j].getParameterValueID())
+                #Cursor = Connection.cursor()
+                #Cursor.execute(sqlExist)
 
-                if(len(Cursor.fetchall()) == 0):
+                #if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                    try:
-                        cur.execute(sql,List[j].getSQLValueList())
-                    except:
+                try:
+                    cur.execute(sql,List[j].getSQLValueList())
+                except:
                         #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
+                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                #else:
                     #print sql
-                    self.__LogObj.NewLog("Doppeltes Parameter List of Values: " + sql ,0)
+                 #   self.__LogObj.NewLog("Doppeltes Parameter List of Values: " + sql ,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
             #Catalog Entry
-            elif(Table == "catalog_entry"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            elif(Table == "CATALOG_ENTRY"):
+                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
                 #check if Product is already existing...
-                sqlExist = "SELECT CATALOG_ENTRY_ID FROM catalog_entry WHERE CATALOG_ENTRY_ID = " + str(List[j].getCatalogEntryID())
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
+               # sqlExist = "SELECT CATALOG_ENTRY_ID FROM catalog_entry WHERE CATALOG_ENTRY_ID = " + str(List[j].getCatalogEntryID())
+                #Cursor = Connection.cursor()
+                #Cursor.execute(sqlExist)
 
-                if(len(Cursor.fetchall()) == 0):
+                #if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                    try:
+                try:
                         #print List[j].getSQLValueList()
-                        cur.execute(sql,List[j].getSQLValueList())
-                    except:
+                    cur.execute(sql,List[j].getSQLValueList())
+                except:
                         #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
+                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                #else:
                     #print sql
-                    self.__LogObj.NewLog("Doppelte Catalog Entry: " + sql ,0)
+                 #   self.__LogObj.NewLog("Doppelte Catalog Entry: " + sql ,0)
 
 
         Connection.commit()

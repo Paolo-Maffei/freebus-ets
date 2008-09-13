@@ -10,6 +10,7 @@
 #Source Datei: FB_Mask.py
 #Version: V0.1 , 06.01.2008
 #Version: V0.2 , 04.06.2008
+#Version: V0.3 , 20.07.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #===============================================================================
@@ -41,10 +42,15 @@ class FB_Mask:
     __PEI_Program = 0           #PEI_PROGRAM_LCS
     __Load_Control_Addr = 0     #LOAD_CONTROL_ADDRESS
     __Run_Control_Addr = 0      #RUN_CONTROL_ADDRESS
+    __ExtMemoryStart = 0        #EXTERNAL_MEMORY_START    NEU
+    __ExtMemoryEnd = 0          #EXTERNAL_MEMORY_END      NEU
+    __AppProgramRCS = 0         #APPLICATION_PROGRAM_RCS  NEU
+    __PEIProgramRCS = 0         #PEI_PROGRAM_RCS          NEU
+    __PortADDR = 0              #PORT_A_DDR               NEU
     __Port_Addr_Protect = 0     #PORT_ADDRESS_PROTECTED
     __Medium_TypeNo = 0         #MEDIUM_TYPE_NUMBER
+    __Medium_TypeNo2 = 0        #MEDIUM_TYPE_NUMBER2      NEU
     __BCU_TypeNo = 0            #BCU_TYPE_NUMBER
-
 
 
     def __init__(self):
@@ -59,8 +65,9 @@ class FB_Mask:
                 self.__CommsTab_Addr,self.__Manufact_Data_Addr,self.__Manufact_Data_Size,self.__Manufact_ID_Addr,
                 self.__Rout_Addr,self.__Manufact_ID_Protetect,self.__Mask_Version_Name,self.__Mask_EEpromData,
                 self.__Mask_Data_Length,self.__Address_Tab,self.__Assoc_Tab,self.__App_Program,self.__PEI_Program,
-                self.__Load_Control_Addr,self.__Run_Control_Addr,self.__Port_Addr_Protect,self.__Medium_TypeNo,
-                self.__BCU_TypeNo)
+                self.__Load_Control_Addr,self.__Run_Control_Addr,self.__ExtMemoryStart, self.__ExtMemoryEnd,
+                self.__AppProgramRCS, self.__PEIProgramRCS,self.__PortADDR, self.__Port_Addr_Protect,self.__Medium_TypeNo,
+                self.__Medium_TypeNo2,self.__BCU_TypeNo)
 
         return List
 
@@ -114,10 +121,22 @@ class FB_Mask:
         elif(Index == 24):
             self.__Run_Control_Addr = Value
         elif(Index == 25):
-            self.__Port_Addr_Protect = Value
+            self.__ExtMemoryStart = Value
         elif(Index == 26):
-            self.__Medium_TypeNo = Value
+            self.__ExtMemoryEnd = Value
         elif(Index == 27):
+            self.__AppProgramRCS = Value
+        elif(Index == 28):
+            self.__PEIProgramRCS = Value
+        elif(Index == 29):
+            self.__PortADDR = Value
+        elif(Index == 30):
+            self.__Port_Addr_Protect = Value
+        elif(Index == 31):
+            self.__Medium_TypeNo = Value
+        elif(Index == 33):
+            self.__Medium_TypeNo2 = Value
+        elif(Index == 33):
             self.__BCU_TypeNo = Value
 
     def getMask(self,Index):
@@ -170,10 +189,22 @@ class FB_Mask:
         elif(Index == 24):
             return self.__Run_Control_Addr
         elif(Index == 25):
-            return self.__Port_Addr_Protect
+            return self.__ExtMemoryStart
         elif(Index == 26):
-            return self.__Medium_TypeNo
+            return self.__ExtMemoryEnd
         elif(Index == 27):
+            return self.__AppProgramRCS
+        elif(Index == 28):
+            return self.__PEIProgramRCS
+        elif(Index == 29):
+            return self.__PortADDR
+        elif(Index == 30):
+            return self.__Port_Addr_Protect
+        elif(Index == 31):
+            return self.__Medium_TypeNo
+        elif(Index == 32):
+            return self.__Medium_TypeNo2
+        elif(Index == 33):
             return self.__BCU_TypeNo
 
 
@@ -370,6 +401,43 @@ class FB_Mask:
         return self.__Run_Control_Addr
 
 #**********************************************************************
+    #EXTERNAL_MEMORY_START
+    def setExtMemoryStart(self,ExtMemStart):
+        self.__ExtMemoryStart = ExtMemStart
+
+    def getExtMemoryStart(self):
+        return self.__ExtMemoryStart
+
+#**********************************************************************
+    #EXTERNAL_MEMORY_END
+    def setExtMemoryEnd(self,ExtMemEnd):
+        self.__ExtMemoryEnd = ExtMemEnd
+
+    def getExtMemoryEnd(self):
+        return self.__ExtMemoryEnd
+#**********************************************************************
+    #APPLICATION_PROGRAM_RCS
+    def setAppProgramRCS(self,AppProgRCS):
+        self.__AppProgramRCS = AppProgRCS
+
+    def getAppProgramRCS(self):
+        return self.__AppProgramRCS
+
+#**********************************************************************
+    #PEI_PROGRAM_RCS
+    def setPEIProgramRCS(self,PEIProgRCS):
+        self.__PEIProgramRCS = PEIProgRCS
+
+    def getPEIProgramRCS(self):
+        return self.__PEIProgramRCS
+#**********************************************************************
+    #PORT_A_DDR
+    def setPortA_Addr(self,PortAAddr):
+        self.__PortADDR = PortAAddr
+
+    def getPortA_Addr(self):
+        return self.__PortADDR
+#**********************************************************************
     #PORT_ADDRESS_PROTECTED
     def setPortAddrProtected(self,PortAddrProtected):
         self.__Port_Addr_Protect = PortAddrProtected
@@ -384,6 +452,12 @@ class FB_Mask:
 
     def getMediumTypeNo(self):
         return self.__Medium_TypeNo
+#**********************************************************************
+    #MEDIUM_TYPE_NUMBER2
+    def setMediumTypeNo2(self,MediumTypeNo2):
+        self.__Medium_TypeNo2 = MediumTypeNo2
+    def getMediumTypeNo2(self):
+        return self.__Medium_TypeNo2
 
 #**********************************************************************
     #BCU_TYPE_NUMBER

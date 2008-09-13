@@ -9,6 +9,7 @@
 #
 #Source File: FB_ParameterType.py
 #Version: V0.1 , 13.06.2008
+#Version: V0.2 , 20.07.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #===============================================================================
@@ -17,14 +18,19 @@
 class FB_ParameterType:
 
       #local variables of Parameter Type Node
-    __ParameterTypeID2 = 0        #PARAMETER_TYPE_ID
-    __AtomicTypeNumber = 0        #ATOMIC_TYPE_NUMBER
-    __ProgramID2 = 0               #PROGRAM_ID
-    __ParameterTypeName = ""      #PARAMETER_TYPE_NAME
-    __ParameterTypeLowAccess = 0  #PARAMETER_TYPE_LOW_ACCESS
-    __ParameterTypeHighAccess = 0 #PARAMETER_TYPE_HIGH_ACCESS
-    __ParameterTypeSize = 0       #PARAMETER_TYPE_SIZE
-
+    __ParameterTypeID2 = 0            #PARAMETER_TYPE_ID
+    __AtomicTypeNumber = 0            #ATOMIC_TYPE_NUMBER
+    __ProgramID2 = 0                  #PROGRAM_ID
+    __ParameterTypeName = ""          #PARAMETER_TYPE_NAME
+    __Parameter_Min_Value = 0         #PARAMETER_MINIMUM_VALUE            NEU
+    __Parameter_Max_Value = 0         #PARAMETER_MAXIMUM_VALUE            NEU
+    __Parameter_Type_Description = "" #PARAMETER_TYPE_DESCRIPTION         NEU
+    __ParameterTypeLowAccess = 0      #PARAMETER_TYPE_LOW_ACCESS
+    __ParameterTypeHighAccess = 0     #PARAMETER_TYPE_HIGH_ACCESS
+    __ParameterTypeSize = 0           #PARAMETER_TYPE_SIZE
+    __Parameter_MinDouble_Value = 0.0 #PARAMETER_MINIMUM_DOUBLE_VALUE    NEU
+    __Parameter_MaxDouble_Value = 0.0 #PARAMETER_MAXIMUM_DOUBLE_VALUE    NEU
+    __Parameter_UI_HINT = ""          #PARAMETER_UI_HINT                 NEU
 
     def __init__(self):
         pass
@@ -34,7 +40,9 @@ class FB_ParameterType:
 
 
         List = (self.__ParameterTypeID2,self.__AtomicTypeNumber,self.__ProgramID2,self.__ParameterTypeName,
-                self.__ParameterTypeLowAccess,self.__ParameterTypeHighAccess,self.__ParameterTypeSize)
+                self.__Parameter_Min_Value, self.__Parameter_Max_Value, self.__Parameter_Type_Description,
+                self.__ParameterTypeLowAccess,self.__ParameterTypeHighAccess,self.__ParameterTypeSize,
+                self.__Parameter_MinDouble_Value, self.__Parameter_MaxDouble_Value, self.__Parameter_UI_HINT)
 
         return List
 #---------------------------------------------------------------------------------
@@ -54,11 +62,24 @@ class FB_ParameterType:
         elif(Index == 4):
             self.__ParameterTypeName = Value
         elif(Index == 5):
-            self.__ParameterTypeLowAccess = Value
+            self.__Parameter_Min_Value = Value
         elif(Index == 6):
-            self.__ParameterTypeHighAccess = Value
+            self.__Parameter_Max_Value = Value
         elif(Index == 7):
+            self.__Parameter_Type_Description = Value
+        elif(Index == 8):
+            self.__ParameterTypeLowAccess = Value
+        elif(Index == 9):
+            self.__ParameterTypeHighAccess = Value
+        elif(Index == 10):
             self.__ParameterTypeSize = Value
+        elif(Index == 11):
+            self.__Parameter_MinDouble_Value = Value
+        elif(Index == 12):
+            self.__Parameter_MaxDouble_Value = Value
+        elif(Index == 13):
+            self.__Parameter_UI_HINT = Value
+
 
     def getParameterType(self,Index):
         if(Index == 1):
@@ -70,12 +91,23 @@ class FB_ParameterType:
         elif(Index == 4):
             return self.__ParameterTypeName
         elif(Index == 5):
-            return self.__ParameterTypeLowAccess
+            return self.__Parameter_Min_Value
         elif(Index == 6):
-            return self.__ParameterTypeHighAccess
+            return self.__Parameter_Max_Value
         elif(Index == 7):
+            return self.__Parameter_Type_Description
+        elif(Index == 8):
+            return self.__ParameterTypeLowAccess
+        elif(Index == 9):
+            return self.__ParameterTypeHighAccess
+        elif(Index == 10):
             return self.__ParameterTypeSize
-
+        elif(Index == 11):
+            return self.__Parameter_MinDouble_Value
+        elif(Index == 12):
+            return self.__Parameter_MaxDouble_Value
+        elif(Index == 13):
+            return self.__Parameter_UI_HINT
 
 #---------------------------------------------------------------------------------
 #----------------------- Parameter Type Handling --------------------------------------
@@ -113,6 +145,28 @@ class FB_ParameterType:
         return self.__ParameterTypeName
 
 #**********************************************************************
+    #PARAMETER_MINIMUM_VALUE
+    def setParameterMinValue(self,P_MinValue):
+        self.__Parameter_Min_Value = P_MinValue
+
+    def getParameterMinValue(self):
+        return self.__Parameter_Min_Value
+#**********************************************************************
+    #PARAMETER_MAXIMUM_VALUE
+    def setParameterMaxValue(self,P_MaxValue):
+        self.__Parameter_Max_Value = P_MaxValue
+
+    def getParameterMaxValue(self):
+        return self.__Parameter_Max_Value
+#**********************************************************************
+    #PARAMETER_TYPE_DESCRIPTION
+    def setParameterTypeDescription(self,P_TypeDescr):
+        self.__Parameter_Type_Description = P_TypeDescr
+
+    def getParameterTypeDescription(self):
+        return self.__Parameter_Type_Description
+
+#**********************************************************************
     #PARAMETER_TYPE_LOW_ACCESS
     def setParameterTypeLow(self,P_TLow):
         self.__ParameterTypeLowAccess = P_TLow
@@ -134,3 +188,26 @@ class FB_ParameterType:
     def getParameterTypeSize(self):
         return self.__ParameterTypeSize
  #**********************************************************************
+    #PARAMETER_MINIMUM_DOUBLE_VALUE
+    def setParameterMinDoubleValue(self,P_MinDoubleValue):
+        self.__Parameter_MinDouble_Value = P_MinDoubleValue
+
+    def getParameterMinDoubleValue(self):
+        return self.__Parameter_MinDouble_Value
+ #**********************************************************************
+    #PARAMETER_MAXIMUM_DOUBLE_VALUE
+    def setParameterMaxDoubleValue(self,P_MaxDoubleValue):
+        self.__Parameter_MaxDouble_Value = P_MaxDoubleValue
+
+    def getParameterMaxDoubleValue(self):
+        return self.__Parameter_MaxDouble_Value
+ #**********************************************************************
+    #PARAMETER_UI_HINT
+    def setParameterUIHint(self,P_UIHint):
+        self.__Parameter_UI_HINT = P_UIHint
+
+    def getParameterUIHint(self):
+        return self.__Parameter_UI_HINT
+ #**********************************************************************
+
+

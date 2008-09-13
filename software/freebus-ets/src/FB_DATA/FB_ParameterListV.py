@@ -9,6 +9,7 @@
 #
 #Source File: FB_ParameterListV.py
 #Version: V0.1 , 13.06.2008
+#Version: V0.2 , 20.07.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #===============================================================================
@@ -19,10 +20,12 @@ class FB_ParameterListV:
     #local variables ParameterList of values
     __ParameterTypeID3 = 0        #PARAMETER_TYPE_ID
     __RealValue = 0               #REAL_VALUE
-    __DisplayValue = ""            #DISPLAYED_VALUE
+    __DisplayValue = ""           #DISPLAYED_VALUE
     __DisplayOrder = 0            #DISPLAY_ORDER
     __ParameterValueID = 0        #PARAMETER_VALUE_ID
+    __BinaryValue = 0             #BINARY_VALUE            NEU
     __BinaryValueLength = 0       #BINARY_VALUE_LENGTH
+    __DoubleValue = 0.0           #DOUBLE_VALUE            NEU
 
 
     def __init__(self):
@@ -32,9 +35,7 @@ class FB_ParameterListV:
     def getSQLValueList(self):
 
         List = (self.__ParameterTypeID3,self.__RealValue,self.__DisplayValue,self.__DisplayOrder,
-               self.__ParameterValueID,self.__BinaryValueLength)
-
-
+               self.__ParameterValueID,self.__BinaryValue, self.__BinaryValueLength, self.__DoubleValue)
 
         return List
 
@@ -51,7 +52,12 @@ class FB_ParameterListV:
         elif(Index == 5):
             self.__ParameterValueID = Value
         elif(Index == 6):
+            self.__BinaryValue = Value
+        elif(Index == 7):
             self.__BinaryValueLength = Value
+        elif(Index == 8):
+            self.__DoubleValue = Value
+
 
     def getParameterListValues(self,Index):
         if(Index == 1):
@@ -65,9 +71,11 @@ class FB_ParameterListV:
         elif(Index == 5):
             return self.__ParameterValueID
         elif(Index == 6):
+            return self.__BinaryValue
+        elif(Index == 7):
             return self.__BinaryValueLength
-
-
+        elif(Index == 8):
+            return self.__DoubleValue
 
 #---------------------------------------------------------------------------------
 #----------------------- ParameterList of values Handling ------------------------
@@ -112,10 +120,24 @@ class FB_ParameterListV:
     def getParameterValueID(self):
         return self.__ParameterValueID
 #**********************************************************************
+    #BINARY_VALUE
+    def setBinaryValue(self,P_Value):
+        self.__BinaryValue = P_Value
+
+    def getBinaryValue(self):
+        return self.__BinaryValue
+#**********************************************************************
     #BINARY_VALUE_LENGTH
     def setBinaryValueLength(self,BinL):
         self.__BinaryValueLength = BinL
 
     def getBinaryValueLength(self):
         return self.__BinaryValueLength
+ #**********************************************************************
+    #DOUBLE_VALUE
+    def setDoubleValue(self,DoubleValue):
+        self.__DoubleValue = DoubleValue
+
+    def getDoubleValue(self):
+        return self.__DoubleValue
  #**********************************************************************

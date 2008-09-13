@@ -9,6 +9,7 @@
 #
 #Source File: FB_Parameter.py
 #Version: V0.1 , 12.06.2008
+#Version: V0.2 , 20.07.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #===============================================================================
@@ -23,16 +24,27 @@ class FB_Parameter:
     __ParameterName = ""       #PARAMETER_NAME
     __ParameterLowAccess = 0   #PARAMETER_LOW_ACCESS
     __ParameterHighAccess = 0  #PARAMETER_HIGH_ACCESS
+    __ParentParmValue = 0      #PARENT_PARM_VALUE             NEU
     __ParameterSize = 0        #PARAMETER_SIZE
+    __ParameterFunction = ""   #PARAMETER_FUNCTION            NEU
     __ParameterDisplayOrder = 0 #PARAMETER_DISPLAY_ORDER
     __ParameterAddress = 0     #PARAMETER_ADDRESS
     __ParameterBitOffset = 0   #PARAMETER_BITOFFSET
     __ParameterDescription = ""#PARAMETER_DESCRIPTION
     __ParameterID = 0          #PARAMETER_ID
     __ParParameterID = 0       #PAR_PARAMETER_ID
-    __ParameterDefault = 0     #PARAMETER_DEFAULT_LONG
+    __ParameterLabel = ""      #PARAMETER_LABEL                NEU
+    __ParameterDefaultLong = 0 #PARAMETER_DEFAULT_LONG
+    __ParameterDefaultStr = "" #PARAMETER_DEFAULT_STRING       NEU
+    __Context_ID = 0           #CONTEXT_ID                     NEU
+    __ParameterDefaultDouble = 0.0 #PARAMETER_DEFAULT_DOUBLE   NEU
     __PatchAlways = 0          #PATCH_ALWAYS
-    __AddressSpace = 0         #ADDRESS_SPACE
+    __AddressSpace = 0         #ADD ESS_SPACE
+    __EIB_Object_Ref = 0       #EIB_OBJECT_REF                 NEU
+    __EIB_Property_ID = 0      #EIB_PROPERTY_ID                NEU
+    __CalculationID = 0        #CalculationID                  NEU
+    __CalculationSet = ""      #CalculationSet                 NEU
+    __AliasName = ""           #AliasName                      NEU
 
 
     def __init__(self):
@@ -42,9 +54,12 @@ class FB_Parameter:
     def getSQLValueList(self):
 
         List = (self.__ProgramID,self.__ParameterTypeID,self.__ParameterNumber,self.__ParameterName,
-                self.__ParameterLowAccess,self.__ParameterHighAccess,self.__ParameterSize,self.__ParameterDisplayOrder,
-                self.__ParameterAddress,self.__ParameterBitOffset,self.__ParameterDescription,self.__ParameterID,
-                self.__ParParameterID,self.__ParameterDefault,self.__PatchAlways,self.__AddressSpace)
+                self.__ParameterLowAccess,self.__ParameterHighAccess,self.__ParentParmValue, self.__ParameterSize,
+                self.__ParameterFunction, self.__ParameterDisplayOrder, self.__ParameterAddress,self.__ParameterBitOffset,
+                self.__ParameterDescription,self.__ParameterID,self.__ParParameterID, self.__ParameterLabel,
+                self.__ParameterDefaultLong, self.__ParameterDefaultStr, self.__Context_ID, self.__ParameterDefaultDouble,
+                self.__PatchAlways,self.__AddressSpace, self.__EIB_Object_Ref, self.__EIB_Property_ID, self.__CalculationID,
+                self.__CalculationSet, self.__AliasName)
 
 
         return List
@@ -67,59 +82,104 @@ class FB_Parameter:
         elif(Index == 6):
             self.__ParameterHighAccess = Value
         elif(Index == 7):
-            self.__ParameterSize = Value
+            self.__ParentParmValue = Value
         elif(Index == 8):
-            self.__ParameterDisplayOrder = Value
+            self.__ParameterSize = Value
         elif(Index == 9):
-            self.__ParameterAddress = Value
+            self.__ParameterFunction = Value
         elif(Index == 10):
-            self.__ParameterBitOffset = Value
+            self.__ParameterDisplayOrder = Value
         elif(Index == 11):
-            self.__ParameterDescription = Value
+            self.__ParameterAddress = Value
         elif(Index == 12):
-            self.__ParameterID = Value
+            self.__ParameterBitOffset = Value
         elif(Index == 13):
-            self.__ParParameterID = Value
+            self.__ParameterDescription = Value
         elif(Index == 14):
-            self.__ParameterDefault = Value
+            self.__ParameterID = Value
         elif(Index == 15):
-            self.__PatchAlways = Value
+            self.__ParParameterID = Value
         elif(Index == 16):
+            self.__ParameterLabel = Value
+        elif(Index == 17):
+            self.__ParameterDefaultLong = Value
+        elif(Index == 18):
+            self.__ParameterDefaultStr = Value
+        elif(Index == 19):
+            self.__Context_ID = Value
+        elif(Index == 20):
+            self.__ParameterDefaultDouble = Value
+        elif(Index == 21):
+            self.__PatchAlways = Value
+        elif(Index == 22):
             self.__AddressSpace = Value
+        elif(Index == 23):
+            self.__EIB_Object_Ref = Value
+        elif(Index == 24):
+            self.__EIB_Property_ID = Value
+        elif(Index == 25):
+            self.__CalculationID = Value
+        elif(Index == 26):
+            self.__CalculationSet = Value
+        elif(Index == 27):
+            self.__AliasName = Value
+
 
     def getParameter(self,Index):
-         if(Index == 1):
+        if(Index == 1):
             return self.__ProgramID
-         elif(Index == 2):
+        elif(Index == 2):
             return self.__ParameterTypeID
-         elif(Index == 3):
+        elif(Index == 3):
             return self.__ParameterNumber
-         elif(Index == 4):
+        elif(Index == 4):
             return self.__ParameterName
-         elif(Index == 5):
+        elif(Index == 5):
             return self.__ParameterLowAccess
-         elif(Index == 6):
+        elif(Index == 6):
             return self.__ParameterHighAccess
-         elif(Index == 7):
+        elif(Index == 7):
+            return self.__ParentParmValue
+        elif(Index == 8):
             return self.__ParameterSize
-         elif(Index == 8):
+        elif(Index == 9):
+            return self.__ParameterFunction
+        elif(Index == 10):
             return self.__ParameterDisplayOrder
-         elif(Index == 9):
+        elif(Index == 11):
             return self.__ParameterAddress
-         elif(Index == 10):
+        elif(Index == 12):
             return self.__ParameterBitOffset
-         elif(Index == 11):
+        elif(Index == 13):
             return self.__ParameterDescription
-         elif(Index == 12):
+        elif(Index == 14):
             return self.__ParameterID
-         elif(Index == 13):
+        elif(Index == 15):
             return self.__ParParameterID
-         elif(Index == 14):
-            return self.__ParameterDefault
-         elif(Index == 15):
+        elif(Index == 16):
+            return self.__ParameterLabel
+        elif(Index == 17):
+            return self.__ParameterDefaultLong
+        elif(Index == 18):
+            return self.__ParameterDefaultStr
+        elif(Index == 19):
+            return self.__Context_ID
+        elif(Index == 20):
+            return self.__ParameterDefaultDouble
+        elif(Index == 21):
             return self.__PatchAlways
-         elif(Index == 16):
+        elif(Index == 22):
             return self.__AddressSpace
+        elif(Index == 23):
+            return self.__EIB_Object_Ref
+        elif(Index == 24):
+            return self.__EIB_Property_ID
+        elif(Index == 25):
+            return self.__CalculationID
+        elif(Index == 26):
+            return self.__CalculationSet
+        elif(Index == 27):
+            return self.__AliasName
 
 
 #**********************************************************************
@@ -170,12 +230,27 @@ class FB_Parameter:
         return self.__ParameterHighAccess
 
 #**********************************************************************
+    #PARENT_PARM_VALUE
+    def setParentParmValue(self,P_ParmValue):
+        self.__ParentParmValue = P_ParmValue
+
+    def getParentParmValue(self):
+        return self.__ParentParmValue
+#**********************************************************************
     #Handling PARAMETER_SIZE
     def setParameterSize(self,P_Size):
         self.__ParameterSize = P_Size
 
     def getParameterSize(self):
         return self.__ParameterSize
+
+#**********************************************************************
+    #PARAMETER_FUNCTION
+    def setParameterFunction(self,P_Function):
+        self.__ParameterFunction = P_Function
+
+    def getParameterFunction(self):
+        return self.__ParameterFunction
 
 #**********************************************************************
     #Handling PARAMETER_DISPLAY_ORDER
@@ -226,13 +301,43 @@ class FB_Parameter:
         return self.__ParParameterID
 
 #**********************************************************************
+    #PARAMETER_LABEL
+    def setParameterLabel(self,P_Label):
+        self.__ParameterLabel = P_Label
+
+    def getParameterLabel(self):
+        return self.__ParameterLabel
+
+#**********************************************************************
     #PARAMETER_DEFAULT_LONG
-    def setParameterDefault(self,P_Default):
-        self.__ParameterDefault = P_Default
+    def setParameterDefaultLong(self,P_DefaultL):
+        self.__ParameterDefaultLong = P_DefaultL
 
-    def getParameterDefault(self):
-        return self.__ParameterDefault
+    def getParameterDefaultLong(self):
+        return self.__ParameterDefaultLong
 
+#**********************************************************************
+    #PARAMETER_DEFAULT_STRING
+    def setParameterDefaultString(self,P_DefaultStr):
+        self.__ParameterDefaultStr = P_DefaultStr
+
+    def getParameterDefaultString(self):
+        return self.__ParameterDefaultStr
+
+#**********************************************************************
+    #CONTEXT_ID
+    def setContextID(self,ContextID):
+        self.__Context_ID = ContextID
+
+    def getContextID(self):
+        return self.__Context_ID
+#**********************************************************************
+    #PARAMETER_DEFAULT_DOUBLE
+    def setParameterDefaultDouble(self,P_DefaultDouble):
+        self.__ParameterDefaultDouble = P_DefaultDouble
+
+    def getParameterDefaultDouble(self):
+        return self.__ParameterDefaultDouble
 #**********************************************************************
     #PATCH_ALWAYS
     def setPatchAlways(self,Patch):
@@ -248,4 +353,38 @@ class FB_Parameter:
     def getAddressSpace(self):
         return self.__AddressSpace
  #**********************************************************************
+    #EIB_OBJECT_REF
+    def setEIBObjRef(self,EIB_ObjRef):
+        self.__EIB_Object_Ref = EIB_ObjRef
 
+    def getEIBObjRef(self):
+        return self.__EIB_Object_Ref
+ #**********************************************************************
+    #EIB_PROPERTY_ID
+    def setEIBPropertyID(self,EIB_PropID):
+        self.__EIB_Property_ID = EIB_PropID
+
+    def getEIBPropertyID(self):
+        return self.__EIB_Property_ID
+#**********************************************************************
+    #CalculationID
+    def setCalculationID(self,CalcID):
+        self.__CalculationID = CalcID
+
+    def getCalculationID(self):
+        return self.__CalculationID
+ #**********************************************************************
+    #CalculationSet
+    def setCalculationSet(self,CalcSet):
+        self.__CalculationSet = CalcSet
+
+    def getCalculationSet(self):
+        return self.__CalculationSet
+ #**********************************************************************
+   #AliasName
+    def setAliasName(self,AliasName):
+        self.__AliasName = AliasName
+
+    def getAliasName(self):
+        return self.__AliasName
+ #**********************************************************************

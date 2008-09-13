@@ -51,6 +51,7 @@ class FB_Apps:
     __AllowedInETS = 0 #AllowedInSimpleEts
     __MinEtsVersion = 0#MinEtsVersion
 
+
     def __init__(self):
         #print "okk"
         pass

@@ -72,6 +72,7 @@ class FB_AppXMLHandler():
     #Sub-Nodes of manufacturer
     __isManID = False        #MANUFACTURER_ID
     __isManName = False      #MANUFACTURER_NAME
+    __AddrID = False         #ADDRESS_ID
 
     #Constructor for FB_AppXMLHandler.
     def __init__(self, LogObj):
@@ -124,6 +125,11 @@ class FB_AppXMLHandler():
                     self.__isManID = True
                 if(self.__isApp == True):
                     self.__isAppManID = True
+
+            elif(eName == "ADDRESS_ID" ):
+                if(self.__isMan == True):
+                    self.__AddrID = True
+
 
         #Look at SubNodes application_program
             elif(eName == "application_program"):
@@ -295,6 +301,9 @@ class FB_AppXMLHandler():
                 if(self.__isApp == True):
                     self.__isAppManID = False
 
+            elif(eName == "ADDRESS_ID" ):
+                if(self.__isMan == True):
+                    self.__AddrID = False
 
             #Look at SubNodes of application_program
             elif(eName == "PROGRAM_ID"):
@@ -438,6 +447,10 @@ class FB_AppXMLHandler():
 
         elif(self.__isManID == True):
             self.__Man.setManufactID(self.IsNumber(strValue))
+
+        elif(self.__AddrID == True):
+            self.__Man.setAddressID(self.IsNumber(strValue))
+
 
         if(self.__isProgID == True):
             self.__App.setProgramID(self.IsNumber(strValue))

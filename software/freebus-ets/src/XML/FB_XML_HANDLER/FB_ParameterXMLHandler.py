@@ -10,6 +10,7 @@
 #Source File: FB_ParameterXMLHandler.py
 #Version: V0.1 , 09.06.2008
 #Version: V0.2 , 15.06.2008
+#Version: V0.3 , 20.07.2008
 #Author: Jerome Leisner
 #email: j.leisner@ing-automation.de
 #
@@ -46,16 +47,28 @@ class FB_ParameterXMLHandler():
     __isParameterName = False           #PARAMETER_NAME
     __isParameterLowAccess = False      #PARAMETER_LOW_ACCESS
     __isParameterHighAccess = False     #PARAMETER_HIGH_ACCESS
+    __isParentParmValue = False         #PARENT_PARM_VALUE             NEU
     __isParameterSize = False           #PARAMETER_SIZE
+    __isParameterFunction = False       #PARAMETER_FUNCTION            NEU
     __isParameterDisplayOrder = False   #PARAMETER_DISPLAY_ORDER
     __isParameterAddress = False        #PARAMETER_ADDRESS
     __isParameterBitOffset = False      #PARAMETER_BITOFFSET
     __isParameterDescription = False    #PARAMETER_DESCRIPTION
     __isParameterID = False             #PARAMETER_ID
     __isParParameterID = False          #PAR_PARAMETER_ID
+    __isParameterLabel = False          #PARAMETER_LABEL                NEU
     __isParameterDefault = False        #PARAMETER_DEFAULT_LONG
+    __isParameterDefaultStr = False     #PARAMETER_DEFAULT_STRING       NEU
+    __isContext_ID = False              #CONTEXT_ID                     NEU
+    __isParameterDefaultDouble = False  #PARAMETER_DEFAULT_DOUBLE       NEU
     __isPatchAlways = False             #PATCH_ALWAYS
     __isAddressSpace = False            #ADDRESS_SPACE
+    __isEIB_Object_Ref = False          #EIB_OBJECT_REF                 NEU
+    __isEIB_Property_ID = False         #EIB_PROPERTY_ID                NEU
+    __isCalculationID = False           #CalculationID                  NEU
+    __isCalculationSet = False          #CalculationSet                 NEU
+    __isAliasName = False               #AliasName                      NEU
+
 
 
     #Block of Parameter Type Node
@@ -63,9 +76,16 @@ class FB_ParameterXMLHandler():
     __isAtomicTypeNumber = False        #ATOMIC_TYPE_NUMBER
     __isPrgramID2 = False               #PROGRAM_ID
     __isParameterTypeName = False       #PARAMETER_TYPE_NAME
+    __isParameter_Min_Value = False     #PARAMETER_MINIMUM_VALUE            NEU
+    __isParameter_Max_Value = False     #PARAMETER_MAXIMUM_VALUE            NEU
+    __isParameter_Type_Description = False #PARAMETER_TYPE_DESCRIPTION         NEU
     __isParameterTypeLowAccess = False  #PARAMETER_TYPE_LOW_ACCESS
     __isParameterTypeHighAccess = False #PARAMETER_TYPE_HIGH_ACCESS
     __isParameterTypeSize = False       #PARAMETER_TYPE_SIZE
+    __isParameter_MinDouble_Value = False #PARAMETER_MINIMUM_DOUBLE_VALUE    NEU
+    __isParameter_MaxDouble_Value = False #PARAMETER_MAXIMUM_DOUBLE_VALUE    NEU
+    __isParameter_UI_HINT = False       #PARAMETER_UI_HINT                 NEU
+
 
 
     #Block of ParameterList of values
@@ -74,7 +94,9 @@ class FB_ParameterXMLHandler():
     __isDisplayValue = False            #DISPLAYED_VALUE
     __isDisplayOrder = False            #DISPLAY_ORDER
     __isParameterValueID = False        #PARAMETER_VALUE_ID
+    __isBinaryValue = False             #BINARY_VALUE            NEU
     __isBinaryValueLength = False       #BINARY_VALUE_LENGTH
+    __isDoubleValue = False             #DOUBLE_VALUE            NEU
 
 
     def __init__(self, LogObj):
@@ -154,8 +176,14 @@ class FB_ParameterXMLHandler():
             elif(eName == "PARAMETER_HIGH_ACCESS" and self.__isParameter == True):
                 self.__isParameterHighAccess = True
 
+            elif(eName == "PARENT_PARM_VALUE" and self.__isParameter == True):
+                self.__isParentParmValue = True
+
             elif(eName == "PARAMETER_SIZE" and self.__isParameter == True):
                 self.__isParameterSize = True
+
+            elif(eName == "PARAMETER_FUNCTION" and self.__isParameter == True):
+                self.__isParameterFunction = True
 
             elif(eName == "PARAMETER_DISPLAY_ORDER" and self.__isParameter == True):
                 self.__isParameterDisplayOrder = True
@@ -175,14 +203,42 @@ class FB_ParameterXMLHandler():
             elif(eName == "PAR_PARAMETER_ID" and self.__isParameter == True):
                 self.__isParParameterID = True
 
+            elif(eName == "PARAMETER_LABEL" and self.__isParameter == True):
+                self.__isParameterLabel = True
+
             elif(eName == "PARAMETER_DEFAULT_LONG" and self.__isParameter == True):
                 self.__isParameterDefault = True
+
+            elif(eName == "PARAMETER_DEFAULT_STRING" and self.__isParameter == True):
+                self.__isParameterDefaultStr = True
+
+            elif(eName == "CONTEXT_ID" and self.__isParameter == True):
+                self.__isContext_ID = True
+
+            elif(eName == "PARAMETER_DEFAULT_DOUBLE" and self.__isParameter == True):
+                self.__isParameterDefaultDouble = True
 
             elif(eName == "PATCH_ALWAYS" and self.__isParameter == True):
                 self.__isPatchAlways = True
 
             elif(eName == "ADDRESS_SPACE" and self.__isParameter == True):
                 self.__isAddressSpace = True
+
+            elif(eName == "EIB_OBJECT_REF" and self.__isParameter == True):
+                self.__isEIB_Object_Ref = True
+
+            elif(eName == "EIB_PROPERTY_ID" and self.__isParameter == True):
+                self.__isEIB_Property_ID = True
+
+            elif(eName == "CalculationID" and self.__isParameter == True):
+                self.__isCalculationID = True
+
+            elif(eName == "CalculationSet" and self.__isParameter == True):
+                self.__isCalculationSet = True
+
+            elif(eName == "AliasName" and self.__isParameter == True):
+                self.__isAliasName = True
+
             #------------------- end of Parmater -----------------------
 
 
@@ -203,6 +259,18 @@ class FB_ParameterXMLHandler():
                 #print eName
                 self.__isParameterTypeName = True
 
+            elif(eName == "PARAMETER_MINIMUM_VALUE" and self.__isParaType == True):
+                #print eName
+                self.__isParameter_Min_Value = True
+
+            elif(eName == "PARAMETER_MAXIMUM_VALUE" and self.__isParaType == True):
+                #print eName
+                self.__isParameter_Max_Value = True
+
+            elif(eName == "PARAMETER_TYPE_DESCRIPTION" and self.__isParaType == True):
+                #print eName
+                self.__isParameter_Type_Description = True
+
             elif(eName == "PARAMETER_TYPE_LOW_ACCESS" and self.__isParaType == True):
                 #print eName
                 self.__isParameterTypeLowAccess = True
@@ -214,6 +282,18 @@ class FB_ParameterXMLHandler():
             elif(eName == "PARAMETER_TYPE_SIZE" and self.__isParaType == True):
                 #print eName
                 self.__isParameterTypeSize = True
+
+            elif(eName == "PARAMETER_MINIMUM_DOUBLE_VALUE" and self.__isParaType == True):
+                #print eName
+                self.__isParameter_MinDouble_Value = True
+
+            elif(eName == "PARAMETER_MAXIMUM_DOUBLE_VALUE" and self.__isParaType == True):
+                #print eName
+                self.__isParameter_MaxDouble_Value = True
+
+            elif(eName == "PARAMETER_UI_HINT" and self.__isParaType == True):
+                #print eName
+                self.__isParameter_UI_HINT = True
 
             #------------------- end of ParameterType -----------------------
 
@@ -233,8 +313,14 @@ class FB_ParameterXMLHandler():
             elif(eName == "PARAMETER_VALUE_ID" and self.__isParaList == True):
                 self.__isParameterValueID = True
 
+            elif(eName == "BINARY_VALUE" and self.__isParaList == True):
+                self.__isBinaryValue = True
+
             elif(eName == "BINARY_VALUE_LENGTH" and self.__isParaList == True):
                 self.__isBinaryValueLength = True
+
+            elif(eName == "DOUBLE_VALUE" and self.__isParaList == True):
+                self.__isDoubleValue = True
 
 
         except SAXException:
@@ -289,8 +375,14 @@ class FB_ParameterXMLHandler():
             elif(eName == "PARAMETER_HIGH_ACCESS" and self.__isParameter == True):
                 self.__isParameterHighAccess = False
 
+            elif(eName == "PARENT_PARM_VALUE" and self.__isParameter == True):
+                self.__isParentParmValue = False
+
             elif(eName == "PARAMETER_SIZE" and self.__isParameter == True):
                 self.__isParameterSize = False
+
+            elif(eName == "PARAMETER_FUNCTION" and self.__isParameter == True):
+                self.__isParameterFunction = False
 
             elif(eName == "PARAMETER_DISPLAY_ORDER" and self.__isParameter == True):
                 self.__isParameterDisplayOrder = False
@@ -310,14 +402,42 @@ class FB_ParameterXMLHandler():
             elif(eName == "PAR_PARAMETER_ID" and self.__isParameter == True):
                 self.__isParParameterID = False
 
+            elif(eName == "PARAMETER_LABEL" and self.__isParameter == True):
+                self.__isParameterLabel = False
+
             elif(eName == "PARAMETER_DEFAULT_LONG" and self.__isParameter == True):
                 self.__isParameterDefault = False
+
+            elif(eName == "PARAMETER_DEFAULT_STRING" and self.__isParameter == True):
+                self.__isParameterDefaultStr = False
+
+            elif(eName == "CONTEXT_ID" and self.__isParameter == True):
+                self.__isContext_ID = False
+
+            elif(eName == "PARAMETER_DEFAULT_DOUBLE" and self.__isParameter == True):
+                self.__isParameterDefaultDouble = False
 
             elif(eName == "PATCH_ALWAYS" and self.__isParameter == True):
                 self.__isPatchAlways = False
 
             elif(eName == "ADDRESS_SPACE" and self.__isParameter == True):
                 self.__isAddressSpace = False
+
+            elif(eName == "EIB_OBJECT_REF" and self.__isParameter == True):
+                self.__isEIB_Object_Ref = False
+
+            elif(eName == "EIB_PROPERTY_ID" and self.__isParameter == True):
+                self.__isEIB_Property_ID = False
+
+            elif(eName == "CalculationID" and self.__isParameter == True):
+                self.__isCalculationID = False
+
+            elif(eName == "CalculationSet" and self.__isParameter == True):
+                self.__isCalculationSet = False
+
+            elif(eName == "AliasName" and self.__isParameter == True):
+                self.__isAliasName = False
+
             #------------------- end of Parmater -----------------------
 
             #------------------- ParameterType -----------------------
@@ -333,6 +453,18 @@ class FB_ParameterXMLHandler():
             elif(eName == "PARAMETER_TYPE_NAME" and self.__isParaType == True):
                 self.__isParameterTypeName = False
 
+            elif(eName == "PARAMETER_MINIMUM_VALUE" and self.__isParaType == True):
+                #print eName
+                self.__isParameter_Min_Value = False
+
+            elif(eName == "PARAMETER_MAXIMUM_VALUE" and self.__isParaType == True):
+                #print eName
+                self.__isParameter_Max_Value = False
+
+            elif(eName == "PARAMETER_TYPE_DESCRIPTION" and self.__isParaType == True):
+                #print eName
+                self.__isParameter_Type_Description = False
+
             elif(eName == "PARAMETER_TYPE_LOW_ACCESS" and self.__isParaType == True):
                 self.__isParameterTypeLowAccess = False
 
@@ -341,6 +473,18 @@ class FB_ParameterXMLHandler():
 
             elif(eName == "PARAMETER_TYPE_SIZE" and self.__isParaType == True):
                 self.__isParameterTypeSize = False
+
+            elif(eName == "PARAMETER_MINIMUM_DOUBLE_VALUE" and self.__isParaType == True):
+                #print eName
+                self.__isParameter_MinDouble_Value = False
+
+            elif(eName == "PARAMETER_MAXIMUM_DOUBLE_VALUE" and self.__isParaType == True):
+                #print eName
+                self.__isParameter_MaxDouble_Value = False
+
+            elif(eName == "PARAMETER_UI_HINT" and self.__isParaType == True):
+                #print eName
+                self.__isParameter_UI_HINT = False
 
             #------------------- end of ParameterType -----------------------
 
@@ -360,9 +504,14 @@ class FB_ParameterXMLHandler():
             elif(eName == "PARAMETER_VALUE_ID" and self.__isParaList == True):
                 self.__isParameterValueID = False
 
+            elif(eName == "BINARY_VALUE" and self.__isParaList == True):
+                self.__isBinaryValue = False
+
             elif(eName == "BINARY_VALUE_LENGTH" and self.__isParaList == True):
                 self.__isBinaryValueLength = False
 
+            elif(eName == "DOUBLE_VALUE" and self.__isParaList == True):
+                self.__isDoubleValue = False
 
         except SAXException:
             print "Error again"
@@ -376,104 +525,150 @@ class FB_ParameterXMLHandler():
 
         #------------------- Parameter -----------------------
         if(self.__isPrgramID1 == True):
-            #self.__Index = 1
             self.__para.setProgramID(self.IsNumber(strValue))
+
         elif(self.__isParameterTypeID1 == True):
-            #self.__Index = 2
             self.__para.setParameterTypeID(self.IsNumber(strValue))
+
         elif(self.__isParameterNumber  == True):
-            #self.__Index = 3
             self.__para.setParameterNumber(self.IsNumber(strValue))
+
         elif(self.__isParameterName == True):
-            #self.__Index = 4
             self.__para.setParameterName(self.IsString(strValue))
+
         elif(self.__isParameterLowAccess == True):
-            #self.__Index = 5
             self.__para.setParameterLow(self.IsNumber(strValue))
+
         elif(self.__isParameterHighAccess == True):
-            #self.__Index = 6
             self.__para.setParameterHigh(self.IsNumber(strValue))
+
+        elif(self.__isParentParmValue == True):
+            self.__para.setParentParmValue(self.IsNumber(strValue))
+
         elif(self.__isParameterSize == True):
-            #self.__Index = 7
             self.__para.setParameterSize(self.IsNumber(strValue))
+
+        elif(self.__isParameterFunction == True):
+            self.__para.setParameterFunction(self.IsString(strValue))
+
         elif(self.__isParameterDisplayOrder == True):
-            #self.__Index = 8
             self.__para.setParameterDisplayOrder(self.IsNumber(strValue))
+
         elif(self.__isParameterAddress == True):
-            #self.__Index = 9
             self.__para.setParameterAddress(self.IsNumber(strValue))
+
         elif(self.__isParameterBitOffset == True):
-            #self.__Index = 10
             self.__para.setParameterBitOffset(self.IsNumber(strValue))
+
         elif(self.__isParameterDescription == True):
-            #self.__Index = 11
             self.__para.setParameterDescription(self.IsString(strValue))
+
         elif(self.__isParameterID == True):
-            #self.__Index = 12
             self.__para.setParameterID(self.IsNumber(strValue))
+
         elif(self.__isParParameterID == True):
-            #self.__Index = 13
             self.__para.setParParameterID(self.IsNumber(strValue))
+
+        elif(self.__isParameterLabel == True):
+            self.__para.setParameterLabel(self.IsString(strValue))
+
         elif(self.__isParameterDefault == True):
-            #self.__Index = 14
-            self.__para.setParameterDefault(self.IsNumber(strValue))
+            self.__para.setParameterDefaultLong(self.IsNumber(strValue))
+
+        elif(self.__isParameterDefaultStr == True):
+            self.__para.setParameterDefaultString(self.IsString(strValue))
+
+        elif(self.__isContext_ID == True):
+            self.__para.setContextID(self.IsNumber(strValue))
+
+        elif(self.__isParameterDefaultDouble == True):
+            self.__para.setParameterDefaultDouble(self.IsNumber(strValue))
+
         elif(self.__isPatchAlways == True):
-            #self.__Index = 15
             self.__para.setPatchAlways(self.IsNumber(strValue))
+
         elif(self.__isAddressSpace == True):
-            #self.__Index = 16
             self.__para.setAddressSpace(self.IsNumber(strValue))
+
+        elif(self.__isEIB_Object_Ref == True):
+            self.__para.setEIBObjRef(self.IsNumber(strValue))
+
+        elif(self.__isEIB_Property_ID == True):
+            self.__para.setEIBPropertyID(self.IsNumber(strValue))
+
+        elif(self.__isCalculationID == True):
+            self.__para.setCalculationID(self.IsNumber(strValue))
+
+        elif(self.__isCalculationSet == True):
+            self.__para.setCalculationSet(self.IsString(strValue))
+
+        elif(self.__isAliasName == True):
+            self.__para.setAliasName(self.IsString(strValue))
 
         #------------------- ParameterType -----------------------
         if(self.__isParameterTypeID2 == True):
-            #self.__Index = 1
             self.__paraTy.setParameterTypeID2(self.IsNumber(strValue))
 
         elif(self.__isAtomicTypeNumber == True):
-            #self.__Index = 2
-            ##print char
             self.__paraTy.setAtomicTypeNumber(self.IsNumber(strValue))
+
         elif(self.__isPrgramID2  == True):
-            #self.__Index = 3
-            #print char
-            self.__paraTy.setProgramID2(self.IsNumber(strValue))
+             self.__paraTy.setProgramID2(self.IsNumber(strValue))
+
         elif(self.__isParameterTypeName == True):
-            #self.__Index = 4
-            #print char
-            self.__paraTy.setParameterTypeName(self.IsString(strValue))
+             self.__paraTy.setParameterTypeName(self.IsString(strValue))
+
+        elif(self.__isParameter_Min_Value == True):
+             self.__paraTy.setParameterMinValue(self.IsNumber(strValue))
+
+        elif(self.__isParameter_Max_Value == True):
+             self.__paraTy.setParameterMaxValue(self.IsNumber(strValue))
+
+        elif(self.__isParameter_Type_Description == True):
+             self.__paraTy.setParameterTypeDescription(self.IsString(strValue))
+
         elif(self.__isParameterTypeLowAccess == True):
-            #self.__Index = 5
-            #print char
-            self.__paraTy.setParameterTypeLow(self.IsNumber(strValue))
+             self.__paraTy.setParameterTypeLow(self.IsNumber(strValue))
+
         elif(self.__isParameterTypeHighAccess == True):
-            #self.__Index = 6
-            #print char
             self.__paraTy.setParameterTypeHigh(self.IsNumber(strValue))
+
         elif(self.__isParameterTypeSize == True):
-            #self.__Index = 7
             self.__paraTy.setParameterTypeSize(self.IsNumber(strValue))
 
+        elif(self.__isParameter_MinDouble_Value == True):
+            self.__paraTy.setParameterMinDoubleValue(self.IsNumber(strValue))
 
+        elif(self.__isParameter_MaxDouble_Value == True):
+            self.__paraTy.setParameterMaxDoubleValue(self.IsNumber(strValue))
+
+        elif(self.__isParameter_UI_HINT == True):
+            self.__paraTy.setParameterUIHint(self.IsString(strValue))
 
         #------------------- ParameterList of values --------------------
         if(self.__isParameterTypeID3 == True):
-            #self.__Index = 1
             self.__paraLi.setParameterTypeID3(self.IsNumber(strValue))
+
         elif(self.__isRealValue == True):
-            #self.__Index = 2
             self.__paraLi.setRealValue(self.IsNumber(strValue))
+
         elif(self.__isDisplayValue  == True):
-            #self.__Index = 3
             self.__paraLi.setDisplayValue(self.IsString(strValue))
+
         elif(self.__isDisplayOrder == True):
-            #self.__Index = 4
             self.__paraLi.setDisplayOrder(self.IsNumber(strValue))
+
         elif(self.__isParameterValueID == True):
-            #self.__Index = 5
             self.__paraLi.setParameterValueID(self.IsNumber(strValue))
+
+        elif(self.__isBinaryValue == True):
+            self.__paraLi.setBinaryValue(self.IsNumber(strValue))
+
         elif(self.__isBinaryValueLength == True):
-            #self.__Index = 6
             self.__paraLi.setBinaryValueLength(self.IsNumber(strValue))
+
+        elif(self.__isDoubleValue == True):
+            self.__paraLi.setDoubleValue(self.IsNumber(strValue))
 
 
     #check for Number in parsed value
