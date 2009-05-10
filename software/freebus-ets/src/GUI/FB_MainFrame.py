@@ -31,9 +31,13 @@ from GUI import FB_NewProjectWindow
 from GUI import FB_OpenProjectWindow
 from GUI import FB_DlgDeviceData
 from GUI.Tree import FB_ArchitecturalTree
+from DATABASE import FB_DlgDatabase
+
 from FB_PROJECT import FB_ArchitecturalDataModel
 from XML import FB_XMLConverter
 from XML import FB_XML_PRODUCT
+
+
 
 import sqlite3
 
@@ -52,6 +56,7 @@ class FB_MainFrame:
     __ArchTree = None            #Object for Tree-Class
     __handelboxToolbar = None    #widget object of handlebox toolbar
     __mnuPopup = None            #Object for popup menu
+    __TopologyTree = None        #widget of topology treeview
 
     treestore = None
     curDragDataType = 0            #the current Type of draged data (builidng,floor,rooms---)
@@ -68,7 +73,7 @@ class FB_MainFrame:
         self.__GladeObj = gtk.glade.XML(Global.GUIPath  + "freebus.glade","MainFrame")
         #get widget of window
         self.window = self.__GladeObj.get_widget("MainFrame")
-        #self.window.width = self.__WindowWidth
+        self.window.fullscreen()
 
         if(self.__GladeObj == None):
            self.__LogObj.NewLog("Error at intializing GUI-Interface (Glade-Object-MainFrame)",1)
@@ -122,6 +127,9 @@ class FB_MainFrame:
         self.Tree = self.__GladeObj.get_widget("ProjectTree")
         self.__ProjTree = self.Tree
 
+        #get widget object of Topology Tree
+        self__TopologyTree = self.__GladeObj.get_widget("TopolgyTree")
+
         dic = { "on_MainFrame_destroy" : gtk.main_quit ,
                 "on_Quitt_activate" : self.QuittApp,
                 #Menu items
@@ -130,15 +138,18 @@ class FB_MainFrame:
                 "on_Save_activate" : self.MenuSaveProject,
                 "on_button_drag_data_get" : self.DragDataGet,
                 "on_ConvertDeviceData_activate":self.Converter,
-                "on_ImportXMLDeviceData_activate":self.ImportXML,
+                "on_ImportDeviceData_activate":self.ImportProductData,
                 "on_ShowDeviceData_activate":self.ShowDeviceData,
-
+                "on_DlgDatabase_activate":self.DatabaseSetting,
 
                 #ProjectTree
                 "on_ProjectTree_drag_data_received" : self.ProjectTreeDropData,
                 "on_ProjectTree_drag_motion" : self.ProjectTreeDragMotion,
                 "on_ProjectTree_button_press_event": self.TreeButtonPress
 
+                #TopologyTree
+
+                #GroupAddressTree
 
                 }
         self.__GladeObj.signal_autoconnect(dic)
@@ -168,6 +179,10 @@ class FB_MainFrame:
             #print "Fehler save "
             self.__LogObj.NewLog("Error at saving Projectdata -> CurProjectObj is Nonetype",1)
 
+    #show Database-settings-Dialog
+    def DatabaseSetting(self, widget, data=None):
+        FB_DlgDatabase.FB_DlgDatabase(self.__LogObj)
+
     #show dlg device data
     def ShowDeviceData(self,widget, data=None):
         FB_DlgDeviceData.FB_DlgDeviceData(self.__LogObj)
@@ -178,8 +193,8 @@ class FB_MainFrame:
     def ConverterThread(self, XMLConverter):
         XMLConverter()
 
-    #start XML Import to SQL Dialog
-    def ImportXML(self,widget, data=None):
+    #start Import to SQL Dialog
+    def ImportProductData(self,widget, data=None):
         FBProductData = FB_XML_PRODUCT.FB_XML_PRODUCT(self.__LogObj)
 
     #set current project object

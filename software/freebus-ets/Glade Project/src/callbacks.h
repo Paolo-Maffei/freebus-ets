@@ -93,3 +93,7 @@ on_ImportXMLDeviceData_activate (GtkMenuItem * menuitem, gpointer user_data);
 
 void
 on_ExportXMLDeviceData_activate (GtkMenuItem * menuitem, gpointer user_data);
+
+void
+on_ListManufacturer_cursor_changed (GtkTreeView * treeview,
+				    gpointer user_data);

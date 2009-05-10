@@ -230,7 +230,7 @@ class FB_DlgDeviceData:
 
         self.__ProductNameList = Cursor.fetchall()
 
-        print self.__ProductNameList
+       # print self.__ProductNameList
         if(len(self.__ProductNameList) > 0):
             for i in range(len(self.__ProductNameList)):
                 ListIterator = self.__productListStore.append([image,unicode(self.__ProductNameList[i][5],"iso-8859-1"),self.__ProductNameList[i][1]])
@@ -242,7 +242,7 @@ class FB_DlgDeviceData:
     def UpdateAppList(self,ProductID):
         if(ProductID <= 0):
             return
-
+        print ProductID
         self.__ApplicationNameList = []
 
         #clear complete List
@@ -362,6 +362,7 @@ class FB_DlgDeviceData:
         #Test to find out the correct number of communication object according to default parameter set
         #1. program id of current application
         ProgramID = self.__ApplicationNameList[self.__SelectedApplication][0][0]
+      
         #2. get paremeter_id of choosen application
         sql = "select * from parameter_type where program_id = " + str(ProgramID) + " and atomic_type_number = 0"
         Cursor = Global.DatabaseConnection.cursor()

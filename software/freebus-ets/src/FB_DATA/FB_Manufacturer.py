@@ -16,9 +16,9 @@
 ##Class for Handling of Freebus-Manufacturer-Data which based from FB XML Product-Files
 class FB_Manufacturer:
 
-    __ManID = 0     #MANUFACTURER_ID
-    __ManName = ""  #MANUFACTURER_NAME
-    __AddrID = 0    #ADDRESS_ID
+    __ManID = None     #MANUFACTURER_ID
+    __ManName = None   #MANUFACTURER_NAME
+    __AddrID = None    #ADDRESS_ID
 
     def __init__(self):
         pass

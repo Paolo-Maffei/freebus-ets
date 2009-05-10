@@ -18,19 +18,19 @@
 class FB_ParameterType:
 
       #local variables of Parameter Type Node
-    __ParameterTypeID2 = 0            #PARAMETER_TYPE_ID
-    __AtomicTypeNumber = 0            #ATOMIC_TYPE_NUMBER
-    __ProgramID2 = 0                  #PROGRAM_ID
-    __ParameterTypeName = ""          #PARAMETER_TYPE_NAME
-    __Parameter_Min_Value = 0         #PARAMETER_MINIMUM_VALUE            NEU
-    __Parameter_Max_Value = 0         #PARAMETER_MAXIMUM_VALUE            NEU
-    __Parameter_Type_Description = "" #PARAMETER_TYPE_DESCRIPTION         NEU
-    __ParameterTypeLowAccess = 0      #PARAMETER_TYPE_LOW_ACCESS
-    __ParameterTypeHighAccess = 0     #PARAMETER_TYPE_HIGH_ACCESS
-    __ParameterTypeSize = 0           #PARAMETER_TYPE_SIZE
-    __Parameter_MinDouble_Value = 0.0 #PARAMETER_MINIMUM_DOUBLE_VALUE    NEU
-    __Parameter_MaxDouble_Value = 0.0 #PARAMETER_MAXIMUM_DOUBLE_VALUE    NEU
-    __Parameter_UI_HINT = ""          #PARAMETER_UI_HINT                 NEU
+    __ParameterTypeID2 = None            #PARAMETER_TYPE_ID
+    __AtomicTypeNumber = None            #ATOMIC_TYPE_NUMBER
+    __ProgramID2 = None                  #PROGRAM_ID
+    __ParameterTypeName = None           #PARAMETER_TYPE_NAME
+    __Parameter_Min_Value = None         #PARAMETER_MINIMUM_VALUE            NEU
+    __Parameter_Max_Value = None         #PARAMETER_MAXIMUM_VALUE            NEU
+    __Parameter_Type_Description = None  #PARAMETER_TYPE_DESCRIPTION         NEU
+    __ParameterTypeLowAccess = None      #PARAMETER_TYPE_LOW_ACCESS
+    __ParameterTypeHighAccess = None     #PARAMETER_TYPE_HIGH_ACCESS
+    __ParameterTypeSize = None           #PARAMETER_TYPE_SIZE
+    __Parameter_MinDouble_Value = None   #PARAMETER_MINIMUM_DOUBLE_VALUE    NEU
+    __Parameter_MaxDouble_Value = None   #PARAMETER_MAXIMUM_DOUBLE_VALUE    NEU
+    __Parameter_UI_HINT = None           #PARAMETER_UI_HINT                 NEU
 
     def __init__(self):
         pass

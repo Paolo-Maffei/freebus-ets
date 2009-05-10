@@ -17,39 +17,39 @@
 ##Class for Handling of Freebus-Application-Data which based from FB XML Product-Files
 class FB_Apps:
 
-    __ProgID = 0       #PROGRAM_ID
-    __SymbolID = 0     #SYMBOL_ID
-    __MaskID = 0       #MASK_ID
-    __ProgName = ""     #PROGRAM_NAME
-    __ProgVersion = ""  #PROGRAM_VERSION
-    __ProgVersionNo = 0 #PROGRAM_VERSION_NUMBER
-    __Linkable = 0     #LINKABLE
-    __DevType = 0      #DEVICE_TYPE
-    __PEIType = 0      #PEI_TYPE
-    __AddTabsize = 0   #ADDRESS_TAB_SIZE
-    __AssTabAddr = 0   #ASSOCTAB_ADDRESS
-    __AssTsize = 0     #ASSOCTAB_SIZE
-    __ComTabAddr = 0   #COMMSTAB_ADDRESS
-    __ComTabsize = 0   #COMMSTAB_SIZE
-    __ProgSN = ""       #PROGRAM_SERIAL_NUMBER
-    __AppManID = 0     #MANUFACTURER_ID
-    __EEPROMData = ""   #EEPROM_DATA
-    __DataLength = 0   #DATA_LENGTH
-    __S19File = ""      #S19_FILE
-    __MapFile = ""      #MAP_FILE
-    __AssemblerID = 0  #ASSEMBLER_ID
-    __HelpFileName = "" #HELP_FILE_NAME
-    __ContextID = 0    #CONTEXT_ID
-    __DynamicMng = 0   #DYNAMIC_MANAGEMENT
-    __ProgType = 0     #PROGRAM_TYPE
-    __RAMSize = 0      #RAM_SIZE
-    __OrgManID = 0     #ORIGINAL_MANUFACTURER_ID
-    __APIVersion = 0   #API_VERSION
-    __ProgStyle = 0    #PROGRAM_STYLE
-    __PollMaster = 0   #IS_POLLING_MASTER
-    __NoPollGroups = 0 #NUMBER_OF_POLLING_GROUPS
-    __AllowedInETS = 0 #AllowedInSimpleEts
-    __MinEtsVersion = 0#MinEtsVersion
+    __ProgID = None           #PROGRAM_ID
+    __SymbolID = None         #SYMBOL_ID
+    __MaskID = None           #MASK_ID
+    __ProgName = None         #PROGRAM_NAME
+    __ProgVersion = None      #PROGRAM_VERSION
+    __ProgVersionNo = None    #PROGRAM_VERSION_NUMBER
+    __Linkable = None         #LINKABLE
+    __DevType = None          #DEVICE_TYPE
+    __PEIType = None          #PEI_TYPE
+    __AddTabsize = None       #ADDRESS_TAB_SIZE
+    __AssTabAddr = None       #ASSOCTAB_ADDRESS
+    __AssTsize = None         #ASSOCTAB_SIZE
+    __ComTabAddr = None       #COMMSTAB_ADDRESS
+    __ComTabsize = None       #COMMSTAB_SIZE
+    __ProgSN = None           #PROGRAM_SERIAL_NUMBER
+    __AppManID = None         #MANUFACTURER_ID
+    __EEPROMData = None       #EEPROM_DATA
+    __DataLength = None       #DATA_LENGTH
+    __S19File = None          #S19_FILE
+    __MapFile = None          #MAP_FILE
+    __AssemblerID = None      #ASSEMBLER_ID
+    __HelpFileName = None     #HELP_FILE_NAME
+    __ContextID = None        #CONTEXT_ID
+    __DynamicMng = None       #DYNAMIC_MANAGEMENT
+    __ProgType = None         #PROGRAM_TYPE
+    __RAMSize = None          #RAM_SIZE
+    __OrgManID = None         #ORIGINAL_MANUFACTURER_ID
+    __APIVersion = None       #API_VERSION
+    __ProgStyle = None        #PROGRAM_STYLE
+    __PollMaster = None       #IS_POLLING_MASTER
+    __NoPollGroups = None     #NUMBER_OF_POLLING_GROUPS
+    __AllowedInETS = None     #AllowedInSimpleEts
+    __MinEtsVersion = None    #MinEtsVersion
 
 
     def __init__(self):

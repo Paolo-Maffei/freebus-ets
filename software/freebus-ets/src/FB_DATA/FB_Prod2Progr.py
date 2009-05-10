@@ -19,26 +19,26 @@
 class FB_Prod2Prog:
 
 
-    __Prod2Prog_ID = 0            #PROD2PROG_ID
-    __Product_ID = 0              #PRODUCT_ID
-    __Program_ID = 0              #PROGRAM_ID
-    __Prod2Prog_Status = ""       #PROD2PROG_STATUS                NEU
-    __PEIProgrID = 0              #PEI_PROGRAM_ID                  NEU
-    __Prod2Prog_Status_Code = 0   #PROD2PROG_STATUS_CODE
-    __Reg_Number = ""             #REGISTRATION_NUMBER
-    __Reg_Year = ""               #REGISTRATION_YEAR
-    __Orig_Reg_Number = ""        #ORIGINAL_REGISTRATION_NUMBER
-    __Orig_Reg_Year = ""          #ORIGINAL_REGISTRATION_YEAR
-    __Expiration_Date = ""        #EXPIRATION_DATE                 NEU
-    __Reg_TS = ""                 #REGISTRATION_TS
-    __Reg_Date = ""               #REGISTRATION_DATE               NEU
-    __Reg_Comment = ""            #REGISTRATION_COMMENT            NEU
-    __Reg_Medium_Type = ""        #REGISTRATION_MEDIUM_TYPE        NEU
-    __DCY_F_Individual = 0.0      #DCY_F_INDIVIDUAL                NEU
-    __DCY_G_Individual = 0.0      #DCY_G_INDIVIDUAL                NEU
-    __DCY_F_Group = 0.0           #DCY_F_GROUP                     NEU
-    __DCY_G_Group = 0.0           #DCY_G_GROUP                     NEU
-    __Signature = ""              #Signature                       NEU
+    __Prod2Prog_ID = None            #PROD2PROG_ID
+    __Product_ID = None              #PRODUCT_ID
+    __Program_ID = None              #PROGRAM_ID
+    __Prod2Prog_Status = None        #PROD2PROG_STATUS                NEU
+    __PEIProgrID = None              #PEI_PROGRAM_ID                  NEU
+    __Prod2Prog_Status_Code = None   #PROD2PROG_STATUS_CODE
+    __Reg_Number = None              #REGISTRATION_NUMBER
+    __Reg_Year = None                #REGISTRATION_YEAR
+    __Orig_Reg_Number = None         #ORIGINAL_REGISTRATION_NUMBER
+    __Orig_Reg_Year = None           #ORIGINAL_REGISTRATION_YEAR
+    __Expiration_Date = None         #EXPIRATION_DATE                 NEU
+    __Reg_TS = None                  #REGISTRATION_TS
+    __Reg_Date = None                #REGISTRATION_DATE               NEU
+    __Reg_Comment = None             #REGISTRATION_COMMENT            NEU
+    __Reg_Medium_Type = None         #REGISTRATION_MEDIUM_TYPE        NEU
+    __DCY_F_Individual = None        #DCY_F_INDIVIDUAL                NEU
+    __DCY_G_Individual = None        #DCY_G_INDIVIDUAL                NEU
+    __DCY_F_Group = None             #DCY_F_GROUP                     NEU
+    __DCY_G_Group = None             #DCY_G_GROUP                     NEU
+    __Signature = None               #Signature                       NEU
 
     def __init__(self):
         pass

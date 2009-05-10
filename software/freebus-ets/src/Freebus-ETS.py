@@ -23,6 +23,7 @@ from XML import FB_XML_PRODUCT
 from XML import FB_XMLDataModel
 from LOG import Logging
 from GUI import FB_MainFrame
+from configobj import ConfigObj            #for application settings
 
 #from pysqlite2 import dbapi2 as sqlite3
 import sqlite3
@@ -31,12 +32,23 @@ LogFileName = Global.LogPath + 'MainFrame.log'
 Options = 0
 
 #Databaseconnection
+config = ConfigObj(Global.settingFile)
 
-Global.DatabaseConnection = sqlite3.connect(Global.Database)
+Global.DatabaseConnection = sqlite3.connect(config['Database'])
 Global.DatabaseConnection.text_factory = str
 
-LOG_MainFrame = Logging.Logging("FB_MainFrame",LogFileName,Options)
+#probably will never be None -> sqlite creats a database if its not connectable...
+if(Global.DatabaseConnection == None):
+    msgbox = gtk.MessageDialog(parent = self.__window, buttons = gtk.BUTTONS_OK,
+                                           flags = gtk.DIALOG_MODAL, type = gtk.MESSAGE_WARNING,
+                                           message_format = Global.ERROROPENDATABASE )
 
+    msgbox.set_title(Global.ERROROPENDATABASETITLE)
+    result = msgbox.run()
+    msgbox.destroy()
+
+
+LOG_MainFrame = Logging.Logging("FB_MainFrame",LogFileName,Options)
 
 
 FBMain = FB_MainFrame.FB_MainFrame(LOG_MainFrame)

@@ -18,14 +18,14 @@
 class FB_ParameterListV:
 
     #local variables ParameterList of values
-    __ParameterTypeID3 = 0        #PARAMETER_TYPE_ID
-    __RealValue = 0               #REAL_VALUE
-    __DisplayValue = ""           #DISPLAYED_VALUE
-    __DisplayOrder = 0            #DISPLAY_ORDER
-    __ParameterValueID = 0        #PARAMETER_VALUE_ID
-    __BinaryValue = 0             #BINARY_VALUE            NEU
-    __BinaryValueLength = 0       #BINARY_VALUE_LENGTH
-    __DoubleValue = 0.0           #DOUBLE_VALUE            NEU
+    __ParameterTypeID3 = None        #PARAMETER_TYPE_ID
+    __RealValue = None               #REAL_VALUE
+    __DisplayValue = None            #DISPLAYED_VALUE
+    __DisplayOrder = None            #DISPLAY_ORDER
+    __ParameterValueID = None        #PARAMETER_VALUE_ID
+    __BinaryValue = None             #BINARY_VALUE            NEU
+    __BinaryValueLength = None       #BINARY_VALUE_LENGTH
+    __DoubleValue = None             #DOUBLE_VALUE            NEU
 
 
     def __init__(self):

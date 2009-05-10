@@ -26,7 +26,7 @@ ImagePath = "..\\Image\\"
 LogPath = "..\\Logging\\"
 dataPath = "..\\data\\"
 Database = "..\\data\\Freebus.db"
-
+settingFile = "..\\data\\settings.txt"
 
 
 
@@ -42,3 +42,9 @@ DND_JUNCTION = 5
 
 QUITTWITHOUTSAVE = U"Das Projekt wurde noch nicht gespeichert. \nMöchten Sie Ihre Daten jetzt speichern oder sofort beenden?"
 QUITMSGTITLE = U"Warnung vor Datenverlust"
+
+DATATBASEEXIST = U"Es gibt bereits eine Datenbank mit diesem Namen. Möchsten Sie diese überschreiben ?"
+DATATBASEEXISTTITLE = U"Datenbank bereits vorhanden"
+
+ERROROPENDATABASE = U"Die in der settings-Datei angegebene Datenbank konnte nicht geöffnet werden! Überprüfen Sie die Einstellungen."
+ERROROPENDATABASETITLE = U"Datenbank nicht vorhanden"

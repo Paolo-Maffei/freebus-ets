@@ -17,21 +17,21 @@
 ##Class for Handling of Freebus-Product-Data which based from FB XML Product-Files
 class FB_Products:
 
-    __Product_ID = 0         #PRODUCT_ID
-    __Manufacturer_ID = 0    #MANUFACTURER_ID
-    __SymbolID = 0           #SYMBOL_ID
-    __Product_Name = ""      #PRODUCT_NAME
-    __Product_Version = 0    #PRODUCT_VERSION_NUMBER
-    __Comp_Type = 0          #COMPONENT_TYPE
-    __Comp_Attr = 0          #COMPONENT_ATTRIBUTES
-    __Bus_Current = 0        #BUS_CURRENT
-    __Product_Serial = ""     #PRODUCT_SERIAL_NUMBER
-    __CompTypeNo = 0         #COMPONENT_TYPE_NUMBER
-    __ProductPic = ""        #PRODUCT_PICTURE
-    __BCU_Type = 0           #BCU_TYPE_NUMBER
-    __Product_Handling = 0   #PRODUCT_HANDLING
-    __ProductDLL = ""        #PRODUCT_DLL
-    __OrigManID = 0          #ORIGINAL_MANUFACTURER_ID
+    __Product_ID = None         #PRODUCT_ID
+    __Manufacturer_ID = None    #MANUFACTURER_ID
+    __SymbolID = None           #SYMBOL_ID
+    __Product_Name = None       #PRODUCT_NAME
+    __Product_Version = None    #PRODUCT_VERSION_NUMBER
+    __Comp_Type = None          #COMPONENT_TYPE
+    __Comp_Attr = None          #COMPONENT_ATTRIBUTES
+    __Bus_Current = None        #BUS_CURRENT
+    __Product_Serial = None     #PRODUCT_SERIAL_NUMBER
+    __CompTypeNo = None         #COMPONENT_TYPE_NUMBER
+    __ProductPic = None         #PRODUCT_PICTURE
+    __BCU_Type = None           #BCU_TYPE_NUMBER
+    __Product_Handling = None   #PRODUCT_HANDLING
+    __ProductDLL = None         #PRODUCT_DLL
+    __OrigManID = None          #ORIGINAL_MANUFACTURER_ID
 
 
     def __init__(self):

@@ -18,33 +18,33 @@
 class FB_Parameter:
 
     #local variables of Parameter block
-    __ProgramID = 0            #PROGRAM_ID
-    __ParameterTypeID = 0      #PARAMETER_TYPE_ID
-    __ParameterNumber = 0      #PARAMETER_NUMBER
-    __ParameterName = ""       #PARAMETER_NAME
-    __ParameterLowAccess = 0   #PARAMETER_LOW_ACCESS
-    __ParameterHighAccess = 0  #PARAMETER_HIGH_ACCESS
-    __ParentParmValue = 0      #PARENT_PARM_VALUE             NEU
-    __ParameterSize = 0        #PARAMETER_SIZE
-    __ParameterFunction = ""   #PARAMETER_FUNCTION            NEU
-    __ParameterDisplayOrder = 0 #PARAMETER_DISPLAY_ORDER
-    __ParameterAddress = 0     #PARAMETER_ADDRESS
-    __ParameterBitOffset = 0   #PARAMETER_BITOFFSET
-    __ParameterDescription = ""#PARAMETER_DESCRIPTION
-    __ParameterID = 0          #PARAMETER_ID
-    __ParParameterID = 0       #PAR_PARAMETER_ID
-    __ParameterLabel = ""      #PARAMETER_LABEL                NEU
-    __ParameterDefaultLong = 0 #PARAMETER_DEFAULT_LONG
-    __ParameterDefaultStr = "" #PARAMETER_DEFAULT_STRING       NEU
-    __Context_ID = 0           #CONTEXT_ID                     NEU
-    __ParameterDefaultDouble = 0.0 #PARAMETER_DEFAULT_DOUBLE   NEU
-    __PatchAlways = 0          #PATCH_ALWAYS
-    __AddressSpace = 0         #ADD ESS_SPACE
-    __EIB_Object_Ref = 0       #EIB_OBJECT_REF                 NEU
-    __EIB_Property_ID = 0      #EIB_PROPERTY_ID                NEU
-    __CalculationID = 0        #CalculationID                  NEU
-    __CalculationSet = ""      #CalculationSet                 NEU
-    __AliasName = ""           #AliasName                      NEU
+    __ProgramID = None                #PROGRAM_ID
+    __ParameterTypeID = None          #PARAMETER_TYPE_ID
+    __ParameterNumber = None          #PARAMETER_NUMBER
+    __ParameterName = None            #PARAMETER_NAME
+    __ParameterLowAccess = None       #PARAMETER_LOW_ACCESS
+    __ParameterHighAccess = None      #PARAMETER_HIGH_ACCESS
+    __ParentParmValue = None          #PARENT_PARM_VALUE             NEU
+    __ParameterSize = None            #PARAMETER_SIZE
+    __ParameterFunction = None        #PARAMETER_FUNCTION            NEU
+    __ParameterDisplayOrder = None    #PARAMETER_DISPLAY_ORDER
+    __ParameterAddress = None         #PARAMETER_ADDRESS
+    __ParameterBitOffset = None       #PARAMETER_BITOFFSET
+    __ParameterDescription = None     #PARAMETER_DESCRIPTION
+    __ParameterID = None              #PARAMETER_ID
+    __ParParameterID = None           #PAR_PARAMETER_ID
+    __ParameterLabel = ""             #PARAMETER_LABEL                NEU
+    __ParameterDefaultLong = None     #PARAMETER_DEFAULT_LONG
+    __ParameterDefaultStr = None      #PARAMETER_DEFAULT_STRING       NEU
+    __Context_ID = None               #CONTEXT_ID                     NEU
+    __ParameterDefaultDouble = None   #PARAMETER_DEFAULT_DOUBLE   NEU
+    __PatchAlways = None              #PATCH_ALWAYS
+    __AddressSpace = None             #ADD ESS_SPACE
+    __EIB_Object_Ref = None           #EIB_OBJECT_REF                 NEU
+    __EIB_Property_ID = None          #EIB_PROPERTY_ID                NEU
+    __CalculationID = None            #CalculationID                  NEU
+    __CalculationSet = None           #CalculationSet                 NEU
+    __AliasName = None                #AliasName                      NEU
 
 
     def __init__(self):

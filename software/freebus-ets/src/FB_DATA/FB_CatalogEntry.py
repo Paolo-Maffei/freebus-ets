@@ -17,38 +17,38 @@
 ##Class for Handling of Freebus-Product-Data which based from FB XML Product-Files
 class FB_CatalogEntry:
 
-    __CatalogEntry_ID = 0    #CATALOG_ENTRY_ID
-    __Product_ID = 0         #PRODUCT_ID
-    __ManufacturerID = 0     #MANUFACTURER_ID
-    __Symbol_ID = 0          #SYMBOL_ID                        NEU
-    __OrderNumber = ""       #ORDER_NUMBER
-    __EntryName = ""         #ENTRY_NAME
-    __EntryColour = ""       #ENTRY_COLOUR                     NEU
-    __EntryWidthModul = 0    #ENTRY_WIDTH_IN_MODULES
-    __EntryWidthMM = 0       #ENTRY_WIDTH_IN_MILLIMETERS
-    __Price = 0              #PRICE                            NEU
-    __Currency = ""          #CURRENCY                         NEU
-    __QuantityUnit = ""      #QUANTITY_UNIT                    NEU
-    __MaterialPrice = ""     #MATERIAL_PRICE                   NEU
-    __MountingHours = 0      #MOUNTING_HOURS                   NEU
-    __MountingMinutes = 0    #MOUNTING_MINUTES                 NEU
-    __MountingSeconds = 0    #MOUNTING_SECONDS                 NEU
-    __DIN_Flag = 0           #DIN_FLAG
-    __Series = ""            #SERIES                           NEU
-    __CatalogName = ""       #CATALOG_NAME                     NEU
-    __PageNumber = 0         #PAGE_NUMBER
-    __EntryPictrue = ""      #ENTRY_PICTURE                    NEU
-    __DesignationType = ""   #DESIGNATION_TYPE
-    __DesignationFunction = "" #DESIGNATION_FUNCTION           NEU
-    __HelpFileName = ""      #HELP_FILE_NAME                   NEU
-    __ContextID = 0          #CONTEXT_ID                       NEU
-    __RAMSize = 0            #RAM_SIZE                         NEU
-    __RegistrationNo = 0     #REGISTRATION_NUMBER              NEU
-    __RegistrationYear = 0   #REGISTRATION_YEAR                NEU
-    __EntryStatusCode = 0    #ENTRY_STATUS_CODE
-    __RegistrationTS = 0     #REGISTRATION_TS
-    __RegistrationDate = ""  #REGISTRATION_DATE                NEU
-    __RegistrationComment = "" #REGISTRATION_COMMENT           NEU
+    __CatalogEntry_ID = None         #CATALOG_ENTRY_ID
+    __Product_ID = None              #PRODUCT_ID
+    __ManufacturerID = None          #MANUFACTURER_ID
+    __Symbol_ID = None               #SYMBOL_ID                        NEU
+    __OrderNumber = None             #ORDER_NUMBER
+    __EntryName = None               #ENTRY_NAME
+    __EntryColour = None             #ENTRY_COLOUR                     NEU
+    __EntryWidthModul = None         #ENTRY_WIDTH_IN_MODULES
+    __EntryWidthMM = None            #ENTRY_WIDTH_IN_MILLIMETERS
+    __Price = None                   #PRICE                            NEU
+    __Currency = None                #CURRENCY                         NEU
+    __QuantityUnit = None            #QUANTITY_UNIT                    NEU
+    __MaterialPrice = None           #MATERIAL_PRICE                   NEU
+    __MountingHours = None           #MOUNTING_HOURS                   NEU
+    __MountingMinutes = None         #MOUNTING_MINUTES                 NEU
+    __MountingSeconds = None         #MOUNTING_SECONDS                 NEU
+    __DIN_Flag = None                #DIN_FLAG
+    __Series = None                  #SERIES                           NEU
+    __CatalogName = None             #CATALOG_NAME                     NEU
+    __PageNumber = None              #PAGE_NUMBER
+    __EntryPictrue = None            #ENTRY_PICTURE                    NEU
+    __DesignationType = None         #DESIGNATION_TYPE
+    __DesignationFunction = None     #DESIGNATION_FUNCTION           NEU
+    __HelpFileName = None            #HELP_FILE_NAME                   NEU
+    __ContextID = None               #CONTEXT_ID                       NEU
+    __RAMSize = None                 #RAM_SIZE                         NEU
+    __RegistrationNo = None          #REGISTRATION_NUMBER              NEU
+    __RegistrationYear = None        #REGISTRATION_YEAR                NEU
+    __EntryStatusCode = None         #ENTRY_STATUS_CODE
+    __RegistrationTS = None          #REGISTRATION_TS
+    __RegistrationDate = None        #REGISTRATION_DATE                NEU
+    __RegistrationComment = None     #REGISTRATION_COMMENT           NEU
 
 
     def __init__(self):

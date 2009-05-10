@@ -18,39 +18,39 @@
 ##Class for Handling of Freebus-Mask-Data which based from FB XML Product-Files
 class FB_Mask:
 
-    __MaskID = 0                #MASK_ID
-    __MaskVersion = 0           #MASK_VERSION
-    __UserRamStart = 0          #USER_RAM_START
-    __UserRamEnd = 0            #USER_RAM_END
-    __UserEEpromStart = 0       #USER_EEPROM_START
-    __UserEEpromEnd = 0         #USER_EEPROM_END
-    __RunErrorAddress = 0       #RUN_ERROR_ADDRESS
-    __Address_Tab_Addr = 0      #ADDRESS_TAB_ADDRESS
-    __AssocTab_Addr = 0         #ASSOCTABPTR_ADDRESS
-    __CommsTab_Addr = 0         #COMMSTABPTR_ADDRESS
-    __Manufact_Data_Addr = 0    #MANUFACTURER_DATA_ADDRESS
-    __Manufact_Data_Size = 0    #MANUFACTURER_DATA_SIZE
-    __Manufact_ID_Addr = 0      #MANUFACTURER_ID_ADDRESS
-    __Rout_Addr = 0             #ROUTECNT_ADDRESS
-    __Manufact_ID_Protetect = 0 #MANUFACTURER_ID_PROTECTED
-    __Mask_Version_Name = ""     #MASK_VERSION_NAME
-    __Mask_EEpromData = ""       #MASK_EEPROM_DATA
-    __Mask_Data_Length = 0      #MASK_DATA_LENGTH
-    __Address_Tab = 0           #ADDRESS_TAB_LCS
-    __Assoc_Tab = 0             #ASSOC_TAB_LCS
-    __App_Program = 0           #APPLICATION_PROGRAM_LCS
-    __PEI_Program = 0           #PEI_PROGRAM_LCS
-    __Load_Control_Addr = 0     #LOAD_CONTROL_ADDRESS
-    __Run_Control_Addr = 0      #RUN_CONTROL_ADDRESS
-    __ExtMemoryStart = 0        #EXTERNAL_MEMORY_START    NEU
-    __ExtMemoryEnd = 0          #EXTERNAL_MEMORY_END      NEU
-    __AppProgramRCS = 0         #APPLICATION_PROGRAM_RCS  NEU
-    __PEIProgramRCS = 0         #PEI_PROGRAM_RCS          NEU
-    __PortADDR = 0              #PORT_A_DDR               NEU
-    __Port_Addr_Protect = 0     #PORT_ADDRESS_PROTECTED
-    __Medium_TypeNo = 0         #MEDIUM_TYPE_NUMBER
-    __Medium_TypeNo2 = 0        #MEDIUM_TYPE_NUMBER2      NEU
-    __BCU_TypeNo = 0            #BCU_TYPE_NUMBER
+    __MaskID = None                #MASK_ID
+    __MaskVersion = None           #MASK_VERSION
+    __UserRamStart = None          #USER_RAM_START
+    __UserRamEnd = None            #USER_RAM_END
+    __UserEEpromStart = None       #USER_EEPROM_START
+    __UserEEpromEnd = None         #USER_EEPROM_END
+    __RunErrorAddress = None       #RUN_ERROR_ADDRESS
+    __Address_Tab_Addr = None      #ADDRESS_TAB_ADDRESS
+    __AssocTab_Addr = None         #ASSOCTABPTR_ADDRESS
+    __CommsTab_Addr = None         #COMMSTABPTR_ADDRESS
+    __Manufact_Data_Addr = None    #MANUFACTURER_DATA_ADDRESS
+    __Manufact_Data_Size = None    #MANUFACTURER_DATA_SIZE
+    __Manufact_ID_Addr = None      #MANUFACTURER_ID_ADDRESS
+    __Rout_Addr = None             #ROUTECNT_ADDRESS
+    __Manufact_ID_Protetect = None #MANUFACTURER_ID_PROTECTED
+    __Mask_Version_Name = None     #MASK_VERSION_NAME
+    __Mask_EEpromData = None       #MASK_EEPROM_DATA
+    __Mask_Data_Length = None      #MASK_DATA_LENGTH
+    __Address_Tab = None           #ADDRESS_TAB_LCS
+    __Assoc_Tab = None             #ASSOC_TAB_LCS
+    __App_Program = None           #APPLICATION_PROGRAM_LCS
+    __PEI_Program = None           #PEI_PROGRAM_LCS
+    __Load_Control_Addr = None     #LOAD_CONTROL_ADDRESS
+    __Run_Control_Addr = None      #RUN_CONTROL_ADDRESS
+    __ExtMemoryStart = None        #EXTERNAL_MEMORY_START    NEU
+    __ExtMemoryEnd = None          #EXTERNAL_MEMORY_END      NEU
+    __AppProgramRCS = None         #APPLICATION_PROGRAM_RCS  NEU
+    __PEIProgramRCS = None         #PEI_PROGRAM_RCS          NEU
+    __PortADDR = None              #PORT_A_DDR               NEU
+    __Port_Addr_Protect = None     #PORT_ADDRESS_PROTECTED
+    __Medium_TypeNo = None         #MEDIUM_TYPE_NUMBER
+    __Medium_TypeNo2 = None        #MEDIUM_TYPE_NUMBER2      NEU
+    __BCU_TypeNo = None            #BCU_TYPE_NUMBER
 
 
     def __init__(self):

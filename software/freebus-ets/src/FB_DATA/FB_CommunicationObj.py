@@ -18,26 +18,26 @@
 ##Class for Handling of Freebus-Comm-Objects-Data which based from FB XML Product-Files
 class FB_CommObj:
 
-    __ProgID = 0           #PROGRAM_ID
-    __ObjName = ""          #OBJECT_NAME
-    __ObjFunction = ""      #OBJECT_FUNCTION
-    __ObjReadEnabled = 0   #OBJECT_READENABLED
-    __ObjWriteEnabled = 0  #OBJECT_WRITEENABLED
-    __ObjCommEnabled = 0   #OBJECT_COMMENABLED
-    __ObjTransEnabled = 0  #OBJECT_TRANSENABLED
-    __ObjDisplayOrder = 0  #OBJECT_DISPLAY_ORDER
-    __ParentParamValue = 0 #PARENT_PARAMETER_VALUE
-    __ObjID = 0            #OBJECT_ID
-    __ParamID = 0          #PARAMETER_ID
-    __ObjNumber = 0        #OBJECT_NUMBER
-    __ObjDescription = ""  #OBJECT_DESCRIPTION    NEU
-    __ObjType = 0          #OBJECT_TYPE
-    __ObjPriority = 0      #OBJECT_PRIORITY
-    __ObjUpdateEnabled = 0 #OBJECT_UPDATEENABLED
-    __ObjUniqueNumber = 0  #OBJECT_UNIQUE_NUMBER
-    __EIBDataTypeCode = 0  #EIB_DATA_TYPE_CODE        NEU
-    __EIBDataSubTypeCode = 0 #EIB_DATA_SUBTYPE_CODE   NEU
-    __ObjReadOnInitEN = 0  #OBJECT_READONINITENABLED  NEU
+    __ProgID = None               #PROGRAM_ID
+    __ObjName = None              #OBJECT_NAME
+    __ObjFunction = None          #OBJECT_FUNCTION
+    __ObjReadEnabled = None       #OBJECT_READENABLED
+    __ObjWriteEnabled = None      #OBJECT_WRITEENABLED
+    __ObjCommEnabled = None       #OBJECT_COMMENABLED
+    __ObjTransEnabled = None      #OBJECT_TRANSENABLED
+    __ObjDisplayOrder = None      #OBJECT_DISPLAY_ORDER
+    __ParentParamValue = None     #PARENT_PARAMETER_VALUE
+    __ObjID = 0                   #OBJECT_ID    (Primary)
+    __ParamID = None              #PARAMETER_ID
+    __ObjNumber = None            #OBJECT_NUMBER
+    __ObjDescription = None       #OBJECT_DESCRIPTION    NEU
+    __ObjType = None              #OBJECT_TYPE
+    __ObjPriority = None          #OBJECT_PRIORITY
+    __ObjUpdateEnabled = None     #OBJECT_UPDATEENABLED
+    __ObjUniqueNumber = None      #OBJECT_UNIQUE_NUMBER
+    __EIBDataTypeCode = None      #EIB_DATA_TYPE_CODE        NEU
+    __EIBDataSubTypeCode = None   #EIB_DATA_SUBTYPE_CODE   NEU
+    __ObjReadOnInitEN = 0         #OBJECT_READONINITENABLED  NEU
 
     __return = None
 

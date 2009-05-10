@@ -75,7 +75,7 @@ class FB_NEWPROJECTWINDOW:
         self.__SelFolder = w1.get_current_folder()
 
         #check if user wants to create a projject directory
-        checked = checkProjDir.get_active()
+        checked = True #checkProjDir.get_active()
         NewPath = self.__SelFolder + "\\" + self.__SelFile
 
         os.chdir(self.__SelFolder)

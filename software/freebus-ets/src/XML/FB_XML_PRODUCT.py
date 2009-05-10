@@ -68,6 +68,7 @@ class FB_XML_PRODUCT:
     lblComObj = None
     lblParam = None
 
+    __choosenImportType = 0    #choosen type to import (0=vd*; 1=vd_; 2=xml)
 
     ##Constructor
     #for each product file you have to create an instance of FB_XML
@@ -76,8 +77,8 @@ class FB_XML_PRODUCT:
     def __init__(self,LogObj):
         self.__LogObj = LogObj
 
-        self.DlgImportGlade = gtk.glade.XML(Global.GUIPath  + "freebus.glade","DlgImportFromXML")
-        self.ImportDlg = self.DlgImportGlade.get_widget("DlgImportFromXML")
+        self.DlgImportGlade = gtk.glade.XML(Global.GUIPath  + "freebus.glade","DlgProductImport")
+        self.ImportDlg = self.DlgImportGlade.get_widget("DlgProductImport")
 
         #get widgets of textfields
         self.__txtSourceFile = self.DlgImportGlade.get_widget("txtSourceFile")
@@ -96,6 +97,22 @@ class FB_XML_PRODUCT:
         self.lblApps.set_text(unicode(Value,"ISO-8859-1"))
         self.lblComObj.set_text(unicode(Value,"ISO-8859-1"))
         self.lblParam.set_text(unicode(Value,"ISO-8859-1"))
+
+        #fill combobox for change importtype
+        self.__cbImportType = self.DlgImportGlade.get_widget("cbImportType")
+        #set List-Items
+        data=["*.VD*","*.VD_","*.XML"]
+        store=gtk.ListStore(str)
+        self.__cbImportType.set_model(store)
+
+        cellrenderer = gtk.CellRendererText()
+        self.__cbImportType.pack_start(cellrenderer)
+        self.__cbImportType.add_attribute(cellrenderer, 'text', 0)
+
+        for d in data:
+            store.append([d])
+
+        self.__cbImportType.set_active(0)
 
 
         self.__SelFolder = ""
@@ -117,10 +134,30 @@ class FB_XML_PRODUCT:
         DlgFileChooserGlade = gtk.glade.XML(Global.GUIPath  + "freebus.glade","DlgFileChooser")
         DlgFileChooser = DlgFileChooserGlade.get_widget("DlgFileChooser")
 
-        #create file-filter
+        #create file-filter depending on the choosen import type
         filter = gtk.FileFilter()
-        filter.add_pattern("*.xml")
-        filter.set_name("XML Produktdaten")
+        #get the current choosen item
+        curItem = self.__cbImportType.get_active() #_text()
+        self.__choosenImportType = curItem
+
+        #VD* (Original)
+        if(curItem == 0):
+            filter.add_pattern("*.vd[1-4]")
+            filter.set_name("VD* Produktdaten")
+
+        #VD_ (pre-unzipped via ETS)
+        elif(curItem == 1):
+            filter.add_pattern("*.vd_")
+            filter.set_name("VD_ Produktdaten")
+        #converted XML
+        elif(curItem == 2):
+            filter.add_pattern("*.xml")
+            filter.set_name("XML Produktdaten")
+        else:
+            filter.add_pattern("*.vd[1-4]\*.vd_\*.xml")
+            filter.set_name("Produktdaten")
+
+
         DlgFileChooser.add_filter(filter)
 
         response = DlgFileChooser.run()
@@ -151,66 +188,88 @@ class FB_XML_PRODUCT:
     #start convert
     def bImport(self,widget, data=None):
 
-        self.response = gtk.RESPONSE_OK
+        try:
+               self.response = gtk.RESPONSE_OK
 
-        productList = []
-        appList = []
-        ManufactList = []
-        paramList = []
+               productList = []
+               appList = []
+               ManufactList = []
+               paramList = []
 
-        Value = "0 Stück"
+               Value = "0 Stück"
 
-        self.lblManufacturer.set_text(unicode(Value,"ISO-8859-1"))
-        self.lblProducts.set_text(unicode(Value,"ISO-8859-1"))
-        self.lblApps.set_text(unicode(Value,"ISO-8859-1"))
-        self.lblComObj.set_text(unicode(Value,"ISO-8859-1"))
-        self.lblParam.set_text(unicode(Value,"ISO-8859-1"))
+               self.lblManufacturer.set_text(unicode(Value,"ISO-8859-1"))
+               self.lblProducts.set_text(unicode(Value,"ISO-8859-1"))
+               self.lblApps.set_text(unicode(Value,"ISO-8859-1"))
+               self.lblComObj.set_text(unicode(Value,"ISO-8859-1"))
+               self.lblParam.set_text(unicode(Value,"ISO-8859-1"))
 
-        #thread.start_new(self.worker_thread, (self.parseXMLFile(),))
+               #depending on the choosen import type do something...
+               if(self.__choosenImportType == 0):
+                   ErrorText = "Error at importing VD*-Type"
+               elif(self.__choosenImportType == 1):
+                   ErrorText = "Error at importing VD_-Type"
+               elif(self.__choosenImportType == 2):
+                   ErrorText = "Error at importing XML-Type"
+                   self.ExtractFromXML()
+               else:
+                   return
+        except:
+            self.__LogObj.NewLog(ErrorText,0)
+
+    def ExtractFromVDx(self):
+        pass
+
+    def ExtractFromVD_(self):
+        #source converted from C# ---> thanks to kubi
+        pass
+
+    def ExtractFromXML(self):
         XMLHandler = self.parseXMLFile()
 
         if(XMLHandler != -1):
             if(Global.DatabaseConnection <> None):
-                #--------------- Products --------------------------
-                productList = self.getProducts(XMLHandler)
-                Value = str(len(productList)) + " Stück"
-                self.lblProducts.set_text(unicode(Value,"ISO-8859-1"))
-                self.WriteToSQL(Global.DatabaseConnection, productList, "HW_PRODUCT")
                 #--------------- Applications / Manufacturer -------
                 [appList, ManufactList] = self.getApplications(XMLHandler)
                 Value = str(len(appList)) + " Stück"
                 self.lblApps.set_text(unicode(Value,"ISO-8859-1"))
                 Value = str(len(ManufactList)) + " Stück"
                 self.lblManufacturer.set_text(unicode(Value,"ISO-8859-1"))
-                self.WriteToSQL(Global.DatabaseConnection, appList, "APPLICATION_PROGRAM")
-                self.WriteToSQL(Global.DatabaseConnection, ManufactList, "MANUFACTURER")
+
+                #--------------- Products --------------------------
+                productList = self.getProducts(XMLHandler)
+                Value = str(len(productList)) + " Stück"
+                self.lblProducts.set_text(unicode(Value,"ISO-8859-1"))
                 #--------------- Communication Objects --------------
                 commList  = self.getCommunicationObjects(XMLHandler)
                 Value = str(len(commList)) + " Stück"
                 self.lblComObj.set_text(unicode(Value,"ISO-8859-1"))
-                self.WriteToSQL(Global.DatabaseConnection, commList, "COMMUNICATION_OBJECT")
                 #-------------------- Mask --------------------------
                 maskList = self.getMask(XMLHandler)
-                self.WriteToSQL(Global.DatabaseConnection, maskList, "MASK")
                 #-------------------- Product to Program-------------
                 ProdProgList = self.getProd2Progr(XMLHandler)
-                self.WriteToSQL(Global.DatabaseConnection, ProdProgList, "PRODUCT_TO_PROGRAM")
                 #-------------------- Parameter ---------------------
                 paramList = self.getParameter(XMLHandler)
                 Value = str(len(paramList)) + " Stück"
                 self.lblParam.set_text(unicode(Value,"ISO-8859-1"))
-                self.WriteToSQL(Global.DatabaseConnection, paramList, "PARAMETER")
                 #-------------------- ParameterType ---------------------
                 paramTypeList  = self.getParameterType(XMLHandler)
-                self.WriteToSQL(Global.DatabaseConnection, paramTypeList, "PARAMETER_TYPE")
                 #-------------------- Parameter List of Values ----------
                 paramListV  = self.getParameterListV(XMLHandler)
-                self.WriteToSQL(Global.DatabaseConnection, paramListV, "PARAMETER_LIST_OF_VALUES")
                 #-------------------- Catalog Entry ---------------------
                 CatalogEntryList  = self.getCatalogEntry(XMLHandler)
+                #--- write SQL Data in correct order
+
+                self.WriteToSQL(Global.DatabaseConnection, ManufactList, "MANUFACTURER")
+                self.WriteToSQL(Global.DatabaseConnection, productList, "HW_PRODUCT")
+                self.WriteToSQL(Global.DatabaseConnection, maskList, "MASK")
+                self.WriteToSQL(Global.DatabaseConnection, appList, "APPLICATION_PROGRAM")
+                self.WriteToSQL(Global.DatabaseConnection, ProdProgList, "PRODUCT_TO_PROGRAM")
                 self.WriteToSQL(Global.DatabaseConnection, CatalogEntryList, "CATALOG_ENTRY")
-
-
+                self.WriteToSQL(Global.DatabaseConnection, commList, "COMMUNICATION_OBJECT")
+                self.WriteToSQL(Global.DatabaseConnection, paramTypeList, "PARAMETER_TYPE")
+                self.WriteToSQL(Global.DatabaseConnection, paramListV, "PARAMETER_LIST_OF_VALUES")
+                self.WriteToSQL(Global.DatabaseConnection, paramList, "PARAMETER")
 
 
     def worker_thread(self, process_import):
@@ -237,22 +296,22 @@ class FB_XML_PRODUCT:
                 sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                # print sql
                 #check if Product is already existing...
-                #sqlExist = "SELECT PRODUCT_ID FROM hw_product WHERE PRODUCT_ID = " + str(List[j].getProductID())
+                sqlExist = "SELECT PRODUCT_ID FROM hw_product WHERE PRODUCT_ID = " + str(List[j].getProductID())
 
-                #Cursor = Connection.cursor()
-                #Cursor.execute(sqlExist)
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
 
-                #if(len(Cursor.fetchall()) == 0):
+                if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                try:
-                    cur.execute(sql,List[j].getSQLValueList())
-                except:
+                   try:
+                       cur.execute(sql,List[j].getSQLValueList())
+                   except:
                         #print sql
-                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                #else:
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                else:
                     #do something else
                     #print sql
-               #     self.__LogObj.NewLog("Doppeltes Produkt: " + sql,0)
+                    self.__LogObj.NewLog("Doppeltes Produkt: " + sql,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -262,22 +321,22 @@ class FB_XML_PRODUCT:
                 sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                # print sql
                 #check if Product is already existing...
-                #sqlExist = "SELECT PROGRAM_ID FROM application_program WHERE PROGRAM_ID = " + str(List[j].getProgramID())
+                sqlExist = "SELECT PROGRAM_ID FROM application_program WHERE PROGRAM_ID = " + str(List[j].getProgramID())
 
-                #Cursor = Connection.cursor()
-                #Cursor.execute(sqlExist)
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
 
-                #if(len(Cursor.fetchall()) == 0):
+                if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                try:
-                    cur.execute(sql,List[j].getSQLValueList())
-                except:
+                   try:
+                       cur.execute(sql,List[j].getSQLValueList())
+                   except:
                         #print sql
-                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                #else:
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                else:
 
                     #print sql
-                 #   self.__LogObj.NewLog("Doppelte Applikation: " + sql ,0)
+                    self.__LogObj.NewLog("Doppelte Applikation: " + sql ,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -287,21 +346,21 @@ class FB_XML_PRODUCT:
                 sql = "INSERT INTO " + Table + " VALUES(?, ?, ?)"
 
                 #check if Product is already existing...
-                #sqlExist = "SELECT MANUFACTURER_ID FROM manufacturer WHERE MANUFACTURER_ID = " + str(List[j].getManufactID())
+                sqlExist = "SELECT MANUFACTURER_ID FROM manufacturer WHERE MANUFACTURER_ID = " + str(List[j].getManufactID())
 
-                #Cursor = Connection.cursor()
-                #Cursor.execute(sqlExist)
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
 
-                #if(len(Cursor.fetchall()) == 0):
+                if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                try:
-                    cur.execute(sql,List[j].getSQLValueList())
-                except:
+                   try:
+                       cur.execute(sql,List[j].getSQLValueList())
+                   except:
                         #print sql
-                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                #else:
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                else:
                     #print sql
-                 #   self.__LogObj.NewLog("Doppelter Hersteller: " + sql ,0)
+                    self.__LogObj.NewLog("Doppelter Hersteller: " + sql ,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -311,24 +370,24 @@ class FB_XML_PRODUCT:
                 sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
                 #check if Product is already existing...
-               # sqlExist = "SELECT OBJECT_ID FROM communication_object WHERE OBJECT_ID = " + str(List[j].getObjID())
+                sqlExist = "SELECT OBJECT_ID FROM communication_object WHERE OBJECT_ID = " + str(List[j].getObjID())
 
-                #Cursor = Connection.cursor()
-                #Cursor.execute(sqlExist)
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
 
-                #if(len(Cursor.fetchall()) == 0):
+                if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                try:
-                    cur.execute(sql,List[j].getSQLValueList())
-                except:
+                   try:
+                       cur.execute(sql,List[j].getSQLValueList())
+                   except:
                         #print sql
-                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                #else:
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                else:
                     #do something else
                     #print str(List[j].getObjUniqueNo())
 
                     #print sql
-                 #   self.__LogObj.NewLog("Doppeltes Kommunikations-Object: " + sql ,0)
+                    self.__LogObj.NewLog("Doppeltes Kommunikations-Object: " + sql ,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -338,21 +397,21 @@ class FB_XML_PRODUCT:
                 sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
                 #check if Product is already existing...
-                #sqlExist = "SELECT MASK_ID FROM mask WHERE MASK_ID = " + str(List[j].getMaskID())
+                sqlExist = "SELECT MASK_ID FROM mask WHERE MASK_ID = " + str(List[j].getMaskID())
 
-                #Cursor = Connection.cursor()
-                #Cursor.execute(sqlExist)
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
 
-                #if(len(Cursor.fetchall()) == 0):
+                if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                try:
-                    cur.execute(sql,List[j].getSQLValueList())
-                except:
+                   try:
+                       cur.execute(sql,List[j].getSQLValueList())
+                   except:
                         #print sql
-                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                #else:
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                else:
                     #print sql
-                #self.__LogObj.NewLog("Doppelte Maske: " + sql ,0)
+                    self.__LogObj.NewLog("Doppelte Maske: " + sql ,0)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
 
@@ -361,21 +420,21 @@ class FB_XML_PRODUCT:
                 sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
                 #check if Product is already existing...
-                #sqlExist = "SELECT PROD2PROG_ID FROM product_to_program WHERE PROD2PROG_ID = " + str(List[j].getProd2ProgID())
+                sqlExist = "SELECT PROD2PROG_ID FROM product_to_program WHERE PROD2PROG_ID = " + str(List[j].getProd2ProgID())
 
-                #Cursor = Connection.cursor()
-                #Cursor.execute(sqlExist)
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
 
-                #if(len(Cursor.fetchall()) == 0):
+                if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                try:
-                    cur.execute(sql,List[j].getSQLValueList())
-                except:
+                   try:
+                       cur.execute(sql,List[j].getSQLValueList())
+                   except:
                         #print sql
-                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                #else:
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                else:
                     #print sql
-                 #   self.__LogObj.NewLog("Doppeltes ProductToProgram: " + sql ,0)
+                    self.__LogObj.NewLog("Doppeltes ProductToProgram: " + sql ,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -385,21 +444,21 @@ class FB_XML_PRODUCT:
                 sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
                 #check if Product is already existing...
-                #sqlExist = "SELECT PARAMETER_ID FROM parameter WHERE PARAMETER_ID = " + str(List[j].getParameterID())
+                sqlExist = "SELECT PARAMETER_ID FROM parameter WHERE PARAMETER_ID = " + str(List[j].getParameterID())
 
-                #Cursor = Connection.cursor()
-                #Cursor.execute(sqlExist)
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
 
-                #if(len(Cursor.fetchall()) == 0):
+                if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                try:
-                    cur.execute(sql,List[j].getSQLValueList())
-                except:
+                   try:
+                       cur.execute(sql,List[j].getSQLValueList())
+                   except:
                         #print sql
                     self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                #else:
+                else:
                     #print sql
-                 #   self.__LogObj.NewLog("Doppelter Parameter: " + sql ,0)
+                    self.__LogObj.NewLog("Doppelter Parameter: " + sql ,0)
 
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
@@ -409,21 +468,21 @@ class FB_XML_PRODUCT:
                 sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
                 #check if Product is already existing...
-                #sqlExist = "SELECT PARAMETER_TYPE_ID FROM parameter_type WHERE PARAMETER_TYPE_ID = " + str(List[j].getParameterTypeID2())
+                sqlExist = "SELECT PARAMETER_TYPE_ID FROM parameter_type WHERE PARAMETER_TYPE_ID = " + str(List[j].getParameterTypeID2())
 
-                #Cursor = Connection.cursor()
-                #Cursor.execute(sqlExist)
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
 
-                #if(len(Cursor.fetchall()) == 0):
+                if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                try:
-                    cur.execute(sql,List[j].getSQLValueList())
-                except:
+                   try:
+                       cur.execute(sql,List[j].getSQLValueList())
+                   except:
                         #print sql
-                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                #else:
+                       self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                else:
                     #print sql
-                 #   self.__LogObj.NewLog("Doppeltes Parameter_Type: " + sql ,0)
+                    self.__LogObj.NewLog("Doppeltes Parameter_Type: " + sql ,0)
 #------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------
             #parameter List of Values
@@ -431,18 +490,18 @@ class FB_XML_PRODUCT:
                 sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ? , ?)"
 
                 #check if Product is already existing...
-                #sqlExist = "SELECT PARAMETER_VALUE_ID FROM parameter_list_of_values WHERE PARAMETER_VALUE_ID = " + \
-                 #           str(List[j].getParameterValueID())
-                #Cursor = Connection.cursor()
-                #Cursor.execute(sqlExist)
+                sqlExist = "SELECT PARAMETER_VALUE_ID FROM parameter_list_of_values WHERE PARAMETER_VALUE_ID = " + \
+                            str(List[j].getParameterValueID())
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
 
-                #if(len(Cursor.fetchall()) == 0):
+                if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                try:
-                    cur.execute(sql,List[j].getSQLValueList())
-                except:
+                   try:
+                       cur.execute(sql,List[j].getSQLValueList())
+                   except:
                         #print sql
-                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
                 #else:
                     #print sql
                  #   self.__LogObj.NewLog("Doppeltes Parameter List of Values: " + sql ,0)
@@ -454,21 +513,21 @@ class FB_XML_PRODUCT:
                 sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
                 #check if Product is already existing...
-               # sqlExist = "SELECT CATALOG_ENTRY_ID FROM catalog_entry WHERE CATALOG_ENTRY_ID = " + str(List[j].getCatalogEntryID())
-                #Cursor = Connection.cursor()
-                #Cursor.execute(sqlExist)
+                sqlExist = "SELECT CATALOG_ENTRY_ID FROM catalog_entry WHERE CATALOG_ENTRY_ID = " + str(List[j].getCatalogEntryID())
+                Cursor = Connection.cursor()
+                Cursor.execute(sqlExist)
 
-                #if(len(Cursor.fetchall()) == 0):
+                if(len(Cursor.fetchall()) == 0):
                    #if item doesnt exist.... insert new record
-                try:
+                   try:
                         #print List[j].getSQLValueList()
-                    cur.execute(sql,List[j].getSQLValueList())
-                except:
+                        cur.execute(sql,List[j].getSQLValueList())
+                   except:
                         #print sql
-                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                #else:
+                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
+                else:
                     #print sql
-                 #   self.__LogObj.NewLog("Doppelte Catalog Entry: " + sql ,0)
+                    self.__LogObj.NewLog("Doppelte Catalog Entry: " + sql ,0)
 
 
         Connection.commit()

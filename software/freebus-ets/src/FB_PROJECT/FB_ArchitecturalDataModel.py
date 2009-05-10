@@ -32,6 +32,8 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
     __FLOOR_PREFIX=""
     __ROOM_PREFIX=""
     __JUNCTION_BOX_PREFIX=""
+    __TOPOLOGY_ROOT=""
+    __GROUPADRESS_ROOT=""
     __archDocument = None
     __PATH = ""         #Project Path
 
@@ -49,6 +51,8 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
         self.__FLOOR_PREFIX = "floor"
         self.__ROOM_PREFIX = "room"
         self.__JUNCTION_BOX_PREFIX = "junctionbox"
+        self.__TOPOLOGY_ROOT = "Topology"
+        self.__GROUPADRESS_ROOT = "GroupAdress"
 
         #archNode = Document.appendChild(Document.createElement("architectural-data"))
         #find mainnode "architectural-data"
@@ -62,6 +66,9 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
             DirTextNode = self.__archDocument.createTextNode(self.makeProjectDirectoryName())
             pNode.appendChild(self.__archDocument.createElement("directoryname")).appendChild(DirTextNode)
             pNode.appendChild(self.__archDocument.createElement("preffered-bus-system"))
+            pNode.appendChild(self.__archDocument.createElement(self.__TOPOLOGY_ROOT))
+            pNode.appendChild(self.__archDocument.createElement(self.__GROUPADRESS_ROOT))
+
 
             OutFileObj = open("structure.xml","w")
             String = self.__archDocument.toxml(encoding = "ISO-8859-1")

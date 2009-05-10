@@ -9,3 +9,6 @@ GtkWidget *create_mnuPopupTree (void);
 GtkWidget *create_DlgAddStructureElement (void);
 GtkWidget *create_DlgConvertDeviceData (void);
 GtkWidget *create_DlgFileChooser (void);
+GtkWidget *create_DlgImportFromXML (void);
+GtkWidget *create_DeviceDataWindow (void);
+GtkWidget *create_ParameterWindow (void);
