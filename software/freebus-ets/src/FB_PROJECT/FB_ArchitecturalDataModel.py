@@ -67,7 +67,9 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
             pNode.appendChild(self.__archDocument.createElement("directoryname")).appendChild(DirTextNode)
             pNode.appendChild(self.__archDocument.createElement("preffered-bus-system"))
             pNode.appendChild(self.__archDocument.createElement(self.__TOPOLOGY_ROOT))
+            pNode.setAttribute("id", self.__TOPOLOGY_ROOT)
             pNode.appendChild(self.__archDocument.createElement(self.__GROUPADRESS_ROOT))
+            pNode.setAttribute("id", self.__GROUPADRESS_ROOT)
 
 
             OutFileObj = open("structure.xml","w")

@@ -31,6 +31,7 @@ from GUI import FB_NewProjectWindow
 from GUI import FB_OpenProjectWindow
 from GUI import FB_DlgDeviceData
 from GUI.Tree import FB_ArchitecturalTree
+from GUI.Tree import FB_TopologyTree
 from DATABASE import FB_DlgDatabase
 
 from FB_PROJECT import FB_ArchitecturalDataModel
@@ -57,6 +58,7 @@ class FB_MainFrame:
     __handelboxToolbar = None    #widget object of handlebox toolbar
     __mnuPopup = None            #Object for popup menu
     __TopologyTree = None        #widget of topology treeview
+    __PopUpGlade = None
 
     treestore = None
     curDragDataType = 0            #the current Type of draged data (builidng,floor,rooms---)
@@ -82,8 +84,8 @@ class FB_MainFrame:
         #-------------------------------------------------------------------------------------
 
         #popupmenu init
-        PopupGlade = gtk.glade.XML(Global.GUIPath  + "freebus.glade","mnuPopupTree")
-        self.__mnuPopup =  PopupGlade.get_widget("mnuPopupTree")
+        self.__PopUpGlade = gtk.glade.XML(Global.GUIPath  + "freebus.glade","mnuPopupTree")
+        self.__mnuPopup =  self.__PopUpGlade.get_widget("mnuPopupTree")
 
         if(self.__mnuPopup == None):
            self.__LogObj.NewLog("Error at intializing GUI-Interface (Glade-Object-Popup Menu)",1)
@@ -91,16 +93,20 @@ class FB_MainFrame:
 
         pop = {
                 #Popupmenu
+                "on_mnuNewItem_activate": self.PopupNew,
                 "on_mnuChangeName_activate": self.PopupChangeName,
                 "on_mnuDeleteGroup_activate": self.PopupDelete,
                 "on_mnuPropertyGroup_activate":self.PopupProperty
                 }
 
-        PopupGlade.signal_autoconnect(pop)
+        self.__PopUpGlade.signal_autoconnect(pop)
 
 
        #-------------------------------------------------------------------------------------
 
+       #popupmenu Topology
+
+       #-------------------------------------------------------------------------------------
 
         #setting up DragNDrop of (Source) Toolbarbuttons
         #1. get widget of building button
@@ -128,7 +134,7 @@ class FB_MainFrame:
         self.__ProjTree = self.Tree
 
         #get widget object of Topology Tree
-        self__TopologyTree = self.__GladeObj.get_widget("TopolgyTree")
+        self.__TopologyTreeWidget = self.__GladeObj.get_widget("TopologyTree")
 
         dic = { "on_MainFrame_destroy" : gtk.main_quit ,
                 "on_Quitt_activate" : self.QuittApp,
@@ -145,7 +151,8 @@ class FB_MainFrame:
                 #ProjectTree
                 "on_ProjectTree_drag_data_received" : self.ProjectTreeDropData,
                 "on_ProjectTree_drag_motion" : self.ProjectTreeDragMotion,
-                "on_ProjectTree_button_press_event": self.TreeButtonPress
+                "on_ProjectTree_button_press_event": self.ProjectTreeButtonPress,
+                "on_TopologyTree_button_press_event": self.TopologyTreeButtonPress
 
                 #TopologyTree
 
@@ -159,7 +166,7 @@ class FB_MainFrame:
 
         #create Project Tree
         self.__ArchTree = FB_ArchitecturalTree.FB_ArchitecturalTree(self.__LogObj,self.__ProjTree)
-
+        self.__TopologyTree = FB_TopologyTree.FB_TopologyTree(self.__LogObj,self.__TopologyTreeWidget)
 
 
     #create a new project
@@ -206,6 +213,10 @@ class FB_MainFrame:
         if(self.__ProjTree <> None):
             self.__ArchTree.ClearTree()
             self.__ArchTree.CreateNewTree(self.__CurProjectObj)
+
+            self.__TopologyTree.ClearTree()
+            self.__TopologyTree.CreateNewTree(self.__CurProjectObj)
+
             self.__handelboxToolbar.show()
 
 
@@ -281,11 +292,26 @@ class FB_MainFrame:
                 pass
 
     #general event handler to handle button events
-    def TreeButtonPress(self,widget, event):
+    def ProjectTreeButtonPress(self,widget, event):
         #Ignore double-clicks and triple-clicks  -> do right click to show popup menu
         if (event.button == 3 and event.type == gtk.gdk.BUTTON_PRESS):
+            #get New-Button Widget and unvisible it, only used in topology/group address tree
+            NewButtonWidget = self.__PopUpGlade.get_widget("mnuNewItem")
+            NewButtonWidget.hide()
             self.__mnuPopup.popup(None,None,None,event.button,event.time)
 
+    def TopologyTreeButtonPress(self,widget,event):
+        #Ignore double-clicks and triple-clicks  -> do right click to show popup menu
+        if (event.button == 3 and event.type == gtk.gdk.BUTTON_PRESS):
+            #get New-Button Widget and unvisible it, only used in topology/group address tree
+            NewButtonWidget = self.__PopUpGlade.get_widget("mnuNewItem")
+            NewButtonWidget.show()
+            self.__mnuPopup.popup(None,None,None,event.button,event.time)
+
+
+    #popup menu -> New item
+    def PopupNew(self,widget, data=None):
+        print "NEW ITEM"
 
     #Popup activity
     def PopupChangeName(self,widget, data=None):
