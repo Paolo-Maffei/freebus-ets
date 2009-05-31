@@ -167,13 +167,13 @@ class FB_ArchitecturalTree:
     def getImage(self,Prefix):
         #get back buidling image
 
-        if(Prefix == 'building'):
+        if(Prefix == self.ArchModel.BUILDING_PREFIX):
             return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "building.png")
-        elif(Prefix == 'floor'):
+        elif(Prefix == self.ArchModel.FLOOR_PREFIX):
             return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "floor.png")
-        elif(Prefix == 'room'):
+        elif(Prefix == self.ArchModel.ROOM_PREFIX):
             return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "room.png")
-        elif(Prefix == 'junctionbox'):
+        elif(Prefix == self.ArchModel.JUNCTION_BOX_PREFIX):
             return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "junctionbox.png")
 
     #gets the iterator of a given path ( comes from a drop action)

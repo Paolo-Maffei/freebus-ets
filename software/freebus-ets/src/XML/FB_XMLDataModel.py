@@ -47,12 +47,12 @@ class FB_XMLDataModel:
         Parent = Node.parentNode
         Parent.removeChild(Node)
 
-    #get the name of a Node
+    #get the name of a Nodeelement
     def getName(self,ID):
         Node = self.getDataRootNode(ID)
         return self.readDOMNodeValue(Node, "name" )
 
-    #set the name of Node
+    #set the name of Nodeelement
     def setName(self,ID,Name):
         Node = self.getDataRootNode(ID)
         self.writeDOMNodeValue(Node, "name", unicode(Name))
@@ -67,6 +67,10 @@ class FB_XMLDataModel:
         Node = self.getDataRootNode(ID)
         self.writeDOMNodeValue(Node,"comment", unicode(comment))
 
+    #get the NodeName
+    def getNodeName(self,ID):
+        Node = self.getDataRootNode(ID)
+        return Node.tagName
 
     ##Return the id list for all child nodes with namen name from the given stat node
     #@param node the start node
@@ -94,7 +98,7 @@ class FB_XMLDataModel:
     #@return the DOM Element
     def createChild(self,TagName):
         Element = self.__DOMObj.createElement(TagName)
-
+        #creates the new ID (root-element name + a number (building + "-1" ...)
         id = TagName+"-" + str(self.getNewID(TagName))  # get id for the child
         Element.setAttribute("id", id)
 
@@ -118,8 +122,10 @@ class FB_XMLDataModel:
             Element = NodeList.item(i)
             if(Element.hasAttribute("id")):
                 idstr = Element.getAttribute("id")
+
                 prefix = TagName + "-"
                 number = idstr.replace(prefix, "")
+
                 if(int(number) > max):
                     max = int(number)
         return max + 1    # return maximum + 1
@@ -137,6 +143,7 @@ class FB_XMLDataModel:
             NodeName = ID[0: end]
         else:
             NodeName = ID
+
 
         #print self.__DOMObj
         NodeList = self.__DOMObj.getElementsByTagName(NodeName)
@@ -169,8 +176,10 @@ class FB_XMLDataModel:
     #@param path path to the node
     #@param value the value that will be written
     def writeDOMNodeValue(self, Node, Path, Value):
+        #in case Node is None-Type, the parent Node is the root-node
 
         self.writeNodeValue(Node, Path, Value)
+
         self.__DOMObj.normalize()
 
 

@@ -94,39 +94,66 @@ class FB_TopologyTree:
         TopologyIter = self.__treestore.get_iter_first()
 
         #get root node
-        Node = self.ArchModel.getDataRootNode("Topology")
+        Node = self.ArchModel.getDataRootNode(self.ArchModel.getRootID())
 
         #Column 1
         self.__treestore.set_value(TopologyIter,1,self.__CurProjectObj.getProjectName())
         #Column 2
-        #self.__treestore.set_value(BuildingIter,2,self.ArchModel.getRootID())
+        self.__treestore.set_value(TopologyIter,2,self.ArchModel.getRootID())
 
         Obj = self.ArchModel.getDOMObj()
 
         #get all buildings
-       # BuildingPrefix = self.ArchModel.getPrefix(Global.DND_BUILDING)
+        TopologyAreaPrefix = self.ArchModel.getPrefix(20)
 
         #get List of ID of given Prefix (building-1,building-2,...)
-        #IDList = self.ArchModel.getIDList(Node,BuildingPrefix)
+        IDList = self.ArchModel.getIDList(Node,TopologyAreaPrefix)
+
+        #for all topology areas....
+        for areas in range(len(IDList)):
+            LastAreaIter = self.CreateTreeNode(IDList[areas],TopologyIter,TopologyAreaPrefix)
+
+            #get all lines in given area
+            LineNode = self.ArchModel.getDataRootNode(IDList[areas])
+            TopologyLinePrefix = self.ArchModel.getPrefix(21)
+            LineList = self.ArchModel.getIDList(LineNode,TopologyLinePrefix)
+            #save last Iter
+            LineIter = LastAreaIter
+
+            for lines in range(len(LineList)):
+                LastLineIter = self.CreateTreeNode(LineList[lines],LineIter,TopologyLinePrefix)
 
 
         self.__TreeObj.expand_all()
 
 
     def CreateTreeNode(self,ID,Iterator,Prefix):
-        BuildingNode = self.ArchModel.getDataRootNode(ID)
-        #attr. will be saved in tree without visibilty
-        Attr = self.ArchModel.getChildID(BuildingNode)
-        Value = self.ArchModel.readDOMNodeValue(BuildingNode,"name")
-        image = self.getImage(Prefix)
-        iter =  self.__treestore.append(Iterator, [image, unicode(Value,"ISO-8859-1"), Attr])
-        path = self.__treestore.get_path(Iterator)
+        ParentNode = self.ArchModel.getDataRootNode(ID)
 
-        self.__TreeObj.expand_row(path, True)
+        #attr. will be saved in tree without visibilty
+        Attr = self.ArchModel.getChildID(ParentNode)
+        Value = self.ArchModel.readDOMNodeValue(ParentNode,"name")
+
+        image = self.getImage(Prefix)
+
+        iter =  self.__treestore.append(Iterator, [image, unicode(Value,"ISO-8859-1"), Attr])
+
+        #Iterator should be None if Root-Node was selected
+        if(Iterator <> None):
+            path = self.__treestore.get_path(Iterator)
+            self.__TreeObj.expand_row(path, True)
+
         self.__CurProjectObj.isChanged = True
         return iter
 
 
+    def getImage(self,Prefix):
+
+        print self.ArchModel.TOPOLOGY_LINE
+        if(Prefix == self.ArchModel.TOPOLOGY_AREA):
+            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "area.png")
+        elif(Prefix == self.ArchModel.TOPOLOGY_LINE):
+            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "line.png")
 
 
     #gets the iterator of a given path ( comes from a drop action)

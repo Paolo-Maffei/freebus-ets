@@ -28,12 +28,14 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
     __DOMObj = None
     __ROOT_ID = ""
     __PROJECT_PREFIX=""
-    __BUILDING_PREFIX=""
-    __FLOOR_PREFIX=""
-    __ROOM_PREFIX=""
-    __JUNCTION_BOX_PREFIX=""
-    __TOPOLOGY_ROOT=""
-    __GROUPADRESS_ROOT=""
+    BUILDING_PREFIX=""
+    FLOOR_PREFIX=""
+    ROOM_PREFIX=""
+    JUNCTION_BOX_PREFIX=""
+    TOPOLOGY_ROOT=""
+    TOPOLOGY_AREA=""
+    TOPOLOGY_LINE=""
+    GROUPADRESS_ROOT=""
     __archDocument = None
     __PATH = ""         #Project Path
 
@@ -46,13 +48,16 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
         self.__LogObj = LogObj
         self.__archDocument = ArchDocument
         self.__ROOT_ID = "project-1"
+        self.TOPOLOGY_ROOT_ID = "topology-1"
         self.__PROJECT_PREFIX = "project"
-        self.__BUILDING_PREFIX = "building"
-        self.__FLOOR_PREFIX = "floor"
-        self.__ROOM_PREFIX = "room"
-        self.__JUNCTION_BOX_PREFIX = "junctionbox"
-        self.__TOPOLOGY_ROOT = "Topology"
-        self.__GROUPADRESS_ROOT = "GroupAdress"
+        self.BUILDING_PREFIX = "building"
+        self.FLOOR_PREFIX = "floor"
+        self.ROOM_PREFIX = "room"
+        self.JUNCTION_BOX_PREFIX = "junctionbox"
+
+        self.TOPOLOGY_AREA = "AreaTopology"
+        self.TOPOLOGY_LINE = "LineTopology"
+        self.GROUPADRESS_ROOT = "RootGroupAdress"
 
         #archNode = Document.appendChild(Document.createElement("architectural-data"))
         #find mainnode "architectural-data"
@@ -66,10 +71,10 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
             DirTextNode = self.__archDocument.createTextNode(self.makeProjectDirectoryName())
             pNode.appendChild(self.__archDocument.createElement("directoryname")).appendChild(DirTextNode)
             pNode.appendChild(self.__archDocument.createElement("preffered-bus-system"))
-            pNode.appendChild(self.__archDocument.createElement(self.__TOPOLOGY_ROOT))
-            pNode.setAttribute("id", self.__TOPOLOGY_ROOT)
-            pNode.appendChild(self.__archDocument.createElement(self.__GROUPADRESS_ROOT))
-            pNode.setAttribute("id", self.__GROUPADRESS_ROOT)
+            newNode = pNode.appendChild(self.__archDocument.createElement("topology"))
+            newNode.setAttribute("id", self.TOPOLOGY_ROOT_ID)
+            newNode = pNode.appendChild(self.__archDocument.createElement(self.GROUPADRESS_ROOT))
+            #newNode.setAttribute("id", self.GROUPADRESS_ROOT)
 
 
             OutFileObj = open("structure.xml","w")
@@ -84,13 +89,18 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
         if(Index == 1):
             return self.__PROJECT_PREFIX
         elif(Index == 2):
-            return self.__BUILDING_PREFIX
+            return self.BUILDING_PREFIX
         elif(Index == 3):
-            return self.__FLOOR_PREFIX
+            return self.FLOOR_PREFIX
         elif(Index == 4):
-            return self.__ROOM_PREFIX
+            return self.ROOM_PREFIX
         elif(Index == 5):
-            return self.__JUNCTION_BOX_PREFIX
+            return self.JUNCTION_BOX_PREFIX
+        elif(Index == 20):
+            return self.TOPOLOGY_AREA
+        elif(Index == 21):
+            return self.TOPOLOGY_LINE
+
 
     ##Returns the data model root node ID.
     def getRootID(self):
@@ -99,58 +109,71 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
 
     def getChildIDs(self, parentID):
         if(parentID.find(self.__PROJECT_PREFIX) > -1):
-            return self.getIDList(self.getDataRootNode(parentID), self.__BUILDING_PREFIX)
+            return self.getIDList(self.getDataRootNode(parentID), self.BUILDING_PREFIX)
 
-        elif(parentID.find(self.__BUILDING_PREFIX) > -1):
-            return self.getIDList(self.getDataRootNode(parentID), self.__FLOOR_PREFIX)
+        elif(parentID.find(self.BUILDING_PREFIX) > -1):
+            return self.getIDList(self.getDataRootNode(parentID), self.FLOOR_PREFIX)
 
-        elif(parentID.find(self.__FLOOR_PREFIX) > -1):
-            return self.getIDList(self.getDataRootNode(parentID), self.__ROOM_PREFIX)
+        elif(parentID.find(self.FLOOR_PREFIX) > -1):
+            return self.getIDList(self.getDataRootNode(parentID), self.ROOM_PREFIX)
 
-        elif(parentID.find(self.__BUILDING_PREFIX) > -1):
-            return self.getIDList(self.getDataRootNode(parentID), self.__FLOOR_PREFIX)
+        elif(parentID.find(self.BUILDING_PREFIX) > -1):
+            return self.getIDList(self.getDataRootNode(parentID), self.FLOOR_PREFIX)
 
-        elif(parentID.find(self.__FLOOR_PREFIX) > -1):
-            return self.getIDList(self.getDataRootNode(parentID), self.__ROOM_PREFIX)
+        elif(parentID.find(self.FLOOR_PREFIX) > -1):
+            return self.getIDList(self.getDataRootNode(parentID), self.ROOM_PREFIX)
 
-        elif(parentID.find(self.__ROOM_PREFIX) > -1):
-            return self.getIDList(self.getDataRootNode(parentID), self.__JUNCTION_BOX_PREFIX)
+        elif(parentID.find(self.ROOM_PREFIX) > -1):
+            return self.getIDList(self.getDataRootNode(parentID), self.JUNCTION_BOX_PREFIX)
         else:
             return None
 #****************************************************************************
     def getParentID(self, childID):
         #child ID starts not with Project-Prefix
         if(childID.find(self.__PROJECT_PREFIX) == -1):
-            ParentElement = self.getDataRootNode(childID).parentNode()
+
+            ParentElement = self.getDataRootNode(childID).parentNode
             return ParentElement.getAttribute("id")
         else:
             return ""
 
 #****************************************************************************
+    #creates a new child-Element in the DOM and returns this Elements ID
     def addChild(self, parentID):
 
         parent = self.getDataRootNode(parentID)
+
+        #print parentID
+        #print self.getNodeName(parentID)
+
         if(parentID.find(self.__PROJECT_PREFIX) > -1):
-            Element = self.createChild(self.__BUILDING_PREFIX)
-            parent.appendChild(Element)
-            return self.getChildID(Element)
+            Element = self.createChild(self.BUILDING_PREFIX)
 
-        elif(parentID.find(self.__BUILDING_PREFIX) > -1):
-            Element = self.createChild(self.__FLOOR_PREFIX)
-            parent.appendChild(Element)
-            return self.getChildID(Element)
+        elif(parentID.find(self.BUILDING_PREFIX) > -1):
+            Element = self.createChild(self.FLOOR_PREFIX)
 
-        if(parentID.find(self.__FLOOR_PREFIX) > -1):
-            Element = self.createChild(self.__ROOM_PREFIX)
-            parent.appendChild(Element)
-            return self.getChildID(Element)
+        elif(parentID.find(self.FLOOR_PREFIX) > -1):
+            Element = self.createChild(self.ROOM_PREFIX)
 
-        if(parentID.find(self.__ROOM_PREFIX) > -1):
-            Element = self.createChild(self.__JUNCTION_BOX_PREFIX)
+        elif(parentID.find(self.ROOM_PREFIX) > -1):
+            Element = self.createChild(self.JUNCTION_BOX_PREFIX)
+
+        #topology elements
+        if(parentID == self.TOPOLOGY_ROOT_ID):
+            Element = self.createChild(self.TOPOLOGY_AREA)
+
+
+        if(self.getNodeName(parentID) == self.TOPOLOGY_AREA):
+            Element = self.createChild(self.TOPOLOGY_LINE)
+
+        try:
             parent.appendChild(Element)
-            return self.getChildID(Element)
-        else:
-            return None
+            ID = self.getChildID(Element)
+
+        except:
+            ID = None
+
+        return ID
 
 #****************************************************************************
     def addEndDevice(self, roomId, enddevId, Point , devType):

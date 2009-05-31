@@ -60,8 +60,13 @@ class FB_MainFrame:
     __TopologyTree = None        #widget of topology treeview
     __PopUpGlade = None
 
+    __popupNewHandlerID = 0      #signale Hander ID for popupMenu "New Item" button
+    __popupEditHandlerID = 0     #signal handler ID for popupMenu "Change Name" button
+
     treestore = None
     curDragDataType = 0            #the current Type of draged data (builidng,floor,rooms---)
+
+    tmpCounter = 0
 
     def __init__(self, LogObj):
     # create a new window
@@ -93,10 +98,11 @@ class FB_MainFrame:
 
         pop = {
                 #Popupmenu
-                "on_mnuNewItem_activate": self.PopupNew,
+               # "on_mnuNewItem_activate": self.PopupNew,
                 "on_mnuChangeName_activate": self.PopupChangeName,
                 "on_mnuDeleteGroup_activate": self.PopupDelete,
                 "on_mnuPropertyGroup_activate":self.PopupProperty
+
                 }
 
         self.__PopUpGlade.signal_autoconnect(pop)
@@ -152,9 +158,9 @@ class FB_MainFrame:
                 "on_ProjectTree_drag_data_received" : self.ProjectTreeDropData,
                 "on_ProjectTree_drag_motion" : self.ProjectTreeDragMotion,
                 "on_ProjectTree_button_press_event": self.ProjectTreeButtonPress,
-                "on_TopologyTree_button_press_event": self.TopologyTreeButtonPress
 
                 #TopologyTree
+                "on_TopologyTree_button_release_event":self.TopologyTreeButtonPress
 
                 #GroupAddressTree
 
@@ -167,6 +173,7 @@ class FB_MainFrame:
         #create Project Tree
         self.__ArchTree = FB_ArchitecturalTree.FB_ArchitecturalTree(self.__LogObj,self.__ProjTree)
         self.__TopologyTree = FB_TopologyTree.FB_TopologyTree(self.__LogObj,self.__TopologyTreeWidget)
+
 
 
     #create a new project
@@ -235,43 +242,24 @@ class FB_MainFrame:
             #get ID of selected item in treeview (iter path)
             Iterator = model.get_iter(path)
             #position is always 2 (column) to idendifiy the type of node
-            #child-element (ex: project-1,building-1 ...
-            Attr = model.get_value(Iterator, 2)
+            #parent-element (ex: project-1,building-1 ...
+            ParentID = model.get_value(Iterator, 2)
             #selected ID (ex:project, building,room, floor...
             SelID = self.__ArchTree.ArchModel.getPrefix(self.curDragDataType-1)
 
             #remove last part (-1 ..)
-            end = Attr.find('-')
+            end = ParentID.find('-')
             if(end <> -1):
-                Type = Attr[0: end]
+                Type = ParentID[0: end]
             else:
-                Type = Attr
+                Type = ParentID
 
             #wenn value = project, dann darf nur Typ building eingefügt werden usw...
             #thats why -> targetID - 1 (building -> project; floor->building ...)
             if (SelID == Type):
-                #open dialog to give a new name
-                #AddStructureElement = FB_AddStructureElement.FB_AddStructureElement(self.__LogObj, self,"Reserve")
-                GladeObj = gtk.glade.XML(Global.GUIPath + "freebus.glade","DlgAddStructureElement")
+                PicturePrefix = self.__ArchTree.ArchModel.getPrefix(self.curDragDataType)
+                self.OpenDlgNewStructureElement(ParentID, Iterator,self.__ArchTree, PicturePrefix)
 
-                window = GladeObj.get_widget("DlgAddStructureElement")
-                txtElementName = GladeObj.get_widget("txtElementName")
-                #wait for closing dialog
-                response = window.run()
-
-                if(response == gtk.RESPONSE_OK):
-                    #Default Name
-                    Name = txtElementName.get_text()
-                    window.destroy()
-                    #add object
-                    ID = self.__ArchTree.ArchModel.addChild(Attr)
-                    if(Name == ""):
-                        Name = ID
-
-                    self.__ArchTree.ArchModel.setName(ID,Name)
-                    self.__ArchTree.CreateTreeNode(ID, Iterator, self.__ArchTree.ArchModel.getPrefix(self.curDragDataType))
-                else:
-                    window.destroy()
 
     #check if type ok for drop position (cursorlayout!)
     #currently not completed --- for later use ti optimize
@@ -291,37 +279,189 @@ class FB_MainFrame:
             if (value == self.__ArchTree.ArchModel.getPrefix(self.curDragDataType-1)):
                 pass
 
+    #handles the general dialog to add any structure element
+    def OpenDlgNewStructureElement(self, ParentID, TreeIterator, TreeObject, PicturePrefix):
+        #open dialog to give a new name
+        #AddStructureElement = FB_AddStructureElement.FB_AddStructureElement(self.__LogObj, self,"Reserve")
+        GladeObj = gtk.glade.XML(Global.GUIPath + "freebus.glade","DlgAddStructureElement")
+
+        window = GladeObj.get_widget("DlgAddStructureElement")
+        txtElementName = GladeObj.get_widget("txtElementName")
+        #wait for closing dialog
+        response = window.run()
+
+        if(response == gtk.RESPONSE_OK):
+        #Default Name
+            Name = txtElementName.get_text()
+
+            #add object and gets the new ID (topology-1 ...)
+            ID = self.__ArchTree.ArchModel.addChild(ParentID)
+
+            if(Name == ""):
+                Name = ID
+
+            if(ID <> None):
+              #  print "neue ID " + ID + " ; Name: " + Name + " ; ParentID = " + ParentID
+                self.__ArchTree.ArchModel.setName(ID,Name)
+                TreeObject.CreateTreeNode(ID, TreeIterator, PicturePrefix)
+
+            window.destroy()
+        else:
+            window.destroy()
+
+    #callback of detach menu to popup
+    def PopupDetach(self,menu, widget):
+        pass
+        #print "Detach"
+
     #general event handler to handle button events
     def ProjectTreeButtonPress(self,widget, event):
+        #attach treeview "ProjectTree" to popup
+        if(self.__mnuPopup.get_attach_widget() <> None):
+            self.__mnuPopup.detach()
+        self.__mnuPopup.attach_to_widget(widget,self.PopupDetach)
         #Ignore double-clicks and triple-clicks  -> do right click to show popup menu
-        if (event.button == 3 and event.type == gtk.gdk.BUTTON_PRESS):
+        if (event.button == 3 and event.type == gtk.gdk.BUTTON_PRESS and self.__CurProjectObj <> None):
             #get New-Button Widget and unvisible it, only used in topology/group address tree
+
             NewButtonWidget = self.__PopUpGlade.get_widget("mnuNewItem")
             NewButtonWidget.hide()
             self.__mnuPopup.popup(None,None,None,event.button,event.time)
 
     def TopologyTreeButtonPress(self,widget,event):
+        #attach treeview "TopologyTree" to popup
+        if(self.__mnuPopup.get_attach_widget() <> None):
+            self.__mnuPopup.detach()
+        self.__mnuPopup.attach_to_widget(widget,self.PopupDetach)
+
         #Ignore double-clicks and triple-clicks  -> do right click to show popup menu
-        if (event.button == 3 and event.type == gtk.gdk.BUTTON_PRESS):
-            #get New-Button Widget and unvisible it, only used in topology/group address tree
+        if (event.button ==  3 and event.type == gtk.gdk.BUTTON_RELEASE and self.__CurProjectObj <> None ):
+            #init Datafield
+            Data = [0,0,0,0]
+
+            #check which item has been clicked (area, line)
+            #1. get treeview
+            treeselection = self.__TopologyTreeWidget.get_selection()
+            #Iterator = model.get_iter(path)
+            (model, iter) = treeselection.get_selected()
+            #get the widget object of the menuitem "new"
             NewButtonWidget = self.__PopUpGlade.get_widget("mnuNewItem")
+
+            #in case of root element -> iter will be None-Type
+            #check for root-selection
+            #print model.iter_parent(iter)
+
+            if(model.iter_parent(iter) == None):
+                ParentID = self.__ArchTree.ArchModel.TOPOLOGY_ROOT_ID
+
+                PicturePrefix = 20    #to idendiy the right picture for tree visualisation
+                Data[0] = 1
+                Data[1] = ParentID
+                Data[2] = iter
+                Data[3] = PicturePrefix
+                #NewButtonWidget.connect("activate",self.PopupNew,(1,ParentID,iter,PicturePrefix))
+                label = NewButtonWidget.child
+                label.set_text("Neuen Bereich anlegen")
+
+
+            #sub node selected (lines are possible)
+            else:
+                #get the ID (=ParentID) of the selected object -> thats the parent for our new line
+                #we need the child ID (ID of the seletced object)
+
+                ParentID =  model.get_value(iter,2) #get value of Column 2 = Attributevalue = ID (Column 0 = picture, 1 = Name)
+                #check prefix (in case of line is selected -> only device can be added)
+                #get the nodename and compare it with the prefix to know if line or area or whatever was selected
+                ParentNodeName = self.__ArchTree.ArchModel.getNodeName(ParentID)
+
+                if(ParentNodeName == self.__ArchTree.ArchModel.TOPOLOGY_AREA):
+                    PicturePrefix = 21
+                    Data[0] = 2
+                    Data[1] = ParentID
+                    Data[2] = iter
+                    Data[3] = PicturePrefix
+                    #NewButtonWidget.connect("activate",self.PopupNew,(2,ParentID,iter,PicturePrefix))
+                    label = NewButtonWidget.child
+                    label.set_text("Neue Linie anlegen")
+                elif(ParentNodeName == self.__ArchTree.ArchModel.TOPOLOGY_LINE):
+                    PicturePrefix = 22
+                    Data[0] = 3
+                    Data[1] = ParentID
+                    Data[2] = iter
+                    Data[3] = PicturePrefix
+                    #NewButtonWidget.connect("activate",self.PopupNew,(3,ParentID,iter,PicturePrefix))
+                    label = NewButtonWidget.child
+                    label.set_text(unicode("Neues Gerät einfügen","ISO-8859-1"))
+
+
             NewButtonWidget.show()
+            self.__popupNewHandlerID = NewButtonWidget.connect("activate",self.PopupNew,(Data[0],Data[1],Data[2],Data[3]))
+            #show popup
+            #popup menu: (parent_menu_shell : the menu shell containing the triggering menu item or None.
+            #             parent_menu_item : the menu item whose activation triggered the popup or None.
+            #             func : a user supplied function used to position the menu or None.
+            #             button : the mouse button which was pressed to initiate the event.
+            #             activate_time : the time at which the activation event occurred.
+            #             data :  optional data to be passed to func
             self.__mnuPopup.popup(None,None,None,event.button,event.time)
 
 
     #popup menu -> New item
-    def PopupNew(self,widget, data=None):
-        print "NEW ITEM"
+    def PopupNew(self,widget, data):
+        #date structure:
+            #[0] = type (1 = new Area of topology ; 2 ) new line in area of topology
+            #[1] = Parent-ID of DOM-Node (in case of new area -> parent = topology-1,
+            #[2] = iterator of tree
+            #[3] = PicturePrefix for tree (building, floor, area, line ...)=
 
-    #Popup activity
+        type = data[0]
+        ParentID = data[1]
+        iter = data[2]
+        PicPrefix = data[3]
+
+        if(type == 1 or type == 2):
+            #new area should be created or  #new line should be created
+            self.OpenDlgNewStructureElement(ParentID,iter, self.__TopologyTree, self.__ArchTree.ArchModel.getPrefix(PicPrefix))
+            #important to disconnect this event!
+            widget.disconnect(self.__popupNewHandlerID)
+            #new device should be created
+        elif(type == 3):
+            pass
+        else:
+            pass
+
+    #Popup activity ;
+    #edit item name
     def PopupChangeName(self,widget, data=None):
-        #change to editmode
-        self.__ArchTree.text_cell.set_property('editable', True)
-        #find current selected position at treeview
-        path,column = self.__ProjTree.get_cursor()
-        self.__ProjTree.set_cursor( path,column ,True )
-        model = self.__ProjTree.get_model()
-        self.__ArchTree.text_cell.connect('edited', self.CellChanged, model)
+        try:
+            menuParent = widget.parent.get_attach_widget()
+            self.__mnuPopup.detach()
+
+            #depending on widget which is attached to the popup do different things...
+            #in case of "ProjectTree"
+            if(menuParent.get_name() == self.__ProjTree.get_name()):
+                #first get the right widget which was initiator
+                #change to editmode
+                self.__ArchTree.text_cell.set_property('editable', True)
+                #find current selected position at treeview
+                path,column = self.__ProjTree.get_cursor()
+                self.__ProjTree.set_cursor( path,column ,True )
+                model = self.__ProjTree.get_model()
+                self.__ArchTree.text_cell.connect('edited', self.CellChanged, model)
+
+            elif(menuParent.get_name() == self.__TopologyTreeWidget.get_name()):
+                #first get the right widget which was initiator
+                #change to editmode
+                self.__TopologyTree.text_cell.set_property('editable', True)
+                #find current selected position at treeview
+                path,column = self.__TopologyTreeWidget.get_cursor()
+                self.__TopologyTreeWidget.set_cursor( path,column ,True )
+                model = self.__TopologyTreeWidget.get_model()
+                self.__TopologyTree.text_cell.connect('edited', self.CellChanged, model)
+
+
+        except:
+            pass
 
     #will be called if a item has been changed (name of node...)
     def CellChanged(self,cell, path, new_text, user_data):
@@ -334,33 +474,70 @@ class FB_MainFrame:
         #find ID from cloumn 2 (building-2 etc.)
         ID = treeview.get_value(Iterator, 2)
         #write new text to architectural model (internal data)
+        #ArchTree is OK; we dont nedd the TopologyTree here, because internal the ArchModel is the one and only
+        #in the project (belongs in every xxTree-module)
         self.__ArchTree.ArchModel.setName(ID,new_text)
         #reset editable property of tree
         self.__ArchTree.text_cell.set_property('editable', False)
+        self.__TopologyTree.text_cell.set_property('editable', False)
+
         self.__CurProjectObj.isChanged = True
 
 
+    #popup acitivity -> delete item
     def PopupDelete(self,widget, data=None):
-        #get the selected item
-        treeselection = self.Tree.get_selection()
-        treestore, Iterator = treeselection.get_selected()
-        #get ID of selected item
-        Attr = treestore.get_value(Iterator, 2)
 
-        end = Attr.find('-')
-        if(end <> -1):
-            Type = Attr[0: end]
-        else:
-            Type = Attr
+        try:
+            menuParent = widget.parent.get_attach_widget()
+            self.__mnuPopup.detach()
 
-        if(Type <> self.__ArchTree.ArchModel.getPrefix(Global.DND_PROJECT)):
-            #finaly:
-            #delete treeobjects
-            treestore.remove(Iterator)
-            #delete internal data
-            self.__ArchTree.ArchModel.removeData(Attr)
-            self.__CurProjectObj.isChanged = True
+            #depending on widget which is attached to the popup do different things...
+            #in case of "ProjectTree"
+            if(menuParent.get_name() == self.__ProjTree.get_name()):
+                #get the selected item
+                treeselection = self.__ProjTree.get_selection()
+                treestore, Iterator = treeselection.get_selected()
+                #get ID of selected item
+                Attr = treestore.get_value(Iterator, 2)
 
+                end = Attr.find('-')
+                if(end <> -1):
+                    Type = Attr[0: end]
+                else:
+                    Type = Attr
+
+                if(Type <> self.__ArchTree.ArchModel.getPrefix(Global.DND_PROJECT)):
+                    #finaly:
+                    #delete treeobjects
+                    treestore.remove(Iterator)
+                    #delete internal data
+                    self.__ArchTree.ArchModel.removeData(Attr)
+                    self.__CurProjectObj.isChanged = True
+            #Topology Tree
+            elif(menuParent.get_name() == self.__TopologyTreeWidget.get_name()):
+                #get the selected item
+                treeselection = self.__TopologyTreeWidget.get_selection()
+                treestore, Iterator = treeselection.get_selected()
+                #get ID of selected item
+                Attr = treestore.get_value(Iterator, 2)
+                end = Attr.find('-')
+                if(end <> -1):
+                    Type = Attr[0: end]
+                else:
+                    Type = Attr
+
+                if(Type <> self.__ArchTree.ArchModel.getPrefix(Global.DND_PROJECT)):
+                    #finaly:
+                    #delete treeobjects
+                    treestore.remove(Iterator)
+                    #delete internal data
+                    self.__TopologyTree.ArchModel.removeData(Attr)
+                    self.__CurProjectObj.isChanged = True
+
+        except:
+            pass
+
+    #popup activity -> show propertys
     def PopupProperty(self,widget, data=None):
         print "Prop"
 
