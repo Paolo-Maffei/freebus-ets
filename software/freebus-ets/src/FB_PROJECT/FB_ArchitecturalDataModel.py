@@ -36,6 +36,9 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
     TOPOLOGY_AREA=""
     TOPOLOGY_LINE=""
     GROUPADRESS_ROOT=""
+    GROUPADRESS_MAIN=""
+    GROUPADRESS_MIDDLE=""
+    GROUPADRESS_SUB=""
     __archDocument = None
     __PATH = ""         #Project Path
 
@@ -49,6 +52,7 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
         self.__archDocument = ArchDocument
         self.__ROOT_ID = "project-1"
         self.TOPOLOGY_ROOT_ID = "topology-1"
+        self.GROUPADRESS_ROOT_ID = "groupadress-1"
         self.__PROJECT_PREFIX = "project"
         self.BUILDING_PREFIX = "building"
         self.FLOOR_PREFIX = "floor"
@@ -57,7 +61,10 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
 
         self.TOPOLOGY_AREA = "AreaTopology"
         self.TOPOLOGY_LINE = "LineTopology"
-        self.GROUPADRESS_ROOT = "RootGroupAdress"
+
+        self.GROUPADRESS_MAIN = "MainGroup"
+        self.GROUPADRESS_MIDDLE = "MiddleGroup"
+        self.GROUPADRESS_SUB = "SubGroup"
 
         #archNode = Document.appendChild(Document.createElement("architectural-data"))
         #find mainnode "architectural-data"
@@ -73,8 +80,8 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
             pNode.appendChild(self.__archDocument.createElement("preffered-bus-system"))
             newNode = pNode.appendChild(self.__archDocument.createElement("topology"))
             newNode.setAttribute("id", self.TOPOLOGY_ROOT_ID)
-            newNode = pNode.appendChild(self.__archDocument.createElement(self.GROUPADRESS_ROOT))
-            #newNode.setAttribute("id", self.GROUPADRESS_ROOT)
+            newNode = pNode.appendChild(self.__archDocument.createElement("groupadress"))
+            newNode.setAttribute("id", self.GROUPADRESS_ROOT_ID)
 
 
             OutFileObj = open("structure.xml","w")
@@ -100,6 +107,12 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
             return self.TOPOLOGY_AREA
         elif(Index == 21):
             return self.TOPOLOGY_LINE
+        elif(Index == 30):
+            return self.GROUPADRESS_MAIN
+        elif(Index == 31):
+            return self.GROUPADRESS_MIDDLE
+        elif(Index == 32):
+            return self.GROUPADRESS_SUB
 
 
     ##Returns the data model root node ID.
@@ -165,6 +178,17 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
 
         if(self.getNodeName(parentID) == self.TOPOLOGY_AREA):
             Element = self.createChild(self.TOPOLOGY_LINE)
+
+        #groupadress elements
+        if(parentID == self.GROUPADRESS_ROOT_ID):
+            Element = self.createChild(self.GROUPADRESS_MAIN)
+
+        if(self.getNodeName(parentID) == self.GROUPADRESS_MAIN):
+            Element = self.createChild(self.GROUPADRESS_MIDDLE)
+
+        if(self.getNodeName(parentID) == self.GROUPADRESS_MIDDLE):
+            Element = self.createChild(self.GROUPADRESS_SUB)
+
 
         try:
             parent.appendChild(Element)
