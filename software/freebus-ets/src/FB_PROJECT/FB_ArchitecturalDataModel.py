@@ -38,7 +38,7 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
     GROUPADRESS_ROOT=""
     GROUPADRESS_MAIN=""
     GROUPADRESS_MIDDLE=""
-    GROUPADRESS_SUB=""
+    GROUPADRESS=""
     __archDocument = None
     __PATH = ""         #Project Path
 
@@ -64,7 +64,7 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
 
         self.GROUPADRESS_MAIN = "MainGroup"
         self.GROUPADRESS_MIDDLE = "MiddleGroup"
-        self.GROUPADRESS_SUB = "SubGroup"
+        self.GROUPADRESS = "GroupAdress"
 
         #archNode = Document.appendChild(Document.createElement("architectural-data"))
         #find mainnode "architectural-data"
@@ -112,7 +112,30 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
         elif(Index == 31):
             return self.GROUPADRESS_MIDDLE
         elif(Index == 32):
-            return self.GROUPADRESS_SUB
+            return self.GROUPADRESS
+
+    #returns the title of the ne structure element dialog
+    #return structur:
+    #Title of the dialog, AdressField visible or not, Adresslabelbezeichnung ,maximum adress
+    def getTypeStructureElement(self,Prefix):
+        if(Prefix == self.BUILDING_PREFIX):
+            return unicode("neues Gebäude anlegen...","ISO-8859-1"), False, "", 0
+        if(Prefix == self.FLOOR_PREFIX):
+            return unicode("neue Etage anlegen...","ISO-8859-1"), False, "", 0
+        if(Prefix == self.ROOM_PREFIX):
+            return unicode("neuen Raum anlegen...","ISO-8859-1"), False, "", 0
+        if(Prefix == self.JUNCTION_BOX_PREFIX):
+            return unicode("neuen Verteiler anlegen...","ISO-8859-1"), False, "", 0
+        if(Prefix == self.TOPOLOGY_AREA):
+            return unicode("neuen Bereich anlegen...","ISO-8859-1"),True, "Breichsadresse [0..15] :" , 15
+        if(Prefix == self.TOPOLOGY_LINE):
+            return unicode("neue Linie anlegen...","ISO-8859-1"),True, "Linieadresse [0..15]: ", 15
+        if(Prefix == self.GROUPADRESS_MAIN):
+            return unicode("neue Hauptgruppe anlegen...","ISO-8859-1"),True, "Hauptgruppe [0..15]: ", 15
+        if(Prefix == self.GROUPADRESS_MIDDLE):
+            return unicode("neue Mittelgruppe anlegen...","ISO-8859-1"),True, "Mittelgruppe [0..7]: ", 7
+        if(Prefix == self.GROUPADRESS):
+            return unicode("neue Gruppenadresse anlegen...","ISO-8859-1"),True, "Gruppenadresse [0..255]: ", 255
 
 
     ##Returns the data model root node ID.
@@ -160,37 +183,37 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
         #print self.getNodeName(parentID)
 
         if(parentID.find(self.__PROJECT_PREFIX) > -1):
-            Element = self.createChild(self.BUILDING_PREFIX)
+            Element = self.createChild(self.BUILDING_PREFIX,1)
 
         elif(parentID.find(self.BUILDING_PREFIX) > -1):
-            Element = self.createChild(self.FLOOR_PREFIX)
+            Element = self.createChild(self.FLOOR_PREFIX,1)
 
         elif(parentID.find(self.FLOOR_PREFIX) > -1):
-            Element = self.createChild(self.ROOM_PREFIX)
+            Element = self.createChild(self.ROOM_PREFIX,1)
 
         elif(parentID.find(self.ROOM_PREFIX) > -1):
-            Element = self.createChild(self.JUNCTION_BOX_PREFIX)
+            Element = self.createChild(self.JUNCTION_BOX_PREFIX,1)
+
 
         #topology elements
         if(parentID == self.TOPOLOGY_ROOT_ID):
-            Element = self.createChild(self.TOPOLOGY_AREA)
-
+            Element = self.createChild(self.TOPOLOGY_AREA,2)
 
         if(self.getNodeName(parentID) == self.TOPOLOGY_AREA):
-            Element = self.createChild(self.TOPOLOGY_LINE)
+            Element = self.createChild(self.TOPOLOGY_LINE,2)
 
         #groupadress elements
         if(parentID == self.GROUPADRESS_ROOT_ID):
-            Element = self.createChild(self.GROUPADRESS_MAIN)
+            Element = self.createChild(self.GROUPADRESS_MAIN,2)
 
         if(self.getNodeName(parentID) == self.GROUPADRESS_MAIN):
-            Element = self.createChild(self.GROUPADRESS_MIDDLE)
+            Element = self.createChild(self.GROUPADRESS_MIDDLE,2)
 
         if(self.getNodeName(parentID) == self.GROUPADRESS_MIDDLE):
-            Element = self.createChild(self.GROUPADRESS_SUB)
-
+            Element = self.createChild(self.GROUPADRESS,2)
 
         try:
+
             parent.appendChild(Element)
             ID = self.getChildID(Element)
 

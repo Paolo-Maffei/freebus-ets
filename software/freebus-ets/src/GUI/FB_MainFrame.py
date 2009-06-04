@@ -36,6 +36,7 @@ from GUI.Tree import FB_GroupAdressTree
 from DATABASE import FB_DlgDatabase
 
 from FB_PROJECT import FB_ArchitecturalDataModel
+from FB_PROJECT import FB_AdressLogic
 from XML import FB_XMLConverter
 from XML import FB_XML_PRODUCT
 
@@ -50,6 +51,7 @@ class FB_MainFrame:
     __LogObj = None
     __CurProjectObj = None         #Project object
     __CurArchObj = None            #architectural model of current project
+    __AdressLogicObj = None        #object to handle the entire adress logic of the CurProjectObj
     __GladeObj = None
     __GUIPath = ""
     __ImagePath = ""
@@ -220,7 +222,10 @@ class FB_MainFrame:
     #set current project object
     def SetCurrProject(self, ProjObj):
         self.__CurProjectObj = ProjObj
-        self.__CurArchObj = self.__CurProjectObj.getArchModel
+        self.__CurArchObj = self.__CurProjectObj.getArchModel()
+
+        #create instance of adresslogic
+        self.__AdressLogicObj = FB_AdressLogic.FB_AdressLogic(self.__LogObj,ProjObj)
 
         #reorganize our project-tree
         if(self.__ProjTree <> None):
@@ -294,8 +299,26 @@ class FB_MainFrame:
         #AddStructureElement = FB_AddStructureElement.FB_AddStructureElement(self.__LogObj, self,"Reserve")
         GladeObj = gtk.glade.XML(Global.GUIPath + "freebus.glade","DlgAddStructureElement")
 
+        lblAdress = GladeObj.get_widget("lblAdress")
+        spinAdress = GladeObj.get_widget("spinAdress")
+
         window = GladeObj.get_widget("DlgAddStructureElement")
+        #create title-text depending on added element
+        (title, AdressFieldVisible, lblAdressText, spinMax) = self.__ArchTree.ArchModel.getTypeStructureElement(PicturePrefix)
+        window.set_title(title)
+
+        if(AdressFieldVisible == True):
+            lblAdress.show()
+            spinAdress.show()
+            lblAdress.set_text(lblAdressText)
+            #spinAdress.set_max(spinMax)
+        else:
+            lblAdress.hide()
+            spinAdress.hide()
+
+
         txtElementName = GladeObj.get_widget("txtElementName")
+
         #wait for closing dialog
         response = window.run()
 
@@ -467,7 +490,7 @@ class FB_MainFrame:
                     Data[3] = PicturePrefix
                     #NewButtonWidget.connect("activate",self.PopupNew,(3,ParentID,iter,PicturePrefix))
                     label = NewButtonWidget.child
-                    label.set_text(unicode("Neue Untergruppe einfügen","ISO-8859-1"))
+                    label.set_text(unicode("Neue Gruppenadresse einfügen","ISO-8859-1"))
                     self.ActivatePopupNewItem(Data,NewButtonWidget,event)
 
 
@@ -510,6 +533,7 @@ class FB_MainFrame:
         #-------------------------------------------------------------------------------------------------------------------------
         #------------------------------------------- Group Adress section --------------------------------------------------------
         #-------------------------------------------------------------------------------------------------------------------------
+
         elif(type == 4 or type == 5 or type == 6):
             self.OpenDlgNewStructureElement(ParentID,iter, self.__GroupAdressTree, self.__ArchTree.ArchModel.getPrefix(PicPrefix))
             #important to disconnect this event!

@@ -121,13 +121,13 @@ class FB_GroupAdressTree:
                 LastMiddleGroupIter = self.CreateTreeNode(MiddleGroupList[middle],MiddleGroupIter,self.ArchModel.GROUPADRESS_MIDDLE)
                 #get all middlegroups in given maingroup
                 SubGroupNode = self.ArchModel.getDataRootNode(MiddleGroupList[middle])
-                SubGroupList = self.ArchModel.getIDList(SubGroupNode,self.ArchModel.GROUPADRESS_SUB)
+                SubGroupList = self.ArchModel.getIDList(SubGroupNode,self.ArchModel.GROUPADRESS)
                 #save last Iter
                 SubGroupIter = LastMiddleGroupIter
 
                 #for all groupadress subgroups
                 for sub in range(len(SubGroupList)):
-                    LastSubGroupIter = self.CreateTreeNode(SubGroupList[sub],SubGroupIter,self.ArchModel.GROUPADRESS_SUB)
+                    LastSubGroupIter = self.CreateTreeNode(SubGroupList[sub],SubGroupIter,self.ArchModel.GROUPADRESS)
 
 
         self.__TreeObj.expand_all()
@@ -159,7 +159,7 @@ class FB_GroupAdressTree:
             return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "MainGroup.png")
         elif(Prefix == self.ArchModel.GROUPADRESS_MIDDLE):
             return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "MiddleGroup.png")
-        elif(Prefix == self.ArchModel.GROUPADRESS_SUB):
+        elif(Prefix == self.ArchModel.GROUPADRESS):
             return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "SubGroup.png")
 
     #gets the iterator of a given path ( comes from a drop action)
