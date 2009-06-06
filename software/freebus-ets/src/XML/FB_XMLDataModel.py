@@ -72,6 +72,17 @@ class FB_XMLDataModel:
         Node = self.getDataRootNode(ID)
         return Node.tagName
 
+    #set the adress of a structure element
+    def setAdress(self,ID,Adress):
+        Node = self.getDataRootNode(ID)
+        self.writeDOMNodeValue(Node,"adress", unicode(Adress))
+
+    #get the adress
+    def getAdress(self,ID):
+
+        Node = self.getDataRootNode(ID)
+        return self.readDOMNodeValue(Node, "adress")
+
     ##Return the id list for all child nodes with namen name from the given stat node
     #@param node the start node
     #@param childname the child node name
@@ -95,15 +106,22 @@ class FB_XMLDataModel:
 
     ##Create a new standard child data node. This node includes a name with id and a comment tag.
     #@param tagname the child root tag name
+    #@param VarGroup: VarGroup contains a number 1 = only structure; 2 = with adress line; ...
     #@return the DOM Element
-    def createChild(self,TagName):
+    def createChild(self,TagName, VarGroup):
         Element = self.__DOMObj.createElement(TagName)
         #creates the new ID (root-element name + a number (building + "-1" ...)
         id = TagName+"-" + str(self.getNewID(TagName))  # get id for the child
+
         Element.setAttribute("id", id)
 
-        Element.appendChild(self.__DOMObj.createElement("name"))
-        Element.appendChild(self.__DOMObj.createElement("comment"))
+        if(VarGroup == 1):
+            Element.appendChild(self.__DOMObj.createElement("name"))
+            Element.appendChild(self.__DOMObj.createElement("comment"))
+        elif(VarGroup == 2):
+            Element.appendChild(self.__DOMObj.createElement("name"))
+            Element.appendChild(self.__DOMObj.createElement("comment"))
+            Element.appendChild(self.__DOMObj.createElement("adress"))
 
         return Element
 

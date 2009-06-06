@@ -29,25 +29,76 @@
                 <property name="can_focus">True</property>
                 <property name="position">260</property>
                 <child>
-                  <widget class="GtkScrolledWindow" id="ScrolledWindowLeft">
+                  <widget class="GtkVPaned" id="vpaned3">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
-                    <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                    <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+                    <property name="position">600</property>
                     <child>
-                      <widget class="GtkTreeView" id="ProjectTree">
+                      <widget class="GtkScrolledWindow" id="ScrolledWindowLeft">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="enable_tree_lines">True</property>
-                        <signal name="button_press_event" handler="on_ProjectTree_button_press_event"/>
-                        <signal name="drag_motion" handler="on_ProjectTree_drag_motion"/>
-                        <signal name="drag_data_received" handler="on_ProjectTree_drag_data_received"/>
+                        <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                        <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+                        <child>
+                          <widget class="GtkTreeView" id="ProjectTree">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="enable_tree_lines">True</property>
+                            <signal name="button_press_event" handler="on_ProjectTree_button_press_event"/>
+                            <signal name="drag_motion" handler="on_ProjectTree_drag_motion"/>
+                            <signal name="drag_data_received" handler="on_ProjectTree_drag_data_received"/>
+                          </widget>
+                        </child>
                       </widget>
+                      <packing>
+                        <property name="resize">False</property>
+                        <property name="shrink">True</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkVBox" id="vboxProperty">
+                        <property name="visible">True</property>
+                        <child>
+                          <widget class="GtkLabel" id="lblProperty">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="yalign">1</property>
+                            <property name="xpad">5</property>
+                            <property name="ypad">2</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Eigenschaften&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkScrolledWindow" id="scrolledwindow1">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                            <child>
+                              <widget class="GtkTextView" id="textview2">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                              </widget>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="resize">True</property>
+                        <property name="shrink">True</property>
+                      </packing>
                     </child>
                   </widget>
                   <packing>
-                    <property name="resize">True</property>
+                    <property name="resize">False</property>
                     <property name="shrink">True</property>
                   </packing>
                 </child>
@@ -379,7 +430,7 @@
                                       <widget class="GtkVBox" id="vboxGroupAddress">
                                         <property name="visible">True</property>
                                         <child>
-                                          <widget class="GtkLabel" id="label57">
+                                          <widget class="GtkLabel" id="lblGroupAdress">
                                             <property name="visible">True</property>
                                             <property name="xalign">0</property>
                                             <property name="yalign">1</property>
@@ -424,7 +475,7 @@
                                       <widget class="GtkVBox" id="vboxTopology">
                                         <property name="visible">True</property>
                                         <child>
-                                          <widget class="GtkLabel" id="label58">
+                                          <widget class="GtkLabel" id="lblTopology">
                                             <property name="visible">True</property>
                                             <property name="xalign">0</property>
                                             <property name="yalign">1</property>
@@ -1228,6 +1279,7 @@
                     <property name="can_focus">True</property>
                     <property name="xalign">0.5</property>
                     <property name="adjustment">0 0 100 1 10 10</property>
+                    <signal name="value_changed" handler="on_spinAdress_value_changed"/>
                   </widget>
                 </child>
               </widget>

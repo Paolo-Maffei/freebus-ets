@@ -71,6 +71,7 @@ class FB_MainFrame:
     curDragDataType = 0            #the current Type of draged data (builidng,floor,rooms---)
 
     tmpCounter = 0
+    __lastValidAdress = 0
 
     def __init__(self, LogObj):
     # create a new window
@@ -170,7 +171,9 @@ class FB_MainFrame:
                 "on_TopologyTree_button_release_event":self.TopologyTreeButtonPress,
 
                 #GroupAddressTree
-                "on_GroupAddressTree_button_release_event":self.GroupAdressTreeButtonPress
+                "on_GroupAddressTree_button_release_event":self.GroupAdressTreeButtonPress,
+
+
 
                 }
         self.__GladeObj.signal_autoconnect(dic)
@@ -307,15 +310,21 @@ class FB_MainFrame:
         (title, AdressFieldVisible, lblAdressText, spinMax) = self.__ArchTree.ArchModel.getTypeStructureElement(PicturePrefix)
         window.set_title(title)
 
+        #changed value at spinadress -> DlgStructureElement
+        localHandler = spinAdress.connect("value_changed",self.spinAdressValueChanged, PicturePrefix)
+
         if(AdressFieldVisible == True):
             lblAdress.show()
             spinAdress.show()
             lblAdress.set_text(lblAdressText)
-            #spinAdress.set_max(spinMax)
+            spinAdress.set_range(0,spinMax)
+
         else:
             lblAdress.hide()
             spinAdress.hide()
 
+        #first call the AdressCheckRoutine
+        spinAdress.set_value(self.__AdressLogicObj.GetNextPossibleAdress(PicturePrefix,0, True))
 
         txtElementName = GladeObj.get_widget("txtElementName")
 
@@ -327,20 +336,52 @@ class FB_MainFrame:
             Name = txtElementName.get_text()
 
             #add object and gets the new ID (topology-1 ...)
-            ID = self.__ArchTree.ArchModel.addChild(ParentID)
+            ID = self.__CurArchObj.addChild(ParentID)
 
             if(Name == ""):
                 Name = ID
 
-
             if(ID <> None):
-              #  print "neue ID " + ID + " ; Name: " + Name + " ; ParentID = " + ParentID
-                self.__ArchTree.ArchModel.setName(ID,Name)
+                self.__CurArchObj.setName(ID,Name)
+                if(self.__CurArchObj.getNodeName(ID) == self.__CurArchObj.TOPOLOGY_AREA or
+                   self.__CurArchObj.getNodeName(ID) == self.__CurArchObj.TOPOLOGY_LINE or
+                   self.__CurArchObj.getNodeName(ID) == self.__CurArchObj.GROUPADRESS_MAIN or
+                   self.__CurArchObj.getNodeName(ID) == self.__CurArchObj.GROUPADRESS_MIDDLE or
+                   self.__CurArchObj.getNodeName(ID) == self.__CurArchObj.GROUPADRESS ):
+
+                    self.__CurArchObj.setAdress(ID, int(spinAdress.get_value()))
+
                 TreeObject.CreateTreeNode(ID, TreeIterator, PicturePrefix)
 
+            spinAdress.disconnect(localHandler)
             window.destroy()
         else:
+            spinAdress.disconnect(localHandler)
             window.destroy()
+
+    #spinbutton value changed event of DlgStructureElement
+    #data = PicturePrefix to iditify the element type (building,floor,..., area, line ...)
+    def spinAdressValueChanged(self,widget, data):
+        try:
+            newAdress = int(widget.get_value())
+            #check if new Adress is valid and still possible to set
+            AdressOK = self.__AdressLogicObj.CheckAdress(newAdress,data)
+
+            if(AdressOK == True):
+                self.__lastValidAdress = newAdress
+            else:
+                #set the next possible adress
+                if(newAdress > self.__lastValidAdress):
+                    Direction = True
+                else:
+                    Direction = False
+
+                self.__lastValidAdress = self.__AdressLogicObj.GetNextPossibleAdress(data,newAdress, Direction)
+                widget.set_value(self.__lastValidAdress)
+
+        except:
+            pass
+
 
     #callback of detach menu to popup
     def PopupDetach(self,menu, widget):
