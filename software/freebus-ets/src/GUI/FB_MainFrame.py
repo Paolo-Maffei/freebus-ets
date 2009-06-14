@@ -51,12 +51,13 @@ class FB_MainFrame:
     __LogObj = None
     __CurProjectObj = None         #Project object
     __CurArchObj = None            #architectural model of current project
+    __CurInstObj = None            #installation model of the current project
     __AdressLogicObj = None        #object to handle the entire adress logic of the CurProjectObj
     __GladeObj = None
     __GUIPath = ""
     __ImagePath = ""
     __ProjTree = None
-    __TreeIterator = None        #Iterator-Object for Tree
+    __TreeIterator = None        #Iterator-ObAject for Tree
     __ArchTree = None            #Object for Tree-Class
     __handelboxToolbar = None    #widget object of handlebox toolbar
     __mnuPopup = None            #Object for popup menu
@@ -66,6 +67,12 @@ class FB_MainFrame:
 
     __popupNewHandlerID = 0      #signale Hander ID for popupMenu "New Item" button
     __popupEditHandlerID = 0     #signal handler ID for popupMenu "Change Name" button
+
+    #object for Communications objects handling
+
+    __commObjList = None         #widget of Communication Object List
+    __commObjListStore = None    #ListModel interface
+
 
     treestore = None
     curDragDataType = 0            #the current Type of draged data (builidng,floor,rooms---)
@@ -77,6 +84,7 @@ class FB_MainFrame:
     # create a new window
         self.__LogObj = LogObj
         self.__CurProjectObj = None
+        self.__CurInstObj = None
 
         #get screensize
         self.__WindowWidth = gtk.gdk.screen_width()
@@ -146,6 +154,7 @@ class FB_MainFrame:
 
         #get widget object of Topology Tree
         self.__TopologyTreeWidget = self.__GladeObj.get_widget("TopologyTree")
+        self.__commObjList = self.__GladeObj.get_widget("CommObjList")
 
         #get widget object of GroupAdress Tree
         self.__GroupAdressTreeWidget = self.__GladeObj.get_widget("GroupAddressTree")
@@ -169,6 +178,7 @@ class FB_MainFrame:
 
                 #TopologyTree
                 "on_TopologyTree_button_release_event":self.TopologyTreeButtonPress,
+                "on_TopologyTree_cursor_changed":self.TopologySelectionChanged,
 
                 #GroupAddressTree
                 "on_GroupAddressTree_button_release_event":self.GroupAdressTreeButtonPress,
@@ -210,7 +220,7 @@ class FB_MainFrame:
 
     #show dlg device data
     def ShowDeviceData(self,widget, data=None):
-        FB_DlgDeviceData.FB_DlgDeviceData(self.__LogObj)
+        FB_DlgDeviceData.FB_DlgDeviceData(self.__LogObj,self.__CurArchObj,self.__AdressLogicObj,True)
     #start the converter dialog
     def Converter(self,widget, data=None):
         XML = FB_XMLConverter.FB_XMLConverter(self.__LogObj)
@@ -226,9 +236,12 @@ class FB_MainFrame:
     def SetCurrProject(self, ProjObj):
         self.__CurProjectObj = ProjObj
         self.__CurArchObj = self.__CurProjectObj.getArchModel()
+        self.__CurInstObj = self.__CurProjectObj.getInstModel()
+
 
         #create instance of adresslogic
         self.__AdressLogicObj = FB_AdressLogic.FB_AdressLogic(self.__LogObj,ProjObj)
+        self.__CurProjectObj.setAdressLogicObj(self.__AdressLogicObj)  #save the global adresslogic instance
 
         #reorganize our project-tree
         if(self.__ProjTree <> None):
@@ -311,20 +324,20 @@ class FB_MainFrame:
         window.set_title(title)
 
         #changed value at spinadress -> DlgStructureElement
-        localHandler = spinAdress.connect("value_changed",self.spinAdressValueChanged, PicturePrefix)
+        localHandler = spinAdress.connect("value_changed",self.spinAdressValueChanged, (PicturePrefix,ParentID))
 
         if(AdressFieldVisible == True):
             lblAdress.show()
             spinAdress.show()
             lblAdress.set_text(lblAdressText)
             spinAdress.set_range(0,spinMax)
+            #first call the AdressCheckRoutine
+            spinAdress.set_value(self.__AdressLogicObj.GetNextPossibleAdress(PicturePrefix,0, True,ParentID))
 
         else:
             lblAdress.hide()
             spinAdress.hide()
 
-        #first call the AdressCheckRoutine
-        spinAdress.set_value(self.__AdressLogicObj.GetNextPossibleAdress(PicturePrefix,0, True))
 
         txtElementName = GladeObj.get_widget("txtElementName")
 
@@ -350,6 +363,9 @@ class FB_MainFrame:
                    self.__CurArchObj.getNodeName(ID) == self.__CurArchObj.GROUPADRESS ):
 
                     self.__CurArchObj.setAdress(ID, int(spinAdress.get_value()))
+                    #recreate Name with adress comment
+                    name = self.__CurArchObj.getName(ID)
+                    self.__CurArchObj.setName(ID,name + " (" + str(int(spinAdress.get_value())) + ")")
 
                 TreeObject.CreateTreeNode(ID, TreeIterator, PicturePrefix)
 
@@ -363,9 +379,12 @@ class FB_MainFrame:
     #data = PicturePrefix to iditify the element type (building,floor,..., area, line ...)
     def spinAdressValueChanged(self,widget, data):
         try:
+            #data[0] = PicturePrefix
+            #data[1] = ParentID
+
             newAdress = int(widget.get_value())
             #check if new Adress is valid and still possible to set
-            AdressOK = self.__AdressLogicObj.CheckAdress(newAdress,data)
+            AdressOK = self.__AdressLogicObj.CheckAdress(newAdress,data[0],data[1])
 
             if(AdressOK == True):
                 self.__lastValidAdress = newAdress
@@ -376,7 +395,7 @@ class FB_MainFrame:
                 else:
                     Direction = False
 
-                self.__lastValidAdress = self.__AdressLogicObj.GetNextPossibleAdress(data,newAdress, Direction)
+                self.__lastValidAdress = self.__AdressLogicObj.GetNextPossibleAdress(data[0],newAdress, Direction,data[1])
                 widget.set_value(self.__lastValidAdress)
 
         except:
@@ -427,13 +446,13 @@ class FB_MainFrame:
             #print model.iter_parent(iter)
 
             if(model.iter_parent(iter) == None):
-                ParentID = self.__ArchTree.ArchModel.TOPOLOGY_ROOT_ID
+                ParentID = self.__CurArchObj.TOPOLOGY_ROOT_ID
 
-                PicturePrefix = 20    #to idendiy the right picture for tree visualisation
+               # PicturePrefix = 20    #to idendiy the right picture for tree visualisation
                 Data[0] = 1
                 Data[1] = ParentID
                 Data[2] = iter
-                Data[3] = PicturePrefix
+                Data[3] = self.__CurArchObj.TOPOLOGY_AREA#PicturePrefix
                 #NewButtonWidget.connect("activate",self.PopupNew,(1,ParentID,iter,PicturePrefix))
                 label = NewButtonWidget.child
                 label.set_text(unicode("Neuen Bereich anlegen"))
@@ -447,25 +466,25 @@ class FB_MainFrame:
                 ParentID =  model.get_value(iter,2) #get value of Column 2 = Attributevalue = ID (Column 0 = picture, 1 = Name)
                 #check prefix (in case of line is selected -> only device can be added)
                 #get the nodename and compare it with the prefix to know if line or area or whatever was selected
-                ParentNodeName = self.__ArchTree.ArchModel.getNodeName(ParentID)
+                ParentNodeName = self.__CurArchObj.getNodeName(ParentID)
 
-                if(ParentNodeName == self.__ArchTree.ArchModel.TOPOLOGY_AREA):
-                    PicturePrefix = 21
+                if(ParentNodeName == self.__CurArchObj.TOPOLOGY_AREA):
+                    #PicturePrefix = 21
                     Data[0] = 2
                     Data[1] = ParentID
                     Data[2] = iter
-                    Data[3] = PicturePrefix
+                    Data[3] = self.__CurArchObj.TOPOLOGY_LINE #PicturePrefix
                     #NewButtonWidget.connect("activate",self.PopupNew,(2,ParentID,iter,PicturePrefix))
                     label = NewButtonWidget.child
                     label.set_text(unicode("Neue Linie anlegen"))
                     self.ActivatePopupNewItem(Data,NewButtonWidget,event)
 
-                elif(ParentNodeName == self.__ArchTree.ArchModel.TOPOLOGY_LINE):
-                    PicturePrefix = 22
+                elif(ParentNodeName == self.__CurArchObj.TOPOLOGY_LINE):
+                    #PicturePrefix = 22
                     Data[0] = 3
                     Data[1] = ParentID
                     Data[2] = iter
-                    Data[3] = PicturePrefix
+                    Data[3] = self.__CurArchObj.TOPOLOGY_DEVICE#PicturePrefix
                     #NewButtonWidget.connect("activate",self.PopupNew,(3,ParentID,iter,PicturePrefix))
                     label = NewButtonWidget.child
                     label.set_text(unicode("Neues Gerät einfügen","ISO-8859-1"))
@@ -494,41 +513,42 @@ class FB_MainFrame:
             NewButtonWidget = self.__PopUpGlade.get_widget("mnuNewItem")
             NewButtonWidget.hide()
 
-            if(model.iter_parent(iter) == None):
-                ParentID = self.__ArchTree.ArchModel.GROUPADRESS_ROOT_ID
 
-                PicturePrefix = 30    #to idendiy the right picture for tree visualisation
+            if(model.iter_parent(iter) == None):
+                ParentID = self.__CurArchObj.GROUPADRESS_ROOT_ID
+
+                #PicturePrefix = 30    #to idendiy the right picture for tree visualisation
                 Data[0] = 4    #new maingroup
                 Data[1] = ParentID
                 Data[2] = iter
-                Data[3] = PicturePrefix
+                Data[3] = self.__CurArchObj.GROUPADRESS_MAIN#PicturePrefix
                 label = NewButtonWidget.child
                 label.set_text(unicode("Neue Hauptgruppe anlegen"))
                 self.ActivatePopupNewItem(Data,NewButtonWidget,event)
 
             else:
                 ParentID =  model.get_value(iter,2) #get value of Column 2 = Attributevalue = ID (Column 0 = picture, 1 = Name)
-                ParentNodeName = self.__ArchTree.ArchModel.getNodeName(ParentID)
+                ParentNodeName = self.__CurArchObj.getNodeName(ParentID)
 
                 #in case maingroup node is selected -> allow to create middle group
-                if(ParentNodeName == self.__ArchTree.ArchModel.GROUPADRESS_MAIN):
-                    PicturePrefix = 31
+                if(ParentNodeName == self.__CurArchObj.GROUPADRESS_MAIN):
+                    #PicturePrefix = 31
                     Data[0] = 5  #middle group
                     Data[1] = ParentID
                     Data[2] = iter
-                    Data[3] = PicturePrefix
+                    Data[3] = self.__CurArchObj.GROUPADRESS_MIDDLE#PicturePrefix
                     #NewButtonWidget.connect("activate",self.PopupNew,(2,ParentID,iter,PicturePrefix))
                     label = NewButtonWidget.child
                     label.set_text(unicode("Neue Mittelgruppe anlegen"))
                     self.ActivatePopupNewItem(Data,NewButtonWidget,event)
 
                 #in case middlegroup node is selected -> allow to create subgroup
-                elif(ParentNodeName == self.__ArchTree.ArchModel.GROUPADRESS_MIDDLE):
-                    PicturePrefix = 32
+                elif(ParentNodeName == self.__CurArchObj.GROUPADRESS_MIDDLE):
+                    #PicturePrefix = 32
                     Data[0] = 6  #subgroup
                     Data[1] = ParentID
                     Data[2] = iter
-                    Data[3] = PicturePrefix
+                    Data[3] = self.__CurArchObj.GROUPADRESS#PicturePrefix
                     #NewButtonWidget.connect("activate",self.PopupNew,(3,ParentID,iter,PicturePrefix))
                     label = NewButtonWidget.child
                     label.set_text(unicode("Neue Gruppenadresse einfügen","ISO-8859-1"))
@@ -540,12 +560,16 @@ class FB_MainFrame:
     #---------------------------------------------------------------------------------------------------------------------------
     #----------------------------------------- Handling Popup Menu -------------------------------------------------------------
     #---------------------------------------------------------------------------------------------------------------------------
-    def ActivatePopupNewItem(self,Data,NewButtonWidget,event ):
+    def ActivatePopupNewItem(self,Data,NewButtonWidget,event):
         #in case the popup menu has been acitvated and now finished (canceled) we have to disconnect the event
         if(self.__popupNewHandlerID <> 0):
             NewButtonWidget.disconnect(self.__popupNewHandlerID)
 
-        NewButtonWidget.show()
+        #Data[1] = ParentID (ex. AreaTopology-1)
+        #Data[2] = iterator of tree
+        #Data[3]= PicturePrefix (Identifier)
+        if(self.__AdressLogicObj.MoreAdressPossible(Data[3],Data[1]) == True):
+            NewButtonWidget.show()
         self.__popupNewHandlerID = NewButtonWidget.connect("activate",self.PopupNew,(Data[0],Data[1],Data[2],Data[3]))
 
 
@@ -562,21 +586,33 @@ class FB_MainFrame:
         iter = data[2]
         PicPrefix = data[3]
 
+        #-------------------------------------------------------------------------------------------------------------------------
+        #------------------------------------------- Topology Adress section -----------------------------------------------------
+        #-------------------------------------------------------------------------------------------------------------------------
 
         if(type == 1 or type == 2):
             #new area should be created or  #new line should be created
-            self.OpenDlgNewStructureElement(ParentID,iter, self.__TopologyTree, self.__ArchTree.ArchModel.getPrefix(PicPrefix))
+            self.OpenDlgNewStructureElement(ParentID,iter, self.__TopologyTree, PicPrefix)
 
-            #new device should be created
+
+        #-------------------------------------------------------------------------------------------------------------------------
+        #------------------------------------------- Device Adress section -------------------------------------------------------
+        #-------------------------------------------------------------------------------------------------------------------------
+        #new device should be created
         elif(type == 3):
-            pass
+            #open the device-dialog with parameter show-only = false -> with adress fields
+            #
+            instance = FB_DlgDeviceData.FB_DlgDeviceData(self.__LogObj,self.__AdressLogicObj,False)
+            instance.SetParentID(ParentID)
+            instance.SetTopologyProperty(self.__TopologyTree,iter)
+            instance.SetProjectObj(self.__CurProjectObj)
 
         #-------------------------------------------------------------------------------------------------------------------------
         #------------------------------------------- Group Adress section --------------------------------------------------------
         #-------------------------------------------------------------------------------------------------------------------------
 
         elif(type == 4 or type == 5 or type == 6):
-            self.OpenDlgNewStructureElement(ParentID,iter, self.__GroupAdressTree, self.__ArchTree.ArchModel.getPrefix(PicPrefix))
+            self.OpenDlgNewStructureElement(ParentID,iter, self.__GroupAdressTree, PicPrefix)
             #important to disconnect this event!
         else:
             pass
@@ -700,7 +736,8 @@ class FB_MainFrame:
                     #delete treeobjects
                     treestore.remove(Iterator)
                     #delete internal data
-                    self.__TopologyTree.ArchModel.removeData(Attr)
+                    self.__CurArchObj.removeData(Attr)
+                    self.__CurInstObj.removeData(Attr)
                     self.__CurProjectObj.isChanged = True
 
             #Groupadress Tree
@@ -732,6 +769,15 @@ class FB_MainFrame:
         print "Prop"
 
 
+    #event: Selection of Topology-Tree has been changed
+    def TopologySelectionChanged(self, widget, data=None):
+        #widget:gtkTreeView
+        #get data of selected row
+        treeselection = widget.get_selection()
+        treestore, Iterator = treeselection.get_selected()
+        #get the column value (2) -> column2 = ID
+        ID =  treestore.get_value(Iterator,2)
+        #get the information from the installationfile
 
 
     def main(self):

@@ -130,6 +130,7 @@ class FB_DlgDatabase:
             #create a new connection object
             Global.DatabaseConnection.close()
             Global.DatabaseConnection = sqlite3.connect(self.__txtDatabase.get_text())
+            Global.DatabaseConnection.text_factory = str
 
         self.__window.destroy()
 

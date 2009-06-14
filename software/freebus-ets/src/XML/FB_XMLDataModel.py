@@ -162,8 +162,6 @@ class FB_XMLDataModel:
         else:
             NodeName = ID
 
-
-        #print self.__DOMObj
         NodeList = self.__DOMObj.getElementsByTagName(NodeName)
 
         #print NodeList

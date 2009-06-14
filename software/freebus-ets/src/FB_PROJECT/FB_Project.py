@@ -27,6 +27,9 @@ class FB_Project:
     __LogObj = None
     __archmodel = None        #object: architectural model
     __instamodell = None      #object: installation model
+    __AdressLogicObj = None   #object: global AdressLogic
+    __DeviceObj = None        #object: global class Devices
+
    # __parent = None           #object: Application
     isChanged = False
 
@@ -42,6 +45,7 @@ class FB_Project:
         if(projectpath != None):
             ArchDocument = minidom.parse(projectpath + "\\structure.xml")
             self.__archmodel = FB_ArchitecturalDataModel.FB_ArchitecturalDataModel(self.__LogObj,ArchDocument,projectname,False)
+
             InstDocument = minidom.parse(projectpath + "\\installation.xml")
             self.__instamodell = FB_InstallationDataModel.FB_InstallationDataModel(self.__LogObj,InstDocument,projectname,False)
         #new project
@@ -54,15 +58,20 @@ class FB_Project:
             InstDocument = impl.createDocument(None, "installation-components", None)
             self.__instamodell = FB_InstallationDataModel.FB_InstallationDataModel(self.__LogObj,InstDocument,projectname,True)
             #create a database file
-            
+
 
 #*****************************************************************************
     #returns the project associated architectural model
     def getArchModel(self):
         return self.__archmodel
 #*****************************************************************************
+    #returns the project associated installation model
+    def getInstModel(self):
+        return self.__instamodell
+#*****************************************************************************
     def setProjectPath(self,projectPath):
         self.__archmodel.setProjectPath(projectPath)
+        self.__instamodell.setProjectPath(projectPath)
 
     def getProjectPath(self):
         return self.__archmodel.getProjectPath()
@@ -88,7 +97,17 @@ class FB_Project:
     def getPrefferedBusSystem(self):
         return self.__archmodel.getPrefferedBusSystem()
 #*****************************************************************************
+    def setAdressLogicObj(self,AdressLogicInstance):
+        self.__AdressLogicObj = AdressLogicInstance
+
+    def getAdressLogicObj(self):
+        return self.__AdressLogicObj
+#*****************************************************************************
+
+
+
 
     def SaveProject(self,):
         self.__archmodel.SaveArchmodel()
+        self.__instamodell.SaveInstmodel()
         self.isChanged = False

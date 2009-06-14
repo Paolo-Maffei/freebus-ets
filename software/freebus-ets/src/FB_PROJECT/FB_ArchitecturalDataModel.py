@@ -35,6 +35,7 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
     TOPOLOGY_ROOT=""
     TOPOLOGY_AREA=""
     TOPOLOGY_LINE=""
+    TOPOLOGY_DEVICE=""
     GROUPADRESS_ROOT=""
     GROUPADRESS_MAIN=""
     GROUPADRESS_MIDDLE=""
@@ -61,6 +62,7 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
 
         self.TOPOLOGY_AREA = "AreaTopology"
         self.TOPOLOGY_LINE = "LineTopology"
+        self.TOPOLOGY_DEVICE = "Device"
 
         self.GROUPADRESS_MAIN = "MainGroup"
         self.GROUPADRESS_MIDDLE = "MiddleGroup"
@@ -82,6 +84,7 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
             newNode.setAttribute("id", self.TOPOLOGY_ROOT_ID)
             newNode = pNode.appendChild(self.__archDocument.createElement("groupadress"))
             newNode.setAttribute("id", self.GROUPADRESS_ROOT_ID)
+
 
 
             OutFileObj = open("structure.xml","w")
@@ -201,6 +204,10 @@ class FB_ArchitecturalDataModel(FB_XMLDataModel):
 
         if(self.getNodeName(parentID) == self.TOPOLOGY_AREA):
             Element = self.createChild(self.TOPOLOGY_LINE,2)
+
+        if(self.getNodeName(parentID) == self.TOPOLOGY_LINE):
+            Element = self.createChild(self.TOPOLOGY_DEVICE,2)
+
 
         #groupadress elements
         if(parentID == self.GROUPADRESS_ROOT_ID):

@@ -18,8 +18,15 @@
 class FB_Device:
 
     __LogObj = None
+    __ProjObj = None
 
     ##Constructor
     #@param LogObj: Log-File-Object to log all events within this inctance
-    def __init__(self,LogObj):
+    #@param ProjObj: current Project Object
+    def __init__(self,LogObj, ProjObj):
         self.__LogObj = LogObj
+        self.__ProjObj = ProjObj
+
+
+    def WriteProductDetails(self):
+        pass

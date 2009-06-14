@@ -119,6 +119,14 @@ class FB_TopologyTree:
             for lines in range(len(LineList)):
                 LastLineIter = self.CreateTreeNode(LineList[lines],LineIter,self.ArchModel.TOPOLOGY_LINE)
 
+                #get all devices in given line
+                DeviceNode =  self.ArchModel.getDataRootNode(LineList[lines])
+                DeviceList =  self.ArchModel.getIDList(DeviceNode,self.ArchModel.TOPOLOGY_DEVICE)
+
+                DeviceIter = LastLineIter
+
+                for devices in range(len(DeviceList)):
+                    LastDeviceIter = self.CreateTreeNode(DeviceList[devices],DeviceIter,self.ArchModel.TOPOLOGY_DEVICE)
 
         self.__TreeObj.expand_all()
 
@@ -150,6 +158,9 @@ class FB_TopologyTree:
             return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "area.png")
         elif(Prefix == self.ArchModel.TOPOLOGY_LINE):
             return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "line.png")
+        elif(Prefix == self.ArchModel.TOPOLOGY_DEVICE):
+            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "Device.png")
+
 
 
     #gets the iterator of a given path ( comes from a drop action)

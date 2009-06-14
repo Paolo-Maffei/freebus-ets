@@ -366,9 +366,8 @@
                                                 <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                                                 <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                                                 <child>
-                                                  <widget class="GtkTextView" id="textview1">
+                                                  <widget class="GtkLayout" id="layout1">
                                                     <property name="visible">True</property>
-                                                    <property name="can_focus">True</property>
                                                   </widget>
                                                 </child>
                                               </widget>
@@ -453,6 +452,7 @@
                                             <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
                                             <child>
                                               <widget class="GtkTreeView" id="GroupAddressTree">
+                                                <property name="width_request">420</property>
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="tooltip" translatable="yes">Gruppenadressen</property>
@@ -489,22 +489,52 @@
                                           </packing>
                                         </child>
                                         <child>
-                                          <widget class="GtkScrolledWindow" id="scrolledwindowTopology">
+                                          <widget class="GtkHPaned" id="hpaned1">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
-                                            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                                            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                                            <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+                                            <property name="position">475</property>
                                             <child>
-                                              <widget class="GtkTreeView" id="TopologyTree">
+                                              <widget class="GtkScrolledWindow" id="scrolledwindowTopology">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
-                                                <property name="tooltip" translatable="yes">Topologie </property>
-                                                <property name="enable_tree_lines">True</property>
-                                                <signal name="button_press_event" handler="on_TopologyTree_button_press_event"/>
-                                                <signal name="button_release_event" handler="on_TopologyTree_button_release_event"/>
-                                                <signal name="cursor_changed" handler="on_TopologyTree_cursor_changed"/>
+                                                <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                                                <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                                                <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+                                                <child>
+                                                  <widget class="GtkTreeView" id="TopologyTree">
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">True</property>
+                                                    <property name="tooltip" translatable="yes">Topologie </property>
+                                                    <property name="enable_tree_lines">True</property>
+                                                    <signal name="button_press_event" handler="on_TopologyTree_button_press_event"/>
+                                                    <signal name="button_release_event" handler="on_TopologyTree_button_release_event"/>
+                                                    <signal name="cursor_changed" handler="on_TopologyTree_cursor_changed"/>
+                                                  </widget>
+                                                </child>
                                               </widget>
+                                              <packing>
+                                                <property name="resize">False</property>
+                                                <property name="shrink">True</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <widget class="GtkScrolledWindow" id="scrolledwindow2">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                                                <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                                                <child>
+                                                  <widget class="GtkTreeView" id="CommObjList">
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">True</property>
+                                                    <property name="headers_clickable">True</property>
+                                                  </widget>
+                                                </child>
+                                              </widget>
+                                              <packing>
+                                                <property name="resize">True</property>
+                                                <property name="shrink">True</property>
+                                              </packing>
                                             </child>
                                           </widget>
                                           <packing>
@@ -2094,7 +2124,7 @@
   <widget class="GtkWindow" id="DeviceDataWindow">
     <property name="visible">True</property>
     <property name="title" translatable="yes">Datenbasis zuordnen</property>
-    <property name="default_width">845</property>
+    <property name="default_width">930</property>
     <property name="default_height">650</property>
     <property name="destroy_with_parent">True</property>
     <child>
@@ -2172,7 +2202,7 @@
                         <property name="right_attach">3</property>
                         <property name="top_attach">1</property>
                         <property name="bottom_attach">2</property>
-                        <property name="x_options"></property>
+                        <property name="x_options">GTK_FILL</property>
                         <property name="y_options"></property>
                         <property name="x_padding">4</property>
                         <property name="y_padding">10</property>
@@ -2222,7 +2252,7 @@
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="right_attach">3</property>
-                        <property name="x_options"></property>
+                        <property name="x_options">GTK_FILL</property>
                         <property name="y_options"></property>
                         <property name="x_padding">4</property>
                         <property name="y_padding">4</property>
@@ -2273,7 +2303,7 @@
                         <property name="right_attach">3</property>
                         <property name="top_attach">2</property>
                         <property name="bottom_attach">3</property>
-                        <property name="x_options"></property>
+                        <property name="x_options">GTK_FILL</property>
                         <property name="y_options">GTK_FILL</property>
                         <property name="x_padding">4</property>
                         <property name="y_padding">4</property>
@@ -2298,25 +2328,6 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="lblPEI">
-                        <property name="width_request">160</property>
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="xpad">4</property>
-                        <property name="ypad">7</property>
-                        <property name="label" translatable="yes">PEI-Prog.-Version:</property>
-                      </widget>
-                      <packing>
-                        <property name="left_attach">2</property>
-                        <property name="right_attach">3</property>
-                        <property name="top_attach">3</property>
-                        <property name="bottom_attach">4</property>
-                        <property name="x_options"></property>
-                        <property name="y_options"></property>
-                        <property name="y_padding">5</property>
-                      </packing>
-                    </child>
-                    <child>
                       <widget class="GtkLabel" id="lblProgramVersion">
                         <property name="width_request">340</property>
                         <property name="visible">True</property>
@@ -2333,6 +2344,45 @@
                         <property name="x_options"></property>
                         <property name="y_options"></property>
                         <property name="y_padding">5</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkAlignment" id="alignment32">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="xscale">0.15000000596046448</property>
+                        <child>
+                          <widget class="GtkHBox" id="hbox12">
+                            <property name="visible">True</property>
+                            <child>
+                              <widget class="GtkLabel" id="lblDeviceAdress">
+                                <property name="visible">True</property>
+                                <property name="xalign">1</property>
+                                <property name="label" translatable="yes">Geräteadresse [1..255]:</property>
+                              </widget>
+                            </child>
+                            <child>
+                              <widget class="GtkSpinButton" id="spinDeviceAdress">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="xalign">0.5</property>
+                                <property name="adjustment">1 1 255 1 10 10</property>
+                              </widget>
+                              <packing>
+                                <property name="fill">False</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </widget>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">2</property>
+                        <property name="right_attach">3</property>
+                        <property name="top_attach">3</property>
+                        <property name="bottom_attach">4</property>
+                        <property name="y_options">GTK_FILL</property>
+                        <property name="x_padding">4</property>
                       </packing>
                     </child>
                   </widget>
@@ -2367,7 +2417,8 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="tooltip" translatable="yes">Auswahl der zur Verfügung stehenden Kommunikationsobjekte</property>
-                                    <property name="headers_visible">False</property>
+                                    <property name="reorderable">True</property>
+                                    <property name="enable_grid_lines">GTK_TREE_VIEW_GRID_LINES_VERTICAL</property>
                                     <signal name="row_activated" handler="on_ListManufacturer_row_activated"/>
                                   </widget>
                                 </child>
@@ -2389,10 +2440,8 @@
                       <packing>
                         <property name="right_attach">3</property>
                         <property name="bottom_attach">2</property>
-                        <property name="x_options"></property>
                         <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                         <property name="x_padding">4</property>
-                        <property name="y_padding">1</property>
                       </packing>
                     </child>
                     <child>
@@ -2402,12 +2451,12 @@
                         <property name="spacing">5</property>
                         <property name="layout_style">GTK_BUTTONBOX_END</property>
                         <child>
-                          <widget class="GtkButton" id="bCancel">
+                          <widget class="GtkButton" id="bApply">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="can_default">True</property>
                             <property name="response_id">0</property>
-                            <signal name="clicked" handler="on_bCancel_clicked"/>
+                            <signal name="clicked" handler="on_bApply_clicked"/>
                             <child>
                               <widget class="GtkAlignment" id="alignment24">
                                 <property name="visible">True</property>
@@ -2420,7 +2469,7 @@
                                     <child>
                                       <widget class="GtkImage" id="image475">
                                         <property name="visible">True</property>
-                                        <property name="stock">gtk-cancel</property>
+                                        <property name="stock">gtk-apply</property>
                                       </widget>
                                       <packing>
                                         <property name="expand">False</property>
@@ -2430,7 +2479,7 @@
                                     <child>
                                       <widget class="GtkLabel" id="label44">
                                         <property name="visible">True</property>
-                                        <property name="label" translatable="yes">Abbrechen</property>
+                                        <property name="label" translatable="yes">Übernehmen</property>
                                         <property name="use_underline">True</property>
                                       </widget>
                                       <packing>
@@ -2498,7 +2547,7 @@
                         <property name="right_attach">3</property>
                         <property name="top_attach">2</property>
                         <property name="bottom_attach">3</property>
-                        <property name="x_options"></property>
+                        <property name="x_options">GTK_FILL</property>
                         <property name="y_options"></property>
                         <property name="x_padding">4</property>
                         <property name="y_padding">10</property>
