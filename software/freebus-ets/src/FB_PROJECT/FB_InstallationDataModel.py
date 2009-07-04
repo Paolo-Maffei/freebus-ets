@@ -85,7 +85,7 @@ class FB_InstallationDataModel(FB_XMLDataModel):
         parentNode = self.getDataRootNode(ID)
         #prepare Instance
         DumpStream = cPickle.dumps(Instance,2)
-        self.writeDOMNodeValue(parentNode,"DeviceInstance", unicode(DumpStream,"ISO-8859-1"))
+        #self.writeDOMNodeValue(parentNode,"DeviceInstance", unicode(DumpStream,"ISO-8859-1"))
 
 #****************************************************************************
     def setProjectPath(self,projectPath):

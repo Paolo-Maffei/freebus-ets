@@ -18,12 +18,16 @@ import codecs
 import xml.sax.handler
 from Global import Global
 
+import zipfile
+import sqlite3
+
 import pygtk
 pygtk.require("2.0")
 import gtk
 import gtk.glade
 import threading
 import thread
+import os
 
 from xml.dom import minidom
 
@@ -69,6 +73,7 @@ class FB_XML_PRODUCT:
     lblParam = None
 
     __choosenImportType = 0    #choosen type to import (0=vd*; 1=vd_; 2=xml)
+    __SelectedFile = ""        #selected folder+file from filedialog
 
     ##Constructor
     #for each product file you have to create an instance of FB_XML
@@ -164,16 +169,16 @@ class FB_XML_PRODUCT:
 
         if(response == gtk.RESPONSE_OK):
             self.__SelFolder = DlgFileChooser.get_current_folder()
-            FileFolder = DlgFileChooser.get_filename()
+            self.__SelectedFile = DlgFileChooser.get_filename()
 
             #split SelFile (get_filename return complete path + filename)
-            List = FileFolder.split("\\")
+            List = self.__SelectedFile.split("\\")
             tFileName = List[len(List)-1]
             tFileName = tFileName.split(".")
 
             #Folder and Filename complete
-            self.__xml_file = FileFolder
-            self.__txtSourceFile.set_text(self.__xml_file)
+
+            self.__txtSourceFile.set_text(self.__SelectedFile)
 
             DlgFileChooser.destroy()
         else:
@@ -188,7 +193,7 @@ class FB_XML_PRODUCT:
     #start convert
     def bImport(self,widget, data=None):
 
-        try:
+       # try:
                self.response = gtk.RESPONSE_OK
 
                productList = []
@@ -207,22 +212,163 @@ class FB_XML_PRODUCT:
                #depending on the choosen import type do something...
                if(self.__choosenImportType == 0):
                    ErrorText = "Error at importing VD*-Type"
+                   self.ExtractFromVDx()
                elif(self.__choosenImportType == 1):
                    ErrorText = "Error at importing VD_-Type"
+                   self.ExtractFromVD_()
                elif(self.__choosenImportType == 2):
                    ErrorText = "Error at importing XML-Type"
                    self.ExtractFromXML()
                else:
                    return
-        except:
-            self.__LogObj.NewLog(ErrorText,0)
+        #except:
+           # self.__LogObj.NewLog(ErrorText,0)
 
     def ExtractFromVDx(self):
-        pass
+        zip = zipfile.ZipFile(self.__SelectedFile,"r")
+        for name in zip.namelist():
+            if(name.find("vd_") > -1):
+                outfile = open(Global.dataPath + "TempVD.vd_", 'wb')
+                outfile.write(zip.read(name, 'Orleander'))
+                outfile.close()
+                #import it to the database
+                self.__SelectedFile = Global.dataPath + "TempVD.vd_"
+                self.ExtractFromVD_()
+                os.remove(self.__SelectedFile)
+
+        zip.close()
+
 
     def ExtractFromVD_(self):
         #source converted from C# ---> thanks to kubi
-        pass
+        InFileObj = open(self.__SelectedFile,"r")
+
+        vdline = ""
+        lineno = 0
+        delimit = [ ' ' ]
+        fieldcount = 0
+        command = ""
+        fieldType = ["" for i in range(50)]
+
+        #create cursor
+        cur = Global.DatabaseConnection.cursor()
+
+        while(True):
+            vdline = InFileObj.readline()
+
+            if(vdline.find("XXX") > -1):
+                Global.DatabaseConnection.commit()
+                break
+
+            else:
+                #lineno = lineno + 1
+                vdField = vdline.split(' ')
+
+                if(len(vdField) > 2):
+                    #table found
+                    command = "CREATE TABLE IF NOT EXISTS " + vdField[2] + " ( id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
+
+                    if (vdField[0] == "T"):
+
+                        fieldcount=0
+                        vdline = InFileObj.readline()
+
+                        while(vdline[0:1] == "C"):
+                            vdField = vdline.split(' ')
+
+                            if (vdField[0][1] !="1"):
+                                command = command +", "
+                            command = command + vdField[5]
+
+                            # type: integer
+                            if (vdField[2]=="1" or vdField[2]=="2"):
+                                command = command + " INTEGER"
+                                fieldType[fieldcount] = "i"
+
+                            # type: varchar
+                            elif (vdField[2]=="3" or vdField[2]=="8"):
+                                command = command + " VARCHAR(" + vdField[3] + ")"
+                                fieldType[fieldcount]="s"
+
+                            # type: Real
+                            elif (vdField[2]=="5"):
+                                command = command + " REAL"
+                                fieldType[fieldcount]="r"
+
+                            fieldcount = fieldcount + 1
+
+                            #store last-fileposition ...
+                            LastPos = InFileObj.tell()
+                            vdline = InFileObj.readline()
+
+                        #restore last filepos if there was no more caption-section
+                        InFileObj.seek(LastPos)
+                        command = command +  ")"
+
+                        #take command as sql statement
+                        command = ""
+
+
+                    if (vdField[0] == "R"):
+                        #record found
+                        command = "INSERT INTO " + vdField[4] + " VALUES(null, "
+                        SelCommand = "SELECT * FROM " + vdField[4]
+                        ValueList = ["null"]
+
+                        n = 0
+                        while(n < fieldcount):
+                            vdline = InFileObj.readline()
+
+                            if (len(vdline) > 1 and vdline[0:2] == "\\\\"):
+                                n = n - 1
+                                command = command[0:len(command)-1]
+                                ValueList.pop()
+                            else:
+                                if (n > 0):
+                                    command = command + ", "
+                                if (fieldType[n]=="s"):
+                                    command = command + "'"
+
+                            if (vdline != "\n"):
+
+                                tmp = vdline.replace("\\\'","")
+                                tmp = tmp.split("\n")
+                                ValueList.append(unicode(tmp[0],"iso-8859-1"))
+
+                                command = command + unicode(tmp[0],"iso-8859-1")
+                                if (fieldType[n] == "s"):
+                                    command = command + "'"
+                            else:
+                                #in case of empty line
+                                if(fieldType[n] == "i"):
+                                    command = command + "0"
+                                    ValueList.append("0")
+
+                                elif (fieldType[n] == "s"):
+                                    command = command + "'"
+                                    ValueList.append(" ")
+
+                                elif (fieldType[n] == "r"):
+                                    command = command + "0.0"
+                                    ValueList.append("0.0")
+
+                            n = n + 1
+
+
+                        command = command + ")"
+
+                        #take command as sql statement
+                        #try:
+                        #check if record is already in database
+                        if (self.CheckSQLRecord(SelCommand,ValueList,fieldType) == False):
+                            cur.execute(command)
+
+                       # except:
+                          #  print command
+                         #   break
+                        #command = ""
+
+
 
     def ExtractFromXML(self):
         XMLHandler = self.parseXMLFile()
@@ -260,16 +406,46 @@ class FB_XML_PRODUCT:
                 CatalogEntryList  = self.getCatalogEntry(XMLHandler)
                 #--- write SQL Data in correct order
 
-                self.WriteToSQL(Global.DatabaseConnection, ManufactList, "MANUFACTURER")
-                self.WriteToSQL(Global.DatabaseConnection, productList, "HW_PRODUCT")
-                self.WriteToSQL(Global.DatabaseConnection, maskList, "MASK")
-                self.WriteToSQL(Global.DatabaseConnection, appList, "APPLICATION_PROGRAM")
-                self.WriteToSQL(Global.DatabaseConnection, ProdProgList, "PRODUCT_TO_PROGRAM")
-                self.WriteToSQL(Global.DatabaseConnection, CatalogEntryList, "CATALOG_ENTRY")
-                self.WriteToSQL(Global.DatabaseConnection, commList, "COMMUNICATION_OBJECT")
-                self.WriteToSQL(Global.DatabaseConnection, paramTypeList, "PARAMETER_TYPE")
-                self.WriteToSQL(Global.DatabaseConnection, paramListV, "PARAMETER_LIST_OF_VALUES")
-                self.WriteToSQL(Global.DatabaseConnection, paramList, "PARAMETER")
+    ##check the database if the record which should be inserted is already not in database
+    #@param SelCommand: SQL Select-Command of current table
+    #@param ValueList: current List of Values which should be inserted
+    #@param TypeList: current TypeList of inserted values (integr, strings ...)
+    def CheckSQLRecord(self,SelCommand,ValueList,TypeList):
+        RValue = False
+
+        #create new cursor
+        Global.DatabaseConnection.row_factory = sqlite3.Row
+        c = Global.DatabaseConnection.cursor()
+        c.execute(SelCommand)
+        r = c.fetchone()
+
+        if r <> None:
+            #get columnlist
+            columnList = r.keys()
+
+            #print columnList
+            #print ValueList
+            #print TypeList
+            SQLStr = SelCommand + " WHERE "
+            #create new select-string starting at index 1 at ValueList (Index 0 = ID which is not to compare)
+            for n in range(1,len(columnList)):
+                if TypeList[n-1] == 'i':
+                    if(n == 1):
+                        SQLStr = SQLStr + columnList[n] + " = " + ValueList[n]
+                    else:
+                        SQLStr = SQLStr + " AND " +  columnList[n] + " = " + ValueList[n]
+
+            c = Global.DatabaseConnection.cursor()
+           # print SQLStr
+            c.execute(SQLStr)
+
+
+            if(len(c.fetchall()) > 0):
+                RValue = True
+            else:
+                pass
+
+        return RValue
 
 
     def worker_thread(self, process_import):
@@ -280,257 +456,6 @@ class FB_XML_PRODUCT:
             if(XMLHandler != -1):
                 print "OK"
 
-    def WriteToSQL(self,Connection,List,Table):
-        #create a cursor
-        cur = Connection.cursor()
-
-        #iterate throuch List
-
-        for j in range(len(List)):
-
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
-
-            #Product found...
-            if(Table == "HW_PRODUCT"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-               # print sql
-                #check if Product is already existing...
-                sqlExist = "SELECT PRODUCT_ID FROM hw_product WHERE PRODUCT_ID = " + str(List[j].getProductID())
-
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
-
-                if(len(Cursor.fetchall()) == 0):
-                   #if item doesnt exist.... insert new record
-                   try:
-                       cur.execute(sql,List[j].getSQLValueList())
-                   except:
-                        #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
-                    #do something else
-                    #print sql
-                    self.__LogObj.NewLog("Doppeltes Produkt: " + sql,0)
-
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
-
-            #Application found
-            elif(Table == "APPLICATION_PROGRAM"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-               # print sql
-                #check if Product is already existing...
-                sqlExist = "SELECT PROGRAM_ID FROM application_program WHERE PROGRAM_ID = " + str(List[j].getProgramID())
-
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
-
-                if(len(Cursor.fetchall()) == 0):
-                   #if item doesnt exist.... insert new record
-                   try:
-                       cur.execute(sql,List[j].getSQLValueList())
-                   except:
-                        #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
-
-                    #print sql
-                    self.__LogObj.NewLog("Doppelte Applikation: " + sql ,0)
-
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
-
-            #Manufacturer found
-            elif(Table == "MANUFACTURER"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?)"
-
-                #check if Product is already existing...
-                sqlExist = "SELECT MANUFACTURER_ID FROM manufacturer WHERE MANUFACTURER_ID = " + str(List[j].getManufactID())
-
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
-
-                if(len(Cursor.fetchall()) == 0):
-                   #if item doesnt exist.... insert new record
-                   try:
-                       cur.execute(sql,List[j].getSQLValueList())
-                   except:
-                        #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
-                    #print sql
-                    self.__LogObj.NewLog("Doppelter Hersteller: " + sql ,0)
-
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
-
-            #Communication Object found
-            elif(Table == "COMMUNICATION_OBJECT"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-
-                #check if Product is already existing...
-                sqlExist = "SELECT OBJECT_ID FROM communication_object WHERE OBJECT_ID = " + str(List[j].getObjID())
-
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
-
-                if(len(Cursor.fetchall()) == 0):
-                   #if item doesnt exist.... insert new record
-                   try:
-                       cur.execute(sql,List[j].getSQLValueList())
-                   except:
-                        #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
-                    #do something else
-                    #print str(List[j].getObjUniqueNo())
-
-                    #print sql
-                    self.__LogObj.NewLog("Doppeltes Kommunikations-Object: " + sql ,0)
-
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
-
-            #Mask Object found
-            elif(Table == "MASK"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-
-                #check if Product is already existing...
-                sqlExist = "SELECT MASK_ID FROM mask WHERE MASK_ID = " + str(List[j].getMaskID())
-
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
-
-                if(len(Cursor.fetchall()) == 0):
-                   #if item doesnt exist.... insert new record
-                   try:
-                       cur.execute(sql,List[j].getSQLValueList())
-                   except:
-                        #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
-                    #print sql
-                    self.__LogObj.NewLog("Doppelte Maske: " + sql ,0)
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
-
-            #product to program Object found
-            elif(Table == "PRODUCT_TO_PROGRAM"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-
-                #check if Product is already existing...
-                sqlExist = "SELECT PROD2PROG_ID FROM product_to_program WHERE PROD2PROG_ID = " + str(List[j].getProd2ProgID())
-
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
-
-                if(len(Cursor.fetchall()) == 0):
-                   #if item doesnt exist.... insert new record
-                   try:
-                       cur.execute(sql,List[j].getSQLValueList())
-                   except:
-                        #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
-                    #print sql
-                    self.__LogObj.NewLog("Doppeltes ProductToProgram: " + sql ,0)
-
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
-
-            #parameter
-            elif(Table == "PARAMETER"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-
-                #check if Product is already existing...
-                sqlExist = "SELECT PARAMETER_ID FROM parameter WHERE PARAMETER_ID = " + str(List[j].getParameterID())
-
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
-
-                if(len(Cursor.fetchall()) == 0):
-                   #if item doesnt exist.... insert new record
-                   try:
-                       cur.execute(sql,List[j].getSQLValueList())
-                   except:
-                        #print sql
-                    self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
-                    #print sql
-                    self.__LogObj.NewLog("Doppelter Parameter: " + sql ,0)
-
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
-
-            #parameterType
-            elif(Table == "PARAMETER_TYPE"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-
-                #check if Product is already existing...
-                sqlExist = "SELECT PARAMETER_TYPE_ID FROM parameter_type WHERE PARAMETER_TYPE_ID = " + str(List[j].getParameterTypeID2())
-
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
-
-                if(len(Cursor.fetchall()) == 0):
-                   #if item doesnt exist.... insert new record
-                   try:
-                       cur.execute(sql,List[j].getSQLValueList())
-                   except:
-                        #print sql
-                       self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
-                    #print sql
-                    self.__LogObj.NewLog("Doppeltes Parameter_Type: " + sql ,0)
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
-            #parameter List of Values
-            elif(Table == "PARAMETER_LIST_OF_VALUES"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ? , ?)"
-
-                #check if Product is already existing...
-                sqlExist = "SELECT PARAMETER_VALUE_ID FROM parameter_list_of_values WHERE PARAMETER_VALUE_ID = " + \
-                            str(List[j].getParameterValueID())
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
-
-                if(len(Cursor.fetchall()) == 0):
-                   #if item doesnt exist.... insert new record
-                   try:
-                       cur.execute(sql,List[j].getSQLValueList())
-                   except:
-                        #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                #else:
-                    #print sql
-                 #   self.__LogObj.NewLog("Doppeltes Parameter List of Values: " + sql ,0)
-
-#------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------
-            #Catalog Entry
-            elif(Table == "CATALOG_ENTRY"):
-                sql = "INSERT INTO " + Table + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-
-                #check if Product is already existing...
-                sqlExist = "SELECT CATALOG_ENTRY_ID FROM catalog_entry WHERE CATALOG_ENTRY_ID = " + str(List[j].getCatalogEntryID())
-                Cursor = Connection.cursor()
-                Cursor.execute(sqlExist)
-
-                if(len(Cursor.fetchall()) == 0):
-                   #if item doesnt exist.... insert new record
-                   try:
-                        #print List[j].getSQLValueList()
-                        cur.execute(sql,List[j].getSQLValueList())
-                   except:
-                        #print sql
-                        self.__LogObj.NewLog("Falscher SQL-Befehl: " + sql,1)
-                else:
-                    #print sql
-                    self.__LogObj.NewLog("Doppelte Catalog Entry: " + sql ,0)
-
-
-        Connection.commit()
 
     ##return the current DOM-Object
     def getDOMObj(self):
@@ -662,11 +587,11 @@ class FB_XML_PRODUCT:
             #self.__handler.ignorableWhitespace(['\n', '\r', '\t'])
             saxparser = xml.sax.make_parser()
             saxparser.setContentHandler(self.__handler)
-            saxparser.parse(self.__xml_file)
+            saxparser.parse(self.__SelectedFile)
 
             return self.__handler
         except:
-            self.__LogObj.NewLog("General error at saxparser: " + self.__xml_file,2)
+            self.__LogObj.NewLog("General error at saxparser: " + self.__SelectedFile,2)
             return -1
 
     ##detect all Products within the given Product-Data-File

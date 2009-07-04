@@ -220,7 +220,7 @@ class FB_MainFrame:
 
     #show dlg device data
     def ShowDeviceData(self,widget, data=None):
-        FB_DlgDeviceData.FB_DlgDeviceData(self.__LogObj,self.__CurArchObj,self.__AdressLogicObj,True)
+        FB_DlgDeviceData.FB_DlgDeviceData(self.__LogObj,self.__AdressLogicObj,True)
     #start the converter dialog
     def Converter(self,widget, data=None):
         XML = FB_XMLConverter.FB_XMLConverter(self.__LogObj)
