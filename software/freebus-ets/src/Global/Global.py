@@ -21,8 +21,8 @@ import os
 
 
 
-GUIPath = "..\\GUI\\"
-ImagePath = "..\\Image\\"
+GUIPath = "..\\GUI_Res\\"
+ImagePath = "..\\GUI_Res\\"
 LogPath = "..\\Logging\\"
 dataPath = "..\\data\\"
 Database = "..\\data\\Freebus.db"

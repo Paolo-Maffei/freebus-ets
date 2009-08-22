@@ -18,8 +18,9 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 import gtk.glade
-from configobj import ConfigObj            #for application settings
+#from configobj import ConfigObj            #for application settings
 import os
+from FB_PROJECT import configobj
 
 import sqlite3
 
@@ -35,7 +36,7 @@ class FB_DlgDatabase:
     # create a new window
         self.__LogObj = LogObj
 
-        config = ConfigObj(Global.settingFile)
+        config = configobj.ConfigObj(Global.settingFile)
 
         self.__GladeObj = gtk.glade.XML(Global.GUIPath + "freebus.glade","DlgDatabse")
         self.__window = self.__GladeObj.get_widget("DlgDatabse")
@@ -49,7 +50,7 @@ class FB_DlgDatabase:
         self.__GladeObj.signal_autoconnect(dic)
 
         self.__txtDatabase = self.__GladeObj.get_widget("txtDatabase")
-        self.__txtDatabase.set_text(config['Database'])
+        self.__txtDatabase.set_text(config['Database']['Database'])
         #show window
         self.__window.show()
 
@@ -122,9 +123,10 @@ class FB_DlgDatabase:
     #applies the new settings (choose a new database)
     def Apply(self,widget, data=None):
         if(self.__txtDatabase != None):
-            config = ConfigObj()
+            config = configobj.ConfigObj()
             config.filename = Global.settingFile
-            config['Database'] = self.__txtDatabase.get_text()
+            config['Database'] = {}
+            config['Database']['Database'] = self.__txtDatabase.get_text()
             config.write()
 
             #create a new connection object

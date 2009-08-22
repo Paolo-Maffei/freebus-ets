@@ -24,6 +24,7 @@ class Logging:
     _OutFileObj = None
     _ClassObj = None
     _Options = 0
+    _FileName = ""
 
     __LogType = ["Meldung","Fehler","Exception"]
     #Konstruktor der Logging-Klasse
@@ -31,7 +32,8 @@ class Logging:
         #ClassObj: Absender (KLassenname)
         #LogFileName: Pafd und Name der Zieldatei
         #Options: z.Bsp. 8-Bits zum Schreiben verschiedener Optionen (Datum,Zeit...)
-        self._OutFileObj = open(LogFileName,"w")
+        self._FileName = LogFileName
+
         self._ClassObj = ClassObj
         self._Options = Options
 
@@ -42,7 +44,7 @@ class Logging:
         #LogType 1 : Meldung
         #LogType 2 : Fehler
         #LogType 3 : Exception
-
+        self._OutFileObj = open(self._FileName,"w")
 
         TimeStr = ctime()
 
@@ -50,4 +52,4 @@ class Logging:
         TimeStr = TimeStr[2]+ ". " + TimeStr[1]+" "+TimeStr[4]+" " +TimeStr[3]
         LogStr = self._ClassObj + "; " + TimeStr + "; " + self.__LogType[LogType] + "; " + LogText + "\n"
         self._OutFileObj.write(LogStr)
-
+        self._OutFileObj.close

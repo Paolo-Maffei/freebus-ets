@@ -24,7 +24,6 @@ import gtk.glade
 class FB_ArchitecturalTree:
 
     __LogObj = None
-    __ImagePath = None
     __treestore = None
     __TreeObj = None
     __CurProjectObj = None
@@ -50,14 +49,11 @@ class FB_ArchitecturalTree:
         self.__LogObj = LogObj
         self.__TreeObj = TreeObj
 
-        #self.__ImagePath = os.getcwd() + os.sep + "Image" + os.sep
-        self.__ImagePath = Global.ImagePath
-
         #create data structure/model
 
         self.__treestore = gtk.TreeStore(gtk.gdk.Pixbuf,str,str)
         self.__TreeObj.set_model(self.__treestore)
-        image=gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "New.gif")
+        image=gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "New.gif")
         self.__TreeIterator = self.__treestore.append(None, [image, "  kein Projekt aktiv", "OK"])
 
         #get TreePath for TreeRowReference
@@ -83,7 +79,7 @@ class FB_ArchitecturalTree:
     def ClearTree(self):
         self.__treestore.clear()
         self.__TreeObj.set_model(self.__treestore)
-        image = gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "New.gif")
+        image = gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "New.gif")
         self.__TreeIterator = self.__treestore.append(None, [image, "  kein Projekt aktiv", "OK"])
 
     #build the project tree, every time you create a new project or open an existing project
@@ -168,13 +164,13 @@ class FB_ArchitecturalTree:
         #get back buidling image
 
         if(Prefix == self.ArchModel.BUILDING_PREFIX):
-            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "building.png")
+            return gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "building.png")
         elif(Prefix == self.ArchModel.FLOOR_PREFIX):
-            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "floor.png")
+            return gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "floor.png")
         elif(Prefix == self.ArchModel.ROOM_PREFIX):
-            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "room.png")
+            return gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "room.png")
         elif(Prefix == self.ArchModel.JUNCTION_BOX_PREFIX):
-            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "junctionbox.png")
+            return gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "junctionbox.png")
 
     #gets the iterator of a given path ( comes from a drop action)
     def getIterator(self,path):

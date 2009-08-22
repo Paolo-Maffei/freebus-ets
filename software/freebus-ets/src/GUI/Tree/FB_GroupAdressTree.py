@@ -24,7 +24,6 @@ import gtk.glade
 class FB_GroupAdressTree:
 
     __LogObj = None
-    __ImagePath = None
     __treestore = None
     __TreeObj = None
     __CurProjectObj = None
@@ -45,14 +44,11 @@ class FB_GroupAdressTree:
         self.__LogObj = LogObj
         self.__TreeObj = TreeObj
 
-        #self.__ImagePath = os.getcwd() + os.sep + "Image" + os.sep
-        self.__ImagePath = Global.ImagePath
-
         #create data structure/model
 
         self.__treestore = gtk.TreeStore(gtk.gdk.Pixbuf,str,str)
         self.__TreeObj.set_model(self.__treestore)
-        image=gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "maingroup.png")
+        image=gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "maingroup.png")
         self.__TreeIterator = self.__treestore.append(None, [image, "  Hauptgruppen", "OK"])
 
         #get TreePath for TreeRowReference
@@ -78,7 +74,7 @@ class FB_GroupAdressTree:
     def ClearTree(self):
         self.__treestore.clear()
         self.__TreeObj.set_model(self.__treestore)
-        image = gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "maingroup.png")
+        image = gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "maingroup.png")
         self.__TreeIterator = self.__treestore.append(None, [image, "  Hauptgruppen", "OK"])
 
     #build the project tree, every time you create a new project or open an existing project
@@ -156,11 +152,11 @@ class FB_GroupAdressTree:
     def getImage(self,Prefix):
 
         if(Prefix == self.ArchModel.GROUPADRESS_MAIN):
-            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "MainGroup.png")
+            return gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "MainGroup.png")
         elif(Prefix == self.ArchModel.GROUPADRESS_MIDDLE):
-            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "MiddleGroup.png")
+            return gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "MiddleGroup.png")
         elif(Prefix == self.ArchModel.GROUPADRESS):
-            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "SubGroup.png")
+            return gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "SubGroup.png")
 
     #gets the iterator of a given path ( comes from a drop action)
     def getIterator(self,path):

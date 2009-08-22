@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #-*- coding: iso-8859-1 -*-
 #!/usr/bin/
 #===============================================================================
@@ -10,47 +11,35 @@
 #Installation-Path
 #    ->    Dist (name of directory of setup procedure
 #    ->    Logging
-#    ->    src
-#            -> GUI
-#            -> Image
+#    -> GUI
+#        -> Images
 
-import os
 import sys
+import pygtk
+if not sys.platform == 'win32':
+    pygtk.require('2.0')
+import gtk
 
-from Global import Global
-from XML import FB_XMLConverter
-from XML import FB_XML_PRODUCT
-from XML import FB_XMLDataModel
-from LOG import Logging
+
+
+#from GUI.FB_MainFrame import * #MainFrame
+#import src.GUI.FB_MainFrame
+
 from GUI import FB_MainFrame
-from configobj import ConfigObj            #for application settings
 
-#from pysqlite2 import dbapi2 as sqlite3
-import sqlite3
+#import FB_MainFrame
 
-LogFileName = Global.LogPath + 'MainFrame.log'
-Options = 0
+if __name__ == '__main__':
+    # enable threading
+    gtk.gdk.threads_init()
+    gtk.gdk.threads_enter()
 
-#Databaseconnection
-config = ConfigObj(Global.settingFile)
+    # create the main window
+    FBMain = FB_MainFrame.MainFrame()
 
-Global.DatabaseConnection = sqlite3.connect(config['Database'])
-Global.DatabaseConnection.text_factory = str
+    # start the program loop
+    FBMain.main()
 
-#probably will never be None -> sqlite creats a database if its not connectable...
-if(Global.DatabaseConnection == None):
-    msgbox = gtk.MessageDialog(parent = self.__window, buttons = gtk.BUTTONS_OK,
-                                           flags = gtk.DIALOG_MODAL, type = gtk.MESSAGE_WARNING,
-                                           message_format = Global.ERROROPENDATABASE )
-
-    msgbox.set_title(Global.ERROROPENDATABASETITLE)
-    result = msgbox.run()
-    msgbox.destroy()
-
-
-LOG_MainFrame = Logging.Logging("FB_MainFrame",LogFileName,Options)
-
-
-FBMain = FB_MainFrame.FB_MainFrame(LOG_MainFrame)
-FBMain.main()
+    # cleanup
+    gtk.gdk.threads_leave()
 

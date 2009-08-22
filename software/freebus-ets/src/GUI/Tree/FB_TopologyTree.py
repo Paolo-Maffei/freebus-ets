@@ -24,7 +24,6 @@ import gtk.glade
 class FB_TopologyTree:
 
     __LogObj = None
-    __ImagePath = None
     __treestore = None
     __TreeObj = None
     __CurProjectObj = None
@@ -45,14 +44,11 @@ class FB_TopologyTree:
         self.__LogObj = LogObj
         self.__TreeObj = TreeObj
 
-        #self.__ImagePath = os.getcwd() + os.sep + "Image" + os.sep
-        self.__ImagePath = Global.ImagePath
-
         #create data structure/model
 
         self.__treestore = gtk.TreeStore(gtk.gdk.Pixbuf,str,str)
         self.__TreeObj.set_model(self.__treestore)
-        image=gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "building.png")
+        image=gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "building.png")
         self.__TreeIterator = self.__treestore.append(None, [image, "  kein Projekt aktiv", "OK"])
 
         #get TreePath for TreeRowReference
@@ -78,7 +74,7 @@ class FB_TopologyTree:
     def ClearTree(self):
         self.__treestore.clear()
         self.__TreeObj.set_model(self.__treestore)
-        image = gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "building.png")
+        image = gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "building.png")
         self.__TreeIterator = self.__treestore.append(None, [image, "  kein Projekt aktiv", "OK"])
 
     #build the project tree, every time you create a new project or open an existing project
@@ -155,11 +151,11 @@ class FB_TopologyTree:
 
 
         if(Prefix == self.ArchModel.TOPOLOGY_AREA):
-            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "area.png")
+            return gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "area.png")
         elif(Prefix == self.ArchModel.TOPOLOGY_LINE):
-            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "line.png")
+            return gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "line.png")
         elif(Prefix == self.ArchModel.TOPOLOGY_DEVICE):
-            return gtk.gdk.pixbuf_new_from_file(self.__ImagePath + "Device.png")
+            return gtk.gdk.pixbuf_new_from_file(Global.ImagePath + "Device.png")
 
 
 

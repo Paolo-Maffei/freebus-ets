@@ -1,1 +1,2 @@
+[Database]
 Database = E:\Elektronik\Projekte\Python Workspace\FB ETS\data\Datenbank.db
