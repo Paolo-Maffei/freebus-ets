@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <glade-interface>
-  <!-- interface-requires gtk+ 2.6 -->
+  <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkWindow" id="MainFrame">
     <property name="width_request">1200</property>
@@ -25,9 +25,10 @@
               <widget class="GtkMenuBar" id="MainMenu">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkImageMenuItem" id="menuitem1">
-                    <property name="label" translatable="yes">Datei</property>
+                  <widget class="GtkImageMenuItem" id="File">
+                    <property name="label" translatable="yes">_Datei</property>
                     <property name="visible">True</property>
+                    <property name="use_underline">True</property>
                     <property name="use_stock">False</property>
                     <child>
                       <widget class="GtkMenu" id="File_menu">
@@ -127,6 +128,7 @@
                     <child internal-child="image">
                       <widget class="GtkImage" id="image2">
                         <property name="visible">True</property>
+                        <property name="ypad">5</property>
                         <property name="pixbuf">file-manager.png</property>
                       </widget>
                     </child>
@@ -134,8 +136,9 @@
                 </child>
                 <child>
                   <widget class="GtkImageMenuItem" id="DeviceData">
-                    <property name="label" translatable="yes">Ger&#xE4;tedaten</property>
+                    <property name="label" translatable="yes">_Ger&#xE4;tedaten</property>
                     <property name="visible">True</property>
+                    <property name="use_underline">True</property>
                     <property name="use_stock">False</property>
                     <child>
                       <widget class="GtkMenu" id="DeviceData_menu">
@@ -238,20 +241,38 @@
                     <child internal-child="image">
                       <widget class="GtkImage" id="image3">
                         <property name="visible">True</property>
+                        <property name="ypad">5</property>
                         <property name="pixbuf">device-data.png</property>
                       </widget>
                     </child>
                   </widget>
                 </child>
                 <child>
-                  <widget class="GtkImageMenuItem" id="About">
-                    <property name="label" translatable="yes">&#xDC;ber...</property>
+                  <widget class="GtkImageMenuItem" id="Program">
+                    <property name="label" translatable="yes">_Programmieren</property>
                     <property name="visible">True</property>
+                    <property name="use_underline">True</property>
+                    <property name="use_stock">False</property>
+                    <child internal-child="image">
+                      <widget class="GtkImage" id="image14">
+                        <property name="visible">True</property>
+                        <property name="ypad">5</property>
+                        <property name="stock">gtk-connect</property>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkImageMenuItem" id="About">
+                    <property name="label" translatable="yes">&#xDC;_ber...</property>
+                    <property name="visible">True</property>
+                    <property name="use_underline">True</property>
                     <property name="use_stock">False</property>
                     <signal name="activate" handler="on_About_activate"/>
                     <child internal-child="image">
                       <widget class="GtkImage" id="image4">
                         <property name="visible">True</property>
+                        <property name="ypad">5</property>
                         <property name="pixbuf">info.png</property>
                       </widget>
                     </child>
@@ -3310,6 +3331,45 @@
           <packing>
             <property name="expand">False</property>
             <property name="padding">5</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkAboutDialog" id="DlgAbout">
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes">Info</property>
+    <property name="resizable">False</property>
+    <property name="window_position">center-always</property>
+    <property name="icon">info.png</property>
+    <property name="type_hint">normal</property>
+    <property name="program_name">Freebus - ETS</property>
+    <property name="copyright" translatable="yes">Copyright (c) 2008-2009 Jerome Leisner &lt;j.leisner@ing-automation.de&gt;</property>
+    <property name="comments" translatable="yes">This program is free software; you can redistribute it 
+and/or modify it under the terms 
+of the GNU General Public License version 2 as published 
+by the Free Software Foundation.</property>
+    <property name="website">http://freebus.org/</property>
+    <property name="authors">Jerome Leisner - (j.leisner@ing-automation.de)</property>
+    <property name="logo">freebuslogowithtransparentback.png</property>
+    <property name="wrap_license">True</property>
+    <child internal-child="vbox">
+      <widget class="GtkVBox" id="dialog-vbox11">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child>
+          <placeholder/>
+        </child>
+        <child internal-child="action_area">
+          <widget class="GtkHButtonBox" id="dialog-action_area11">
+            <property name="visible">True</property>
+            <property name="layout_style">end</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
             <property name="pack_type">end</property>
             <property name="position">0</property>
           </packing>

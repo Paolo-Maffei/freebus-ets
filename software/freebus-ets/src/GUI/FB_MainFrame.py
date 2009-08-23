@@ -59,6 +59,7 @@ class MainFrame:
     __CurInstObj = None            #installation model of the current project
     __AdressLogicObj = None        #object to handle the entire adress logic of the CurProjectObj
     __GladeObj = None
+
     __GUIPath = ""
     __ImagePath = ""
     __ProjTree = None
@@ -118,10 +119,10 @@ class MainFrame:
         self.__WindowWidth = gtk.gdk.screen_width()
         self.__WindowHeigth = gtk.gdk.screen_height()
 
-        self.__GladeObj = gtk.glade.XML(Global.GUIPath  + "freebus.glade","MainFrame")
+        self.__GladeObj = gtk.glade.XML(Global.GUIPath  + Global.GladeFile,"MainFrame")
         #get widget of window
         self.window = self.__GladeObj.get_widget("MainFrame")
-        #self.window.fullscreen()
+
 
         if(self.__GladeObj == None):
            self.__LogObj.NewLog("Error at intializing GUI-Interface (Glade-Object-MainFrame)",1)
@@ -130,7 +131,7 @@ class MainFrame:
         #-------------------------------------------------------------------------------------
 
         #popupmenu init
-        self.__PopUpGlade = gtk.glade.XML(Global.GUIPath  + "freebus.glade","mnuPopupTree")
+        self.__PopUpGlade = gtk.glade.XML(Global.GUIPath  + Global.GladeFile,"mnuPopupTree")
         self.__mnuPopup =  self.__PopUpGlade.get_widget("mnuPopupTree")
 
         if(self.__mnuPopup == None):
@@ -198,6 +199,8 @@ class MainFrame:
                 "on_ImportDeviceData_activate":self.ImportProductData,
                 "on_ShowDeviceData_activate":self.ShowDeviceData,
                 "on_DlgDatabase_activate":self.DatabaseSetting,
+
+                "on_About_activate":self.ShowAboutDlg,
 
                 #ProjectTree
                 "on_ProjectTree_drag_data_received" : self.ProjectTreeDropData,
@@ -341,7 +344,7 @@ class MainFrame:
     def OpenDlgNewStructureElement(self, ParentID, TreeIterator, TreeObject, PicturePrefix):
         #open dialog to give a new name
         #AddStructureElement = FB_AddStructureElement.FB_AddStructureElement(self.__LogObj, self,"Reserve")
-        GladeObj = gtk.glade.XML(Global.GUIPath + "freebus.glade","DlgAddStructureElement")
+        GladeObj = gtk.glade.XML(Global.GUIPath + Global.GladeFile,"DlgAddStructureElement")
 
         lblAdress = GladeObj.get_widget("lblAdress")
         spinAdress = GladeObj.get_widget("spinAdress")
@@ -806,6 +809,16 @@ class MainFrame:
         #get the column value (2) -> column2 = ID
         ID =  treestore.get_value(Iterator,2)
         #get the information from the installationfile
+
+
+    ##menu item "About"
+    def ShowAboutDlg(self,widget, data=None):
+        #get the dlgAbout widget
+        tmpGlade = gtk.glade.XML(Global.GUIPath  + Global.GladeFile,"DlgAbout")
+        #get widget of window
+        DlgAbout = tmpGlade.get_widget("DlgAbout")
+        DlgAbout.run()
+        DlgAbout.destroy()
 
 
     def main(self):

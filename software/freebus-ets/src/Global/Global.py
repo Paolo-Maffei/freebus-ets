@@ -19,7 +19,10 @@
 #GUI Path
 import os
 
-
+import pygtk
+pygtk.require("2.0")
+import gtk
+import gtk.glade
 
 GUIPath = "..\\GUI_Res\\"
 ImagePath = "..\\GUI_Res\\"
@@ -27,7 +30,7 @@ LogPath = "..\\Logging\\"
 dataPath = "..\\data\\"
 Database = "..\\data\\Freebus.db"
 settingFile = "..\\data\\settings.txt"
-
+GladeFile = "freebus.glade"
 
 
 Prefix = [" ", "Project","Building","Floor", "Room", "Junction"]
@@ -48,3 +51,9 @@ DATATBASEEXISTTITLE = U"Datenbank bereits vorhanden"
 
 ERROROPENDATABASE = U"Die in der settings-Datei angegebene Datenbank konnte nicht geöffnet werden! Überprüfen Sie die Einstellungen."
 ERROROPENDATABASETITLE = U"Datenbank nicht vorhanden"
+
+#-----------------------------------------------------------------------------------------------------------------------
+#--------------------------------  some helping functions --------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------------------------
+
+
