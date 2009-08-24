@@ -1,0 +1,4 @@
+von Markus, 24.08.09 :
+Die Verknüpfung freebus-ets zeigt auf ein absolutes Verzeichnis (E:) und funktioniert damit nicht.
+
+starten der freebus-ets.exe bringt fehlermeldung wie in beigefügter log. 
