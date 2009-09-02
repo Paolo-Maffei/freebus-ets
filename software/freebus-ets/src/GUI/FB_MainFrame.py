@@ -32,6 +32,7 @@ from Global import Global
 from GUI import FB_NewProjectWindow
 from GUI import FB_OpenProjectWindow
 from GUI import FB_DlgDeviceData
+from GUI import FB_ProgramFrame
 from GUI.Tree import FB_ArchitecturalTree
 from GUI.Tree import FB_TopologyTree
 from GUI.Tree import FB_GroupAdressTree
@@ -45,11 +46,11 @@ from FB_PROJECT import configobj
 from XML import FB_XMLConverter
 from XML import FB_XML_PRODUCT
 
-
+import jpype
 
 import sqlite3
 
-class MainFrame:
+class MainFrame(object):
 
     __WindowWidth = 0
     __WindowHeigth = 0
@@ -80,6 +81,9 @@ class MainFrame:
     __commObjListStore = None    #ListModel interface
 
 
+    #--- menu buttons ----
+    __ShowProgramWindow = None
+
     treestore = None
     curDragDataType = 0            #the current Type of draged data (builidng,floor,rooms---)
 
@@ -91,6 +95,19 @@ class MainFrame:
         LogFileName = Global.LogPath + 'MainFrame.log'
         Options = 0
         self.__LogObj = Logging.Logging("FB_MainFrame",LogFileName,Options)
+
+
+        #Get path to directory with calimero-2.0a4.jar
+        jarpath = os.path.join(os.path.abspath("."), "lib")
+        #Start JVM
+        jpype.startJVM(jpype.getDefaultJVMPath(), "-Djava.ext.dirs=%s" % jarpath)
+
+        #exc = jpype.JClass("tuwien.auto.calimero.exception.KNXException")
+
+
+        #FT12Connection = jpype.JClass("tuwien.auto.calimero.serial.FT12Connection")
+        #z = FT12Connection(8)
+        #print z.getState()
 
         #self.__LogObj.NewLog("doof",1)
         #Databaseconnection
@@ -188,7 +205,7 @@ class MainFrame:
         #get widget object of GroupAdress Tree
         self.__GroupAdressTreeWidget = self.__GladeObj.get_widget("GroupAddressTree")
 
-        dic = { "on_MainFrame_destroy" : gtk.main_quit ,
+        dic = { "on_MainFrame_destroy" : self.QuittApp ,
                 "on_Quitt_activate" : self.QuittApp,
                 #Menu items
                 "on_new_project_activate" : self.MenuNewProject,
@@ -199,6 +216,11 @@ class MainFrame:
                 "on_ImportDeviceData_activate":self.ImportProductData,
                 "on_ShowDeviceData_activate":self.ShowDeviceData,
                 "on_DlgDatabase_activate":self.DatabaseSetting,
+
+                #Menu: Program
+                "on_Program_activate":self.ShowProgramWindow,
+
+
 
                 "on_About_activate":self.ShowAboutDlg,
 
@@ -219,8 +241,9 @@ class MainFrame:
                 }
         self.__GladeObj.signal_autoconnect(dic)
 
-       #-------------------------------------------------------------------------------------
-
+        #-------------------------------------------------------------------------------------
+        self.__ShowProgramWindow = self.__GladeObj.get_widget("Program")
+        self.__ShowProgramWindow.set_state(gtk.STATE_INSENSITIVE)
 
         #create Project Tree
         self.__ArchTree = FB_ArchitecturalTree.FB_ArchitecturalTree(self.__LogObj,self.__ProjTree)
@@ -263,12 +286,20 @@ class MainFrame:
     def ImportProductData(self,widget, data=None):
         FBProductData = FB_XML_PRODUCT.FB_XML_PRODUCT(self.__LogObj)
 
+    #Menu: Program
+    def ShowProgramWindow(self,widget, data=None):
+        FB_ProgramFrame.FB_ProgramFrame(self.__CurProjectObj)
+
+
     #set current project object
     def SetCurrProject(self, ProjObj):
         self.__CurProjectObj = ProjObj
         self.__CurArchObj = self.__CurProjectObj.getArchModel()
         self.__CurInstObj = self.__CurProjectObj.getInstModel()
 
+
+        if self.__CurProjectObj <> None:
+            self.__ShowProgramWindow.set_sensitive(True)
 
         #create instance of adresslogic
         self.__AdressLogicObj = FB_AdressLogic.FB_AdressLogic(self.__LogObj,ProjObj)

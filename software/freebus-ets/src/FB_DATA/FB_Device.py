@@ -13,8 +13,8 @@
 #email: j.leisner@ing-automation.de
 #===============================================================================
 
-from random import randint
 
+from Global import Global
 
 ##general class for containing device data
 
@@ -35,29 +35,9 @@ class FB_Device:
         self.__LogObj = LogObj
         self.__ProjObj = ProjObj
 
-        self.__InstanceID = self.CreateGUID()
+        self.__InstanceID = Global.CreateGUID()
 
 
     def WriteProductDetails(self):
         pass
 
-    def CreateGUID(self):
-        chars = '0123456789abcdef' # Hexadezimalziffern
-        clen = len(chars) - 1      # Anzahl verfügbarer Ziffern (Nullbasiert)
-        parts = [8, 4, 4, 4, 12]   # Längen der einzelnen GUID-Abschnitte
-
-        # Liste mit den einzelnen GUID-Abschnitten
-        guid = []
-
-        # p ist die Länge jedes einzelnen Abschnitts
-        for p in parts:
-            # Aktuelle Abschnitt initialisieren
-            gpart = ''
-            # Iteriere von 0 bis zur Länge des aktuellen Abschnitts
-            for c in range(0, p):
-            # füge ein zufälliges Zeichen aus chars zum aktuellen Abschnitt hinzu
-                gpart += chars[randint(0, clen)]
-        # hänge den Abschnitt an die GUID-Liste an
-        guid.append(gpart)
-
-        return guid[0]

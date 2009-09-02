@@ -18,7 +18,7 @@ from xml.dom import minidom
 from xml.dom.minidom import *
 from FB_PROJECT import FB_ArchitecturalDataModel
 from FB_PROJECT import FB_InstallationDataModel
-#from xml.dom.minidom import getDOMImplementation
+from FB_EIB.FB_EIBConnection import FB_EIBConnection
 
 ##general class for handling project data which are based on XML
 class FB_Project:
@@ -32,6 +32,12 @@ class FB_Project:
 
    # __parent = None           #object: Application
     isChanged = False
+
+
+    #-------------------------------------------------------------
+    eibConnectionList = []    #list of instances of FB_EIBConnection
+
+    #-------------------------------------------------------------
 
 
     ##Constructor for new Project
@@ -110,4 +116,6 @@ class FB_Project:
     def SaveProject(self,):
         self.__archmodel.SaveArchmodel()
         self.__instamodell.SaveInstmodel()
+        
+        
         self.isChanged = False

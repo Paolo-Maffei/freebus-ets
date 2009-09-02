@@ -18,11 +18,12 @@
 #add Directory Structure
 #GUI Path
 import os
-
+from random import randint
 import pygtk
 pygtk.require("2.0")
 import gtk
 import gtk.glade
+from enum import Enum
 
 GUIPath = "..\\GUI_Res\\"
 ImagePath = "..\\GUI_Res\\"
@@ -52,8 +53,32 @@ DATATBASEEXISTTITLE = U"Datenbank bereits vorhanden"
 ERROROPENDATABASE = U"Die in der settings-Datei angegebene Datenbank konnte nicht geöffnet werden! Überprüfen Sie die Einstellungen."
 ERROROPENDATABASETITLE = U"Datenbank nicht vorhanden"
 
+
+ConTypes = Enum("Eibnet", "sFT12")
+ConTypesText = Enum("Eibnet/IP", "RS232 FT1.2")
+COM = Enum("COM 1", "COM 2", "COM 3", "COM 4", "COM 5", "COM 6", "COM 7", "COM 8")
+
 #-----------------------------------------------------------------------------------------------------------------------
 #--------------------------------  some helping functions --------------------------------------------------------------
 #-----------------------------------------------------------------------------------------------------------------------
 
+def CreateGUID():
+        chars = '0123456789abcdef' # Hexadezimalziffern
+        clen = len(chars) - 1      # Anzahl verfügbarer Ziffern (Nullbasiert)
+        parts = [8, 4, 4, 4, 12]   # Längen der einzelnen GUID-Abschnitte
 
+        # Liste mit den einzelnen GUID-Abschnitten
+        guid = []
+
+        # p ist die Länge jedes einzelnen Abschnitts
+        for p in parts:
+            # Aktuelle Abschnitt initialisieren
+            gpart = ''
+            # Iteriere von 0 bis zur Länge des aktuellen Abschnitts
+            for c in range(0, p):
+            # füge ein zufälliges Zeichen aus chars zum aktuellen Abschnitt hinzu
+                gpart += chars[randint(0, clen)]
+        # hänge den Abschnitt an die GUID-Liste an
+        guid.append(gpart)
+
+        return guid[0]
