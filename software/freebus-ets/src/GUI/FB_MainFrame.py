@@ -47,6 +47,7 @@ from XML import FB_XMLConverter
 from XML import FB_XML_PRODUCT
 
 import jpype
+#import socket
 
 import sqlite3
 
@@ -84,6 +85,12 @@ class MainFrame(object):
     #--- menu buttons ----
     __ShowProgramWindow = None
 
+    #statusbar vars
+    __MainStatusBar = None
+    __contextID = None        #generall context id belong to the statusbar
+    __messageIDDatabase = None #meesage id for information Database connection
+
+
     treestore = None
     curDragDataType = 0            #the current Type of draged data (builidng,floor,rooms---)
 
@@ -96,14 +103,24 @@ class MainFrame(object):
         Options = 0
         self.__LogObj = Logging.Logging("FB_MainFrame",LogFileName,Options)
 
+        self.__CurProjectObj = None
+        self.__CurInstObj = None
 
-        #Get path to directory with calimero-2.0a4.jar
-        jarpath = os.path.join(os.path.abspath("."), "lib")
-        #Start JVM
-        jpype.startJVM(jpype.getDefaultJVMPath(), "-Djava.ext.dirs=%s" % jarpath)
+        #get screensize
+        self.__WindowWidth = gtk.gdk.screen_width()
+        self.__WindowHeigth = gtk.gdk.screen_height()
 
-        #exc = jpype.JClass("tuwien.auto.calimero.exception.KNXException")
+        self.__GladeObj = gtk.glade.XML(Global.GUIPath  + Global.GladeFile,"MainFrame")
+        #get widget of window
+        self.window = self.__GladeObj.get_widget("MainFrame")
+        self.__MainStatusBar = self.__GladeObj.get_widget("MainStatusBar")
+        self.__contextID = self.__MainStatusBar.get_context_id("Statusbar in FB_MainFrame")
 
+        self.__contextID_DB = self.__MainStatusBar.get_context_id("Test")
+        self.__messageIDDatabase = self.__MainStatusBar.push(self.__contextID, "Database: ")
+
+        #self.__messageIDDatabase = self.__MainStatusBar.push(self.__contextID, "Database: doof ")
+        #self.__messageIDDatabase = self.__MainStatusBar.push(self.__contextID_DB, "Database: hallo ")
 
         #FT12Connection = jpype.JClass("tuwien.auto.calimero.serial.FT12Connection")
         #z = FT12Connection(8)
@@ -113,12 +130,19 @@ class MainFrame(object):
         #Databaseconnection
         config = configobj.ConfigObj(Global.settingFile)
         self.__LogObj.NewLog(Global.settingFile,1)
-        Global.DatabaseConnection = sqlite3.connect(config['Database']['Database'])
-        Global.DatabaseConnection.text_factory = str
+
+        try:
+            Global.DatabaseConnection = sqlite3.connect(config['Database']['Database'])
+            Global.DatabaseConnection.text_factory = str
+        except:
+            Global.DatabaseConnection = None
+            pass
+
+
 
         #probably will never be None -> sqlite creats a database if its not connectable...
         if(Global.DatabaseConnection == None):
-            msgbox = gtk.MessageDialog(parent = self.__window, buttons = gtk.BUTTONS_OK,
+            msgbox = gtk.MessageDialog(parent = self.window, buttons = gtk.BUTTONS_OK,
                                            flags = gtk.DIALOG_MODAL, type = gtk.MESSAGE_WARNING,
                                            message_format = Global.ERROROPENDATABASE )
 
@@ -126,19 +150,6 @@ class MainFrame(object):
             result = msgbox.run()
             msgbox.destroy()
 
-
-
-        self.__CurProjectObj = None
-        self.__CurInstObj = None
-
-
-        #get screensize
-        self.__WindowWidth = gtk.gdk.screen_width()
-        self.__WindowHeigth = gtk.gdk.screen_height()
-
-        self.__GladeObj = gtk.glade.XML(Global.GUIPath  + Global.GladeFile,"MainFrame")
-        #get widget of window
-        self.window = self.__GladeObj.get_widget("MainFrame")
 
 
         if(self.__GladeObj == None):

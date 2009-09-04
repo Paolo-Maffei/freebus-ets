@@ -24,6 +24,7 @@ pygtk.require("2.0")
 import gtk
 import gtk.glade
 from enum import Enum
+import jpype
 
 GUIPath = "..\\GUI_Res\\"
 ImagePath = "..\\GUI_Res\\"
@@ -54,9 +55,47 @@ ERROROPENDATABASE = U"Die in der settings-Datei angegebene Datenbank konnte nich
 ERROROPENDATABASETITLE = U"Datenbank nicht vorhanden"
 
 
+ERRORCONNECTIONTITLE = U"Fehler beim Verbindungsaufbau"
+
+
 ConTypes = Enum("Eibnet", "sFT12")
 ConTypesText = Enum("Eibnet/IP", "RS232 FT1.2")
 COM = Enum("COM 1", "COM 2", "COM 3", "COM 4", "COM 5", "COM 6", "COM 7", "COM 8")
+
+#-----------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------  Java Kram --------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------------------------
+#Get path to directory with calimero-2.0a4.jar
+jarpath = os.path.join(os.path.abspath("."), "lib")
+#Start JVM
+jpype.startJVM(jpype.getDefaultJVMPath(), "-Djava.ext.dirs=%s" % jarpath)
+
+
+KNXNetworkLinkIP = jpype.JClass("tuwien.auto.calimero.link.KNXNetworkLinkIP")
+TPSettings = jpype.JClass("tuwien.auto.calimero.link.medium.TPSettings")
+KNXnetIPTunnel = jpype.JClass("tuwien.auto.calimero.knxnetip.KNXnetIPTunnel")
+CEMILData = jpype.JClass("tuwien.auto.calimero.cemi.CEMILData")
+IndividualAddress = jpype.JClass("tuwien.auto.calimero.IndividualAddress")
+KNXAddress = jpype.JClass("tuwien.auto.calimero.KNXAddress")
+ManagementClientImpl = jpype.JClass("tuwien.auto.calimero.mgmt.ManagementClientImpl")
+
+#java internals
+KNXnetIPConnection = jpype.JClass("tuwien.auto.calimero.knxnetip.KNXnetIPConnection")
+InetSocketAddress = jpype.JClass("java.net.InetSocketAddress")
+
+#interfaces
+KNXListener = jpype.JClass("tuwien.auto.calimero.KNXListener")
+
+#Exceptions
+KNXAckTimeoutException = jpype.JClass("tuwien.auto.calimero.exception.KNXAckTimeoutException")
+KNXException = jpype.JClass("tuwien.auto.calimero.exception.KNXException")
+KNXFormatException = jpype.JClass("tuwien.auto.calimero.exception.KNXFormatException")
+KNXIllegalArgumentException = jpype.JClass("tuwien.auto.calimero.exception.KNXIllegalArgumentException")
+KNXIllegalStateException = jpype.JClass("tuwien.auto.calimero.exception.KNXIllegalStateException")
+KNXInvalidResponseException = jpype.JClass("tuwien.auto.calimero.exception.KNXInvalidResponseException")
+KNXRemoteException = jpype.JClass("tuwien.auto.calimero.exception.KNXRemoteException")
+KNXTimeoutException = jpype.JClass("tuwien.auto.calimero.exception.KNXTimeoutException")
+KNXLinkClosedException = jpype.JClass("tuwien.auto.calimero.link.KNXLinkClosedException")
 
 #-----------------------------------------------------------------------------------------------------------------------
 #--------------------------------  some helping functions --------------------------------------------------------------

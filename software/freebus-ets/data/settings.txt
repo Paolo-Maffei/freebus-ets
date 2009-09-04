@@ -1,2 +1,2 @@
 [Database]
-Database = E:\Elektronik\Projekte\Python Workspace\FB ETS\data\Datenbank.db
+Database = <euer Pfad zur runtime>\data\Datenbank.db

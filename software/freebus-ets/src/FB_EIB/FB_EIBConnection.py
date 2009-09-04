@@ -13,13 +13,16 @@
 #email: j.leisner@ing-automation.de
 #===============================================================================
 
+#from FB_EIB.FB_EIBFrameListener import FB_EIBFrameListener
 from Global import Global
 import socket
 import jpype
 
-class FB_EIBConnection(object):
+import gtk
 
-    _individualAddress = None
+class FB_EIBConnection(object):#FB_EIBFrameListener):
+
+    _individualAddress = "0.0.0"
     _connected = False
 
     __name = ""                 #name of connection
@@ -31,12 +34,18 @@ class FB_EIBConnection(object):
     __ipPort = 3671
     __id = 0
 
+    __KNXConnection = None        #calimero connection
+    __KNXNetworkLinkIP = None     #calimero Link object according to the KNXCOnnection
+
+
+    __parent = None
+
     ##Constructor for EIBConnection.
     def __init__(self):
         self.__name = "neue Verbindung"
         self.__isDefault = True
         self.__id = Global.CreateGUID()
-
+        self.__parent = self
 
     def getID(self):
         return self.__id
@@ -118,27 +127,87 @@ class FB_EIBConnection(object):
 
     def doConnect(self):
         if self.__type == 0:    #EIBNet/IP
-            self.ConnectIP()
+            return self.ConnectIP()
         elif self.__type == 1:    #RS232 FT1.2
+            return False
+
+    def doDisconnect(self):
+        try:
+            self._connected = False
+            self.__KNXConnection.close()
+            self.__KNXConnection = None
+            self.__KNXNetworkLinkIP = None
+        except:
             pass
 
-
-
-
-
     def ConnectIP(self):
-        #create a socket
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #s.connect((self.__ipIP, self.__ipPort))
-        #get a CRI - connection request information
-        CRIclass = jpype.JClass("tuwien.auto.calimero.knxnetip.util.CRI")
-        HPAIclass = jpype.JClass("tuwien.auto.calimero.knxnetip.util.HPAI")
+        try:
+            #create a socket
+            RValue = False
+            self._connected = False
+            #s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            hostname = socket.gethostname()
+            localIP = socket.gethostbyname(hostname)
+            remoteIP = self.__ipIP
 
-        CRI = CRIclass.createRequest(2,[])
-        #HPAI = HPAIclass(HPAIclass.IPV4_TCP,socket.gethostname(),3671)
-        #socket.getaddrinfo(host, port)
-        #HPAI = HPAIclass(2,socket.gethostname())
-        #print HPAI
+            localEP = Global.InetSocketAddress(localIP,0)
+            remoteEP = Global.InetSocketAddress(remoteIP,int(self.__ipPort))
+
+            self.__KNXNetworkLinkIP = Global.KNXNetworkLinkIP(Global.KNXNetworkLinkIP.TUNNEL,localEP,remoteEP,False,Global.TPSettings(True))
+            #ip tunnel connection
+            self.__KNXConnection = Global.KNXnetIPTunnel(Global.KNXnetIPTunnel.LINK_LAYER,localEP,remoteEP,False)
+
+            #create a JProxy to integrate the Java interface KNXListener
+            d = {
+            'frameReceived' : self.frameReceived,
+            'connectionClosed' : self.connectionClosed,
+            }
+            proxy = jpype.JProxy(Global.KNXListener, dict=d)
+            self.__KNXConnection.addConnectionListener(proxy)
+
+
+            if self.__KNXConnection.getState() == Global.KNXnetIPConnection.OK:
+                RValue = True
+                self._connected = True
+            else:
+                RValue = False
+                self._connected = False
+            return RValue
+
+        except jpype.JavaException, ex :
+            error = ""
+            self._connected = False
+
+            if jpype.JavaException.javaClass(ex) is Global.KNXException:
+                error = "Allg. Socket-Verbindungsfehler : " + str(jpype.JavaException.message(ex))
+            elif jpype.JavaException.javaClass(ex) is Global.KNXTimeoutException:
+                error = "Fehler beim Verbindungsaufbau : " + str(jpype.JavaException.message(ex))
+            elif jpype.JavaException.javaClass(ex) is Global.KNXRemoteException:
+                error = "Fehler beim Remote-Server : " + str(jpype.JavaException.message(ex))
+            elif jpype.JavaException.javaClass(ex) is Global.KNXInvalidResponseException:
+                error = "Falsches Format bei der Antwort : " + str(jpype.JavaException.message(ex))
+
+            msgbox = gtk.MessageDialog(parent = self.__parent, buttons = gtk.BUTTONS_OK,
+                                           flags = gtk.DIALOG_MODAL, type = gtk.MESSAGE_ERROR,
+                                           message_format = error )
+
+            msgbox.set_title(Global.ERRORCONNECTIONTITLE)
+            result = msgbox.run()
+            msgbox.destroy()
+
+#------------------------------------------------------------------------------------------------
+#--------------------------------- Events from Calimero------------------------------------------
+#------------------------------------------------------------------------------------------------
+
+
+    def frameReceived(self,FrameEvent):
+        EIBFrame = FrameEvent.getFrame()
+        FrameByte = FrameEvent.getFrameBytes()
+
+
+    def connectionClosed(self,CloseEvent):
+        #print CloseEvent.getReason()
+        self._connected = False
 
 
 #------------------------------------------------------------------------------------------------
@@ -148,27 +217,29 @@ class FB_EIBConnection(object):
 
     ##Call this method to add an EIBframeListener for receiving a frame
     ##@param efl the EIBFrameListener
-    def addEIBFrameListener(self, efl):
-        pass
+    #def addEIBFrameListener(self, efl):
         #check for double listeners
-        #for cnt in range(len(self.listeners)):
-        #    if listeners[cnt] == efl:
-        #        return
+     #   for cnt in range(len(self.listeners)):
+      #      if listeners[cnt] == efl:
+       #         return
         #self._listeners.append(efl)
 
     ##Remove a EIBFrameListener
     #@param efl the instance of the Listener you want to remove
-    def removeEIBFrameListener(self,efl):
-        pass
-        #for cnt in range(len(self.listeners)):
-        #   if listeners[cnt] == efl:
-        #       del listeners[cnt]
+    #def removeEIBFrameListener(self,efl):
+     #   for cnt in range(len(self.listeners)):
+      #     if listeners[cnt] == efl:
+       #        del listeners[cnt]
         #       return
 
     ##Returns the individual (physical) address of the EIB interface
     #@return the individual (physical) address of the EIB interface
     def getIndividualAddress(self):
         return self._individualAddress
+
+    ##returns the KNXNetworkLink according to the current connection
+    def getKNXNetworkLink(self):
+        return self.__KNXNetworkLinkIP
 
 
     def isConnected(self):

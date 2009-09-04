@@ -287,7 +287,7 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkStatusbar" id="statusbar1">
+          <widget class="GtkStatusbar" id="MainStatusBar">
             <property name="visible">True</property>
           </widget>
           <packing>
@@ -2926,110 +2926,67 @@
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox7">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
-          <widget class="GtkTable" id="table8">
+          <widget class="GtkLayout" id="layout1">
+            <property name="width_request">690</property>
+            <property name="height_request">55</property>
             <property name="visible">True</property>
-            <property name="n_rows">4</property>
-            <property name="n_columns">3</property>
-            <child>
-              <widget class="GtkHSeparator" id="hseparator2">
-                <property name="visible">True</property>
-              </widget>
-              <packing>
-                <property name="right_attach">3</property>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkFixed" id="fixed1">
-                <property name="visible">True</property>
-              </widget>
-              <packing>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkAlignment" id="alignment22">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="xscale">0.81999999284744263</property>
-                <property name="left_padding">25</property>
-                <child>
-                  <widget class="GtkButton" id="bChooseDatabase">
-                    <property name="label" translatable="yes">Durchsuchen</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="tooltip" translatable="yes">&#xD6;ffnet den Auswahldialog zur Auswahl der Datenbank</property>
-                    <signal name="clicked" handler="on_bChooseDatabase_clicked"/>
-                  </widget>
-                </child>
-              </widget>
-              <packing>
-                <property name="left_attach">2</property>
-                <property name="right_attach">3</property>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
-                <property name="x_padding">10</property>
-                <property name="y_padding">20</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkEntry" id="txtDatabase">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="width_chars">70</property>
-              </widget>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">3</property>
-                <property name="x_padding">10</property>
-              </packing>
-            </child>
             <child>
               <widget class="GtkLabel" id="label4">
+                <property name="width_request">140</property>
+                <property name="height_request">25</property>
                 <property name="visible">True</property>
                 <property name="xalign">0.20000000298023224</property>
                 <property name="label" translatable="yes">Auswahl der Datenbank:</property>
               </widget>
-            </child>
-            <child>
-              <widget class="GtkAlignment" id="alignment27">
-                <property name="visible">True</property>
-                <property name="xalign">1</property>
-                <property name="xscale">0.81999999284744263</property>
-                <property name="left_padding">25</property>
-                <child>
-                  <widget class="GtkButton" id="bNewDatabase">
-                    <property name="label" translatable="yes">Neu...</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="tooltip" translatable="yes">&#xD6;ffnet den Auswahldialog zur Auswahl der Datenbank</property>
-                    <signal name="clicked" handler="on_bNewDatabase_clicked"/>
-                  </widget>
-                </child>
-              </widget>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
-                <property name="x_padding">10</property>
-                <property name="y_padding">20</property>
+                <property name="x">5</property>
+                <property name="y">5</property>
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <widget class="GtkEntry" id="txtDatabase">
+                <property name="width_request">450</property>
+                <property name="height_request">25</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="invisible_char">&#x25CF;</property>
+                <property name="width_chars">70</property>
+              </widget>
+              <packing>
+                <property name="x">134</property>
+                <property name="y">5</property>
+              </packing>
             </child>
             <child>
-              <placeholder/>
+              <widget class="GtkButton" id="bChooseDatabase">
+                <property name="label" translatable="yes">Durchsuchen</property>
+                <property name="width_request">87</property>
+                <property name="height_request">28</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip" translatable="yes">&#xD6;ffnet den Auswahldialog zur Auswahl der Datenbank</property>
+                <signal name="clicked" handler="on_bChooseDatabase_clicked"/>
+              </widget>
+              <packing>
+                <property name="x">597</property>
+                <property name="y">4</property>
+              </packing>
             </child>
             <child>
-              <placeholder/>
+              <widget class="GtkHSeparator" id="hseparator1">
+                <property name="width_request">677</property>
+                <property name="height_request">10</property>
+                <property name="visible">True</property>
+              </widget>
+              <packing>
+                <property name="x">5</property>
+                <property name="y">37</property>
+              </packing>
             </child>
           </widget>
           <packing>
@@ -3040,6 +2997,22 @@
           <widget class="GtkHButtonBox" id="dialog-action_area7">
             <property name="visible">True</property>
             <property name="layout_style">end</property>
+            <child>
+              <widget class="GtkButton" id="bNewDatabase">
+                <property name="label" translatable="yes">Neu...</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="has_tooltip">True</property>
+                <property name="tooltip" translatable="yes">&#xD6;ffnet den Auswahldialog zur Auswahl der Datenbank</property>
+                <signal name="clicked" handler="on_bNewDatabase_clicked"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
             <child>
               <widget class="GtkButton" id="bApply">
                 <property name="response_id">-6</property>
@@ -3089,7 +3062,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">0</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -3141,7 +3114,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </widget>
@@ -3381,9 +3354,12 @@ by the Free Software Foundation.</property>
   <widget class="GtkWindow" id="winProgramming">
     <property name="title" translatable="yes">Programmieren</property>
     <property name="default_width">800</property>
+    <property name="default_height">800</property>
     <child>
       <widget class="GtkLayout" id="layout1">
         <property name="visible">True</property>
+        <property name="width">1000</property>
+        <property name="height">1000</property>
         <child>
           <widget class="GtkFrame" id="frame">
             <property name="width_request">684</property>
@@ -3397,12 +3373,15 @@ by the Free Software Foundation.</property>
                 <child>
                   <widget class="GtkLayout" id="layout2">
                     <property name="visible">True</property>
+                    <property name="width">1000</property>
+                    <property name="height">1000</property>
                     <child>
                       <widget class="GtkLabel" id="label3">
-                        <property name="width_request">72</property>
+                        <property name="width_request">76</property>
                         <property name="height_request">22</property>
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Verbindung&lt;/b&gt;</property>
+                        <property name="xalign">0.10000000149011612</property>
+                        <property name="label" translatable="yes">Verbindung</property>
                         <property name="use_markup">True</property>
                       </widget>
                       <packing>
@@ -3432,22 +3411,6 @@ by the Free Software Foundation.</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkToggleButton" id="bConnect">
-                        <property name="label" translatable="yes">Verbinden</property>
-                        <property name="width_request">100</property>
-                        <property name="height_request">35</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="tooltip" translatable="yes">Verbindung &#xF6;ffnen/schlie&#xDF;en</property>
-                        <signal name="toggled" handler="on_bConnect_toggled"/>
-                      </widget>
-                      <packing>
-                        <property name="x">328</property>
-                        <property name="y">7</property>
-                      </packing>
-                    </child>
-                    <child>
                       <widget class="GtkButton" id="bTestConnection">
                         <property name="label" translatable="yes">Test</property>
                         <property name="width_request">100</property>
@@ -3468,10 +3431,29 @@ by the Free Software Foundation.</property>
                         <property name="width_request">185</property>
                         <property name="height_request">25</property>
                         <property name="visible">True</property>
+                        <signal name="changed" handler="on_cbConnections_changed"/>
                       </widget>
                       <packing>
                         <property name="x">87</property>
                         <property name="y">13</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkToggleButton" id="bConnect">
+                        <property name="label" translatable="yes">Verbinden</property>
+                        <property name="width_request">100</property>
+                        <property name="height_request">35</property>
+                        <property name="visible">True</property>
+                        <property name="app_paintable">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="has_tooltip">True</property>
+                        <property name="tooltip" translatable="yes">Verbindung &#xF6;ffnen/schlie&#xDF;enq</property>
+                        <signal name="toggled" handler="on_bConnect_toggled"/>
+                      </widget>
+                      <packing>
+                        <property name="x">324</property>
+                        <property name="y">7</property>
                       </packing>
                     </child>
                   </widget>
@@ -3495,6 +3477,82 @@ by the Free Software Foundation.</property>
             <property name="y">6</property>
           </packing>
         </child>
+        <child>
+          <widget class="GtkFrame" id="frame1">
+            <property name="width_request">684</property>
+            <property name="height_request">192</property>
+            <property name="visible">True</property>
+            <property name="label_xalign">0</property>
+            <child>
+              <widget class="GtkAlignment" id="alignment1">
+                <property name="visible">True</property>
+                <property name="left_padding">12</property>
+                <child>
+                  <widget class="GtkLayout" id="layout3">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkLabel" id="label4">
+                        <property name="width_request">214</property>
+                        <property name="height_request">25</property>
+                        <property name="visible">True</property>
+                        <property name="xalign">0.10000000149011612</property>
+                        <property name="label" translatable="yes">Ger&#xE4;t(e) im Programmiermodus</property>
+                        <property name="use_markup">True</property>
+                      </widget>
+                      <packing>
+                        <property name="y">13</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkTreeView" id="ListViewProgDevices">
+                        <property name="width_request">137</property>
+                        <property name="height_request">88</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="border_width">1</property>
+                        <property name="headers_visible">False</property>
+                      </widget>
+                      <packing>
+                        <property name="x">6</property>
+                        <property name="y">36</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkToggleButton" id="toggleCheckProgDevices">
+                        <property name="label" translatable="yes">Suchlauf starten</property>
+                        <property name="width_request">138</property>
+                        <property name="height_request">25</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <signal name="toggled" handler="on_toggleCheckProgDevices_toggled"/>
+                      </widget>
+                      <packing>
+                        <property name="x">6</property>
+                        <property name="y">128</property>
+                      </packing>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label1">
+                <property name="visible">True</property>
+                <property name="xpad">4</property>
+                <property name="label" translatable="yes">&lt;b&gt;physikalische Addressen&lt;/b&gt;</property>
+                <property name="use_markup">True</property>
+              </widget>
+              <packing>
+                <property name="type">label_item</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="x">4</property>
+            <property name="y">84</property>
+          </packing>
+        </child>
       </widget>
     </child>
   </widget>
@@ -3514,7 +3572,7 @@ by the Free Software Foundation.</property>
         <child>
           <widget class="GtkLayout" id="layout1">
             <property name="visible">True</property>
-            <property name="hadjustment">0 0 516 1 464.40000000000003 516</property>
+            <property name="hadjustment">0 0 450 1 464.40000000000003 516</property>
             <property name="vadjustment">0 0 320 1 237.59999999999999 264</property>
             <property name="width">450</property>
             <property name="height">320</property>

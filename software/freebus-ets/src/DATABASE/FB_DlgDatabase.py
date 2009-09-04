@@ -130,7 +130,11 @@ class FB_DlgDatabase:
             config.write()
 
             #create a new connection object
-            Global.DatabaseConnection.close()
+            #test if Database is already open...
+            try:
+                Global.DatabaseConnection.close()
+            except:
+                pass
             Global.DatabaseConnection = sqlite3.connect(self.__txtDatabase.get_text())
             Global.DatabaseConnection.text_factory = str
 
